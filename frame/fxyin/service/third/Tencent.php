@@ -53,7 +53,7 @@ class Qq extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_webAuthInfo($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -79,7 +79,7 @@ class Qq extends Tencent
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'access_token', 'openid',
         ];
@@ -121,7 +121,7 @@ class WeChat extends Tencent
         //初始化变量
         $tran = $this->data;
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'url_redirect',
         ];
@@ -163,7 +163,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'code',
         ];
@@ -199,7 +199,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_webAuthToken($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -225,7 +225,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'code',
         ];
@@ -265,7 +265,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_webAuthInfo($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -286,7 +286,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'access_token', 'openid',
         ];
@@ -320,7 +320,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_jssdkAuthToken($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -345,7 +345,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         //应用钥匙
         $conf['app_key'] = fxy_config('third_wechat')['jssdk_grant_access_token']['app_key'];
         //应用密钥
@@ -376,7 +376,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_jssdkAuthTicket($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -401,7 +401,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'access_token',
         ];
@@ -437,7 +437,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'sn', 'money', 'dateline',
             'openid',
@@ -469,7 +469,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'sn', 'money', 'dateline',
             'openid',
@@ -576,7 +576,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'sn', 'money', 'dateline',
         ];
@@ -678,7 +678,7 @@ class WeChat extends Tencent
     public function payCallback()
     {
         //初始化变量
-        $result = fsi_result(2);
+        $result = fsi_result();
         //商户号
         $conf['mch_id'] = fxy_config('third_wechat')['app_pay']['mch_id'];
         //服务处理
@@ -743,7 +743,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
@@ -777,7 +777,7 @@ class WeChat extends Tencent
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
@@ -851,7 +851,7 @@ class WeChat extends Tencent
     public function refundCallback()
     {
         //初始化变量
-        $result = fsi_result(2);
+        $result = fsi_result();
         $result[0] = false;
         $result[1] = fxy_lang(['pay', 'not2', 'open3']);
         $result[3] = 1002;

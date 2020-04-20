@@ -243,7 +243,7 @@ function dso_splice($string, $value, $separator = '')
  */
 function dso_fpempty($tran)
 {
-    $result = fsi_result(2);
+    $result = fsi_result();
     if (!isset($tran)) {
         $result[0] = false;
         $result[1] = fxy_lang(['lack', 'parameter']);
@@ -273,7 +273,7 @@ function dso_fpempty($tran)
  */
 function dsc_pempty($tran)
 {
-    $result = fsi_result(2);
+    $result = fsi_result();
     if (!isset($tran)) {
         $result[0] = false;
         $result[1] = fxy_lang(['lack', 'parameter']);
@@ -305,7 +305,7 @@ function dsc_pempty($tran)
  */
 function dsc_unpempty($tran)
 {
-    $result = fsi_result(2);
+    $result = fsi_result();
     if (!isset($tran)) {
         $result[0] = false;
         $result[1] = fxy_lang(['lack', 'parameter']);
@@ -342,7 +342,7 @@ function dsc_unpempty($tran)
  */
 function dsc_strlen($string = null, $slen = 0, $elen = 0)
 {
-    $result = fsi_result(2);
+    $result = fsi_result();
     $str_len = mb_strlen($string, 'utf-8');
     $elen == 0 && $elen = $str_len;
     $slen > $elen && $slen = $elen;

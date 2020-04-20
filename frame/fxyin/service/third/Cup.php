@@ -50,7 +50,7 @@ class Unionpay extends Cup
     public function payApply()
     {
         //初始化变量
-        $result = fsi_result(2);
+        $result = fsi_result();
         $result[0] = false;
         $result[1] = fxy_lang(['pay', 'not2', 'open3']);
         $result[3] = 1002;
@@ -64,7 +64,7 @@ class Unionpay extends Cup
     public function payCallback()
     {
         //初始化变量
-        $result = fsi_result(2);
+        $result = fsi_result();
         $result[0] = false;
         $result[1] = fxy_lang(['pay', 'not2', 'open3']);
         $result[3] = 1002;

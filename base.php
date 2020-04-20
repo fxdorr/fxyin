@@ -9,7 +9,7 @@
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
 //环境配置
-$_ENV['fxy']['version'] = '0.3.0';                      //框架版本
+$_ENV['fxy']['version'] = '1.0.0';                      //框架版本
 $_ENV['fxy']['start_time'] = microtime(true);           //时间戳和微秒数
 $_ENV['fxy']['start_mem'] = memory_get_usage();         //分配内存量
 //关键字声明

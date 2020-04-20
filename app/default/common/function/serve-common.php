@@ -97,40 +97,22 @@ function fco_return($var, $type = '')
 
 /**
  * 框架-服务-初始化-结果
- * @param integer $mode 模式
  * @return array
  */
-function fsi_result($mode)
+function fsi_result()
 {
-    //逻辑状态：$data[0]-true
-    //提示信息：$data[1]-'message'
-    //返回数据：$data[2]-[data=>[],'extend'=>[]]
-    //错误代码：$data[3]-0
-    //跳转地址：$data[4]-'-1'
-    $data = null;
-    switch ($mode) {
-        case 1:
-            //[boolean, message, data, state, url]
-            $data[0] = true;
-            $data[1] = '';
-            $data[2] = [];
-            $data[3] = 0;
-            $data[4] = '-1';
-            break;
-        case 2:
-            //[boolean, message, data, state, url]
-            $data[0] = true;
-            $data[1] = '';
-            $data[2] = ['data' => [], 'extend' => []];
-            $data[3] = 0;
-            $data[4] = '-1';
-            break;
-        case 3:
-            //[boolean, message]
-            $data[0] = true;
-            $data[1] = '';
-            break;
-    }
+    //初始化变量
+    $data = [];
+    //逻辑状态
+    $data[0] = true;
+    //提示信息
+    $data[1] = '';
+    //返回数据
+    $data[2] = ['data' => [], 'extend' => []];
+    //错误代码
+    $data[3] = 0;
+    //跳转地址
+    $data[4] = '-1';
     return $data;
 }
 

@@ -57,7 +57,7 @@ class ToolService extends Tool
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'content', 'file_name', 'file_path',
         ];
@@ -102,7 +102,7 @@ class ToolService extends Tool
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'title', 'data',
         ];
@@ -151,6 +151,6 @@ class ToolService extends Tool
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
     }
 }

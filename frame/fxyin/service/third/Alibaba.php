@@ -54,7 +54,7 @@ class Alipay extends Alibaba
         //初始化变量
         $tran = $this->data;
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'url_redirect',
         ];
@@ -93,7 +93,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_webAuthToken($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -119,7 +119,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'auth_code',
         ];
@@ -163,7 +163,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_webRefreshToken($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -189,7 +189,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'refresh_token',
         ];
@@ -233,7 +233,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $record = $this->_webAuthInfo($tran);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
@@ -265,7 +265,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'access_token',
         ];
@@ -306,7 +306,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'sn', 'money',
         ];
@@ -452,7 +452,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         //支付宝公钥
         $conf['url_pub_key'] = fxy_config('third_alipay')['app_pay']['url_pub_key'];
         //签名类型
@@ -504,7 +504,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'sn', 'money',
         ];
@@ -637,7 +637,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         //支付宝公钥
         $conf['url_pub_key'] = fxy_config('third_alipay')['wap_pay']['url_pub_key'];
         //签名类型
@@ -693,7 +693,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
@@ -746,7 +746,7 @@ class Alipay extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
@@ -804,7 +804,7 @@ class Alipay extends Alibaba
     public function refundCallback()
     {
         //初始化变量
-        $result = fsi_result(2);
+        $result = fsi_result();
         $result[0] = false;
         $result[1] = fxy_lang(['pay', 'not2', 'open3']);
         $result[3] = 1002;
@@ -827,7 +827,7 @@ class Taobao extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'ip',
         ];
@@ -869,7 +869,7 @@ class Aliyun extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'domain',
         ];
@@ -906,7 +906,7 @@ class Aliyun extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'domain', 'rr',
         ];
@@ -952,7 +952,7 @@ class Aliyun extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'domain', 'rr', 'type',
             'value',
@@ -1001,7 +1001,7 @@ class Aliyun extends Alibaba
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'key' => fxy_config('third_aliyun')['ddns']['access_key_id'], 'secret' => fxy_config('third_aliyun')['ddns']['access_key_secret'],
         ];

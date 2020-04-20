@@ -52,7 +52,7 @@ class Lbsyun extends Baidu
     {
         //初始化变量
         $tran = $this->data;
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'ip',
         ];

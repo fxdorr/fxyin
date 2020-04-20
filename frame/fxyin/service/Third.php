@@ -53,7 +53,7 @@ class Third extends Service
      */
     public function __call($name, $data)
     {
-        $result = fsi_result(2);
+        $result = fsi_result();
         $result[0] = false;
         $result[1] = fxy_lang(['third', 'service', '[', fxy_config('lang')['prefix'] . $this->getSupplier(), ']', 'not2', 'find2']);
         $result[3] = 1002;

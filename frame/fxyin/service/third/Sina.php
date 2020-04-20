@@ -51,7 +51,7 @@ class SinaOpen extends Sina
         //初始化变量
         $tran = $this->data;
         $conf['param'] = '';
-        $result = fsi_result(2);
+        $result = fsi_result();
         $predefined = [
             'ip',
         ];
