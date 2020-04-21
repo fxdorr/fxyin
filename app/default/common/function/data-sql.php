@@ -477,7 +477,7 @@ function dqa_fdempty($field, $replace = '')
  */
 function dqc_upcompare($data_new, $data_old)
 {
-    $result = fsi_result(3);
+    $result = fsi_result();
     if (!isset($data_new)) {
         $result[0] = false;
         $result[1] = fxy_lang(['lack', 'new', 'data']);
