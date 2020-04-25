@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -52,8 +52,8 @@ class Unionpay extends Cup
         //初始化变量
         $result = fsi_result();
         $result[0] = false;
-        $result[1] = fxy_lang(['pay', 'not2', 'open3']);
-        $result[3] = 1002;
+        $result[1] = 1002;
+        $result[2] = fxy_lang(['pay', 'not2', 'open3']);
         return $result;
     }
 
@@ -66,8 +66,8 @@ class Unionpay extends Cup
         //初始化变量
         $result = fsi_result();
         $result[0] = false;
-        $result[1] = fxy_lang(['pay', 'not2', 'open3']);
-        $result[3] = 1002;
+        $result[1] = 1002;
+        $result[2] = fxy_lang(['pay', 'not2', 'open3']);
         return $result;
     }
 }

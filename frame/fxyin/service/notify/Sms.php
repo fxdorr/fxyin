@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -51,7 +51,7 @@ class Sms extends Notify
         $conf['url_sdk'] = fxy_config('notify_sms')['alidayu']['url_sdk'];
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[1] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
             return $pempty;
         }
         fxy_load($conf['url_sdk']);
@@ -60,7 +60,7 @@ class Sms extends Notify
         $c->appkey = $conf['appkey'];
         $c->secretKey = $conf['secretKey'];
         $req = new \AlibabaAliqinFcSmsNumSendRequest;
-    //     $req->setExtend('123456');
+        // $req->setExtend('123456');
         $req->setSmsType($parm['_param']['_sms_type']);
         $req->setSmsFreeSignName($parm['_param']['_sms_sign']);
         $req->setSmsParam($parm['_param']['_sms_param']);
@@ -71,17 +71,17 @@ class Sms extends Notify
         $record['msg'] = $resp->msg;
         $record['sub_msg'] = $resp->sub_msg;
         if ($record['status']) {
-            $result[1] = fxy_lang(['send', 'success']);
+            $result[2] = fxy_lang(['send', 'success']);
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $record['sub_msg'] ? : $record['msg'];
-            if ($result[1] == '触发业务流控') {
-                $result[1] = fxy_lang(['send', 'fail', ',', 'sms', 'interval', '1', 'minute']);
+            $result[1] = 1002;
+            $result[2] = $record['sub_msg'] ?: $record['msg'];
+            if ($result[2] == '触发业务流控') {
+                $result[2] = fxy_lang(['send', 'fail', ',', 'sms', 'interval', '1', 'minute']);
             } else {
-                $result[1] = fxy_lang(['send', 'fail', ',', $result[1]]);
+                $result[2] = fxy_lang(['send', 'fail', ',', $result[2]]);
             }
-            $result[3] = 1002;
             return $result;
         }
     }
@@ -114,12 +114,12 @@ class Sms extends Notify
         $conf['domain'] = fxy_config('notify_sms')['webservice']['domain'];
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[1] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
             return $pempty;
         }
         //设置配置
         $conf['message_id'] = -1;
-        $conf['password'] = (int)substr($parm['account'], 7, 4) * 3 + 6016;
+        $conf['password'] = (int) substr($parm['account'], 7, 4) * 3 + 6016;
         $conf['src_tele_num'] = $conf['src_tele_num'];
         $conf['dest_tele_num'] = $parm['account'];
         $conf['message'] = $parm['content'];
@@ -142,8 +142,9 @@ class Sms extends Notify
         $doc = new \SimpleXMLElement($record->out);
         $status = $doc->info->state;
         if ($status == 0) {
-            $result[1] = fxy_lang(['send', 'success']);
-            return $result;//发送成功
+            //发送成功
+            $result[2] = fxy_lang(['send', 'success']);
+            return $result;
         } else {
             $errinfo = '发送失败！';
             switch ($status) {
@@ -169,10 +170,11 @@ class Sms extends Notify
                     $errinfo = '验证码不匹配！';
                     break;
             }
+            //返回发送失败的提示
             $result[0] = false;
-            $result[1] = $errinfo;
-            $result[3] = 1002;
-            return $result;//返回发送失败的提示
+            $result[1] = 1002;
+            $result[2] = $errinfo;
+            return $result;
         }
     }
 }

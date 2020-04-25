@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -480,20 +480,20 @@ function dqc_upcompare($data_new, $data_old)
     $result = fsi_result();
     if (!isset($data_new)) {
         $result[0] = false;
-        $result[1] = fxy_lang(['lack', 'new', 'data']);
+        $result[2] = fxy_lang(['lack', 'new', 'data']);
     } else if (!isset($data_old)) {
         $result[0] = false;
-        $result[1] = fxy_lang(['lack', 'old', 'data']);
+        $result[2] = fxy_lang(['lack', 'old', 'data']);
     } else if (is_array($data_new) && is_array($data_old)) {
         foreach ($data_new as $key => $value) {
             if ($data_new[$key] != $data_old[$key]) {
                 $result[0] = false;
-                $result[1] = fxy_lang(['data', '[', fxy_config('lang')['prefix'] . $key, ']', 'not', 'same']);
+                $result[2] = fxy_lang(['data', '[', fxy_config('lang')['prefix'] . $key, ']', 'not', 'same']);
             }
         }
     } else {
         $result[0] = false;
-        $result[1] = fxy_lang(['data', 'format', 'error']);
+        $result[2] = fxy_lang(['data', 'format', 'error']);
     }
     return $result;
 }

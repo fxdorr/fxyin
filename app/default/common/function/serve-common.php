@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -22,54 +22,40 @@ use fxyin\Db;
 function fcc_format($data, $type)
 {
     //初始化变量
-    $inform = [];
-    $type = strtolower($type);
+    $param = ftc_param(['base' => ['debug']]);
+    $echo = [];
     switch ($type) {
         default:
             //默认
-            $inform = $data;
+            $echo = $data;
             break;
         case 1:
-            //输入参数处理
-            $predefined = [
-                false, ['system', 'busy'], ['data' => []],
-                -1, '-1',
-            ];
-            $data = fsi_param([$data, $predefined], '1.1.1');
-            //调试模式处理
+            //通用
+            $base = fxy_config('result.format');
+            //处理数据
+            $data[2] = fxy_lang($data[2]);
+            foreach ($base as $key => $value) {
+                if (array_key_exists($key, $data)) {
+                    $echo[$value] = $data[$key];
+                }
+            }
+            //调试模式
             $debug = fxy_config('fxy_debug');
-            if ($data[3] !== 0 && $debug) {
-                $data[2]['debug'] = [
+            if ($debug && $param['base']['debug']) {
+                $echo['debug'] = [
                     'get' => $_GET,
                     'post' => $_POST,
                     'request' => $_REQUEST,
                     'files' => $_FILES,
-                    'input' => file_get_contents("php://input"),
+                    'input' => file_get_contents('php://input'),
                     'server' => $_SERVER,
                 ];
             }
-            //消息处理
-            if (dsc_pempty([$data[1]])[0]) {
-                $data[1] = fxy_lang($data[1]);
-            }
-            //结果处理
-            $inform = ['state' => $data[3], 'message' => $data[1]];
-            if (is_array($data[2]) && dsc_pempty($data[2])[0]) {
-                foreach ($data[2] as $key => $value) {
-                    $inform[$key] = $value;
-                }
-            }
-            //配置扩展数据
-            if (isset($inform['extend'])) {
-                $inform['extend'] = fmf_aempty($inform['extend'], 1);
-            }
-            //配置链接
-            if (!isset($inform['url'])) {
-                $inform['url'] = $data[4];
-            }
+            //空对象处理
+            $echo = fmo_oempty($echo);
             break;
     }
-    return $inform;
+    return $echo;
 }
 
 /**
@@ -102,17 +88,7 @@ function fco_return($var, $type = '')
 function fsi_result()
 {
     //初始化变量
-    $data = [];
-    //逻辑状态
-    $data[0] = true;
-    //提示信息
-    $data[1] = '';
-    //返回数据
-    $data[2] = ['data' => [], 'extend' => []];
-    //错误代码
-    $data[3] = 0;
-    //跳转地址
-    $data[4] = '-1';
+    $data = fxy_config('result.template');
     return $data;
 }
 
@@ -477,7 +453,28 @@ function fcs_database($type, $options = [])
  */
 function fmo_explode($separator, $string)
 {
+    //初始化变量
     return array_values(array_unique(explode($separator, $string)));
+}
+
+/**
+ * 框架-模块-操作-空数组转对象
+ * @param array $param 参数
+ * @return mixed
+ */
+function fmo_oempty($param)
+{
+    //初始化变量
+    if (is_array($param)) {
+        if (isset($param['']) && count($param) == 1) {
+            $param = new \StdClass();
+        } else {
+            foreach ($param as $key => $value) {
+                $param[$key] = fmo_oempty($value);
+            }
+        }
+    }
+    return $param;
 }
 
 /**
@@ -487,6 +484,7 @@ function fmo_explode($separator, $string)
  */
 function fmo_merge(...$args)
 {
+    //初始化变量
     $data = [];
     if (count($args) < 2) {
         return array_shift($args);
@@ -506,6 +504,7 @@ function fmo_merge(...$args)
  */
 function fmo_cover($args)
 {
+    //初始化变量
     if (!is_array($args[0])) {
         $args[0] = $args[1];
     } else if (is_array($args[1])) {
@@ -766,6 +765,7 @@ function fcf_ipv4($var, $type)
  */
 function fcf_rand($length, $numeric = 0)
 {
+    //初始化变量
     $seed = base_convert(md5(microtime() . __DIR__), 16, $numeric ? 10 : 35);
     $seed = $numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
     if ($numeric) {

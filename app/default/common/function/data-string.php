@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -19,6 +19,7 @@
  */
 function dsc_fhtml($string, $flags = null)
 {
+    //初始化变量
     if (is_array($string)) {
         foreach ($string as $key => $val) {
             $string[$key] = dsc_fhtml($val, $flags);
@@ -33,11 +34,11 @@ function dsc_fhtml($string, $flags = null)
             if (PHP_VERSION < '5.4.0') {
                 $string = htmlspecialchars($string, $flags);
             } else {
-//                 if(strtolower(CHARSET) == 'utf-8') {
+                // if(strtolower(CHARSET) == 'utf-8') {
                 $charset = 'UTF-8';
-//                 } else {
-//                     $charset = 'ISO-8859-1';
-//                 }
+                // } else {
+                //     $charset = 'ISO-8859-1';
+                // }
                 $string = htmlspecialchars($string, $flags, $charset);
             }
         }
@@ -55,6 +56,7 @@ function dsc_fhtml($string, $flags = null)
  */
 function dsc_rhtml($string, $flags = null)
 {
+    //初始化变量
     if (is_array($string)) {
         foreach ($string as $key => $val) {
             $string[$key] = dsc_rhtml($val, $flags);
@@ -82,6 +84,7 @@ function dsc_rhtml($string, $flags = null)
  */
 function dso_listtotree($list, $pId = 0, $pName = 'parent_id', $index = 'id', $cName = '_child')
 {
+    //初始化变量
     $tree = array();
     if (is_array($list)) {
         $refer = array();
@@ -111,6 +114,7 @@ if (!function_exists('is_email')) {
      */
     function is_email($var)
     {
+        //初始化变量
         if (is_string($var)) {
             if (!empty($var)) {
                 return preg_match('/^[a-z0-9]+([\+_\-\.]?[a-z0-9]+)*@([a-z0-9]+[\-]?[a-z0-9]+\.)+[a-z]{2,6}$/i', $var);
@@ -128,6 +132,7 @@ if (!function_exists('is_mobile')) {
      */
     function is_mobile($var)
     {
+        //初始化变量
         if (is_string($var)) {
             if (!empty($var)) {
                 return preg_match('/^1[0-9]{2}\d{8}$/', $var);
@@ -145,6 +150,7 @@ if (!function_exists('is_zipcode')) {
      */
     function is_zipcode($var)
     {
+        //初始化变量
         if (is_string($var)) {
             if (!empty($var)) {
                 return preg_match('/^[1-9][0-9]{5}$/', $var);
@@ -163,6 +169,7 @@ if (!function_exists('is_json')) {
      */
     function is_json($var, $format = null)
     {
+        //初始化变量
         if (is_string($var)) {
             switch ($format) {
                 default:
@@ -192,6 +199,7 @@ if (!function_exists('is_string_large')) {
      */
     function is_string_large($var)
     {
+        //初始化变量
         if (preg_match('/[A-Z]/', $var)) {
             return true;
         }
@@ -207,6 +215,7 @@ if (!function_exists('is_string_small')) {
      */
     function is_string_small($var)
     {
+        //初始化变量
         if (preg_match('/[a-z]/', $var)) {
             return true;
         }
@@ -223,6 +232,7 @@ if (!function_exists('is_string_small')) {
  */
 function dso_splice($string, $value, $separator = '')
 {
+    //初始化变量
     if (is_null($value) || is_null($separator)) {
         return $string;
     }
@@ -243,23 +253,24 @@ function dso_splice($string, $value, $separator = '')
  */
 function dso_fpempty($tran)
 {
+    //初始化变量
     $result = fsi_result();
     if (!isset($tran)) {
         $result[0] = false;
-        $result[1] = fxy_lang(['lack', 'parameter']);
-        $result[3] = 1000;
+        $result[1] = 1000;
+        $result[2] = fxy_lang(['lack', 'parameter']);
     } else if (is_array($tran)) {
         foreach ($tran as $key => $value) {
             if (is_null($value)) {
                 unset($tran[$key]);
             }
         }
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $tran;
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $tran;
     } else {
         $result[0] = false;
-        $result[1] = fxy_lang(['parameter', 'format', 'error']);
-        $result[3] = 1001;
+        $result[1] = 1001;
+        $result[2] = fxy_lang(['parameter', 'format', 'error']);
     }
     return $result;
 }
@@ -273,25 +284,26 @@ function dso_fpempty($tran)
  */
 function dsc_pempty($tran)
 {
+    //初始化变量
     $result = fsi_result();
     if (!isset($tran)) {
         $result[0] = false;
-        $result[1] = fxy_lang(['lack', 'parameter']);
-        $result[3] = 1000;
+        $result[1] = 1000;
+        $result[2] = fxy_lang(['lack', 'parameter']);
     } else if (is_array($tran)) {
         foreach ($tran as $key => $value) {
             if (is_null($value) || $value === '') {
                 $varname = is_numeric($key) ? 'param' : $key;
                 $result[0] = false;
-                $result[1] = fxy_lang(['lack', $varname]);
-                $result[3] = 1000;
+                $result[1] = 1000;
+                $result[2] = fxy_lang(['lack', $varname]);
                 break;
             }
         }
     } else {
         $result[0] = false;
-        $result[1] = fxy_lang(['parameter', 'format', 'error']);
-        $result[3] = 1001;
+        $result[1] = 1001;
+        $result[2] = fxy_lang(['parameter', 'format', 'error']);
     }
     return $result;
 }
@@ -305,28 +317,29 @@ function dsc_pempty($tran)
  */
 function dsc_unpempty($tran)
 {
+    //初始化变量
     $result = fsi_result();
     if (!isset($tran)) {
         $result[0] = false;
-        $result[1] = fxy_lang(['lack', 'parameter']);
-        $result[3] = 1000;
+        $result[1] = 1000;
+        $result[2] = fxy_lang(['lack', 'parameter']);
     } else if (is_array($tran)) {
         foreach ($tran as $key => $value) {
             if (is_null($value) || $value === '') {
                 $result[0] = false;
-                $result[1] = fxy_lang(['lack', 'param']);
-                $result[3] = 1000;
+                $result[1] = 1000;
+                $result[2] = fxy_lang(['lack', 'param']);
             } else {
                 $result[0] = true;
-                $result[1] = fxy_lang(['check', 'success']);
-                $result[3] = 0;
+                $result[1] = 0;
+                $result[2] = fxy_lang(['check', 'success']);
                 break;
             }
         }
     } else {
         $result[0] = false;
-        $result[1] = fxy_lang(['parameter', 'format', 'error']);
-        $result[3] = 1001;
+        $result[1] = 1001;
+        $result[2] = fxy_lang(['parameter', 'format', 'error']);
     }
     return $result;
 }
@@ -342,6 +355,7 @@ function dsc_unpempty($tran)
  */
 function dsc_strlen($string = null, $slen = 0, $elen = 0)
 {
+    //初始化变量
     $result = fsi_result();
     $str_len = mb_strlen($string, 'utf-8');
     $elen == 0 && $elen = $str_len;
@@ -349,13 +363,13 @@ function dsc_strlen($string = null, $slen = 0, $elen = 0)
     if (is_string($string)) {
         if ($elen > 0 && !($str_len >= $slen && $str_len <= $elen)) {
             $result[0] = false;
-            $result[1] = fxy_lang(['string', 'length', 'should', 'be', ($slen == $elen ? $elen : $slen . '-' . $elen)]);
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = fxy_lang(['string', 'length', 'should', 'be', ($slen == $elen ? $elen : $slen . '-' . $elen)]);
         }
     } else {
         $result[0] = false;
-        $result[1] = fxy_lang(['string', 'not2', 'input']);
-        $result[3] = 1000;
+        $result[1] = 1000;
+        $result[2] = fxy_lang(['string', 'not2', 'input']);
     }
     return $result;
 }
@@ -368,6 +382,7 @@ function dsc_strlen($string = null, $slen = 0, $elen = 0)
  */
 function dso_assemble($tran, $mode = null)
 {
+    //初始化变量
     $data = '';
     $string = '';
     $mode = !empty($tran) && is_array($tran) ? $mode : null;
@@ -426,6 +441,7 @@ function dso_assemble($tran, $mode = null)
  */
 function fco_authcode($string, $operation = 'decode', $key = '', $expiry = 0)
 {
+    //初始化变量
     $ckey_length = 4;
     $operation = strtolower($operation);
     $key = md5($key != '' ? $key : fxy_config('authkey'));
@@ -505,6 +521,7 @@ function fco_letters($var, $in_charset = 'utf-8', $out_charset = 'gb2312')
 function fco_letter($var, $in_charset = 'utf-8', $out_charset = 'gb2312')
 {
     try {
+        //初始化变量
         //如果程序是gbk的，此行就要注释掉
         $data = iconv($in_charset, $out_charset, $var);
         if (preg_match("/^[\x7f-\xff]/", $data)) {

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -86,8 +86,8 @@ class ToolService extends Tool
             \fxyin\Dir::create(dirname($parm['file_url']));
         }
         \QRcode::png($parm['content'], $parm['file_url'], $parm['level'], $parm['size'], $parm['margin'], $parm['print']);
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $parm;
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $parm;
         return $result;
     }
 

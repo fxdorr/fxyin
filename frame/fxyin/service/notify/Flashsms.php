@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -53,7 +53,7 @@ class Flashsms extends Notify
         $conf['domain'] = fxy_config('notify_flashsms')['common']['domain'];
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[1] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
             return $pempty;
         }
         //待发数据
@@ -193,12 +193,12 @@ class Flashsms extends Notify
             }
             //返回发送失败的提示
             $result[0] = false;
-            $result[1] = $errinfo;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $errinfo;
             return $result;
         } else {
             //发送成功
-            $result[1] = fxy_lang(['send', 'success']);
+            $result[2] = fxy_lang(['send', 'success']);
             return $result;
         }
     }

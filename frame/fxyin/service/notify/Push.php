@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -71,7 +71,7 @@ class Push extends Notify
         $conf['url_sdk'] = fxy_config('notify_push')['jpush']['url_sdk'];
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[1] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
             return $pempty;
         }
         fxy_load($conf['url_sdk']);
@@ -160,8 +160,8 @@ class Push extends Notify
                         }
                         if (!$pass) {
                             $result[0] = false;
-                            $result[1] = fxy_lang(['lack', 'tag']);
-                            $result[3] = 1002;
+                            $result[1] = 1002;
+                            $result[2] = fxy_lang(['lack', 'tag']);
                             return $result;
                         }
                         $model = $model
@@ -194,8 +194,8 @@ class Push extends Notify
                         }
                         if (!$pass) {
                             $result[0] = false;
-                            $result[1] = fxy_lang(['lack', 'alias']);
-                            $result[3] = 1002;
+                            $result[1] = 1002;
+                            $result[2] = fxy_lang(['lack', 'alias']);
                             return $result;
                         }
                         $model = $model
@@ -228,8 +228,8 @@ class Push extends Notify
                         }
                         if (!$pass) {
                             $result[0] = false;
-                            $result[1] = fxy_lang(['lack', 'jpush', 'id']);
-                            $result[3] = 1002;
+                            $result[1] = 1002;
+                            $result[2] = fxy_lang(['lack', 'jpush', 'id']);
                             return $result;
                         }
                         $model = $model
@@ -240,17 +240,17 @@ class Push extends Notify
             $record = $model->send();
         } catch (\Throwable $e) {
             $result[0] = false;
-            $result[1] = $e->getMessage();
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $e->getMessage();
             return $result;
         }
         if ($record) {
-            $result[1] = fxy_lang(['send', 'success']);
+            $result[2] = fxy_lang(['send', 'success']);
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = fxy_lang(['send', 'fail']);
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['send', 'fail']);
             return $result;
         }
     }

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -55,8 +55,8 @@ class Third extends Service
     {
         $result = fsi_result();
         $result[0] = false;
-        $result[1] = fxy_lang(['third', 'service', '[', fxy_config('lang')['prefix'] . $this->getSupplier(), ']', 'not2', 'find2']);
-        $result[3] = 1002;
+        $result[1] = 1002;
+        $result[2] = fxy_lang(['third', 'service', '[', fxy_config('lang')['prefix'] . $this->getSupplier(), ']', 'not2', 'find2']);
         return $result;
     }
 }

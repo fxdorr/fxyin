@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -74,14 +74,14 @@ class SinaOpen extends Sina
             $response = json_decode($response[0], true);
         }
         if ($response) {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $response;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $response;
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = fxy_lang(['location', 'fail']);
-            $result[2]['data'] = $response;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['location', 'fail']);
+            $result[3] = $response;
             return $result;
         }
     }

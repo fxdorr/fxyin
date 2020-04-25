@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -79,8 +79,8 @@ class Alipay extends Alibaba
         $conf['param'] = dso_splice($conf['param'], 'scope=' . $conf['scope'], '&');
         $conf['param'] = dso_splice($conf['param'], 'state=' . $conf['state'], '&');
         $conf['domain'] = dso_splice($conf['domain'], $conf['param'], '?');
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $conf;
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $conf;
         return $result;
     }
 
@@ -99,13 +99,13 @@ class Alipay extends Alibaba
             return $record;
         } else if (isset($record['error_response']['code'])) {
             $result[0] = false;
-            $result[1] = $record['error_response']['sub_msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['error_response']['sub_msg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -169,13 +169,13 @@ class Alipay extends Alibaba
             return $record;
         } else if (isset($record['error_response']['code'])) {
             $result[0] = false;
-            $result[1] = $record['error_response']['sub_msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['error_response']['sub_msg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -239,19 +239,19 @@ class Alipay extends Alibaba
             return $record;
         } else if (isset($record['error_response']['code'])) {
             $result[0] = false;
-            $result[1] = $record['error_response']['sub_msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['error_response']['sub_msg'];
+            $result[3] = $record;
             return $result;
         } else if (isset($record['alipay_user_info_share_response']['code']) && $record['alipay_user_info_share_response']['code'] != '10000') {
             $result[0] = false;
-            $result[1] = $record['alipay_user_info_share_response']['sub_msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['alipay_user_info_share_response']['sub_msg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -354,29 +354,29 @@ class Alipay extends Alibaba
             'product_code' => $conf['product_code'], 'url_pri_key' => $conf['url_pri_key'], 'url_sdk' => $conf['url_sdk'],
         ];
         $tran = fsi_param([$tran, $predefined], '1.1.2');
-        $parm_2_1['app_id'] = $tran['app_id'];
-        $parm_2_1['service'] = $tran['service'];
-        $parm_2_1['partner'] = $tran['partner'];
-        $parm_2_1['charset'] = $tran['charset'];
-        $parm_2_1['sign_type'] = $tran['sign_type'];
-        $parm_2_1['sign'] = $tran['sign'];
-        $parm_2_1['url_notify'] = $tran['url_notify'];
-        $parm_2_1['sn'] = $parm['sn'];
-        $parm_2_1['subject'] = $tran['subject'];
-        $parm_2_1['format'] = $tran['format'];
-        $parm_2_1['version'] = $tran['version'];
-        $parm_2_1['seller_id'] = $tran['seller_id'];
-        $parm_2_1['money'] = $parm['money'];
-        $parm_2_1['body'] = $tran['body'];
-        $parm_2_1['timestamp'] = date('Y-m-d H:i:s');
-        $parm_2_1['product_code'] = $tran['product_code'];
-        $parm_2_1['url_pri_key'] = $tran['url_pri_key'];
-        $parm_2_1['url_sdk'] = $tran['url_sdk'];
+        $temp[2][1]['app_id'] = $tran['app_id'];
+        $temp[2][1]['service'] = $tran['service'];
+        $temp[2][1]['partner'] = $tran['partner'];
+        $temp[2][1]['charset'] = $tran['charset'];
+        $temp[2][1]['sign_type'] = $tran['sign_type'];
+        $temp[2][1]['sign'] = $tran['sign'];
+        $temp[2][1]['url_notify'] = $tran['url_notify'];
+        $temp[2][1]['sn'] = $parm['sn'];
+        $temp[2][1]['subject'] = $tran['subject'];
+        $temp[2][1]['format'] = $tran['format'];
+        $temp[2][1]['version'] = $tran['version'];
+        $temp[2][1]['seller_id'] = $tran['seller_id'];
+        $temp[2][1]['money'] = $parm['money'];
+        $temp[2][1]['body'] = $tran['body'];
+        $temp[2][1]['timestamp'] = date('Y-m-d H:i:s');
+        $temp[2][1]['product_code'] = $tran['product_code'];
+        $temp[2][1]['url_pri_key'] = $tran['url_pri_key'];
+        $temp[2][1]['url_sdk'] = $tran['url_sdk'];
         //生成签名
-        $parm_2_2 = $this->_paySignApply($parm_2_1);
-        $data['sign'] = $parm_2_2['param'];
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $data;
+        $temp[2][2] = $this->_paySignApply($temp[2][1]);
+        $data['sign'] = $temp[2][2]['param'];
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $data;
         return $result;
     }
 
@@ -474,22 +474,22 @@ class Alipay extends Alibaba
             } else if ($tran['trade_status'] == 'TRADE_SUCCESS') {
                 $verify_result = true;
             } else if ($tran['trade_status'] == 'TRADE_FINISHED') {
-                $result[1] = fxy_lang(['pay', 'complete']);
-                $result[2]['data'] = $tran;
+                $result[2] = fxy_lang(['pay', 'complete']);
+                $result[3] = $tran;
                 return $result;
             }
         }
         //验证支付结果
         if ($verify_result) {
-            $result[1] = fxy_lang(['pay', 'success']);
-            $result[2]['data'] = $tran;
+            $result[2] = fxy_lang(['pay', 'success']);
+            $result[3] = $tran;
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = fxy_lang(['pay', 'fail']);
-            $result[2]['data']['result'] = $verify_result;
-            $result[2]['data']['param'] = $tran;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['pay', 'fail']);
+            $result[3]['result'] = $verify_result;
+            $result[3]['param'] = $tran;
             return $result;
         }
     }
@@ -555,30 +555,30 @@ class Alipay extends Alibaba
             'url_sdk' => $conf['url_sdk'],
         ];
         $tran = fsi_param([$tran, $predefined], '1.1.2');
-        $parm_2_1['app_id'] = $tran['app_id'];
-        $parm_2_1['service'] = $tran['service'];
-        $parm_2_1['partner'] = $tran['partner'];
-        $parm_2_1['charset'] = $tran['charset'];
-        $parm_2_1['sign_type'] = $tran['sign_type'];
-        $parm_2_1['sign'] = $tran['sign'];
-        $parm_2_1['url_return'] = $tran['url_return'];
-        $parm_2_1['url_notify'] = $tran['url_notify'];
-        $parm_2_1['sn'] = $parm['sn'];
-        $parm_2_1['subject'] = $tran['subject'];
-        $parm_2_1['format'] = $tran['format'];
-        $parm_2_1['version'] = $tran['version'];
-        $parm_2_1['seller_id'] = $tran['seller_id'];
-        $parm_2_1['money'] = $parm['money'];
-        $parm_2_1['body'] = $tran['body'];
-        $parm_2_1['timestamp'] = date('Y-m-d H:i:s');
-        $parm_2_1['product_code'] = $tran['product_code'];
-        $parm_2_1['url_pri_key'] = $tran['url_pri_key'];
-        $parm_2_1['url_sdk'] = $tran['url_sdk'];
+        $temp[2][1]['app_id'] = $tran['app_id'];
+        $temp[2][1]['service'] = $tran['service'];
+        $temp[2][1]['partner'] = $tran['partner'];
+        $temp[2][1]['charset'] = $tran['charset'];
+        $temp[2][1]['sign_type'] = $tran['sign_type'];
+        $temp[2][1]['sign'] = $tran['sign'];
+        $temp[2][1]['url_return'] = $tran['url_return'];
+        $temp[2][1]['url_notify'] = $tran['url_notify'];
+        $temp[2][1]['sn'] = $parm['sn'];
+        $temp[2][1]['subject'] = $tran['subject'];
+        $temp[2][1]['format'] = $tran['format'];
+        $temp[2][1]['version'] = $tran['version'];
+        $temp[2][1]['seller_id'] = $tran['seller_id'];
+        $temp[2][1]['money'] = $parm['money'];
+        $temp[2][1]['body'] = $tran['body'];
+        $temp[2][1]['timestamp'] = date('Y-m-d H:i:s');
+        $temp[2][1]['product_code'] = $tran['product_code'];
+        $temp[2][1]['url_pri_key'] = $tran['url_pri_key'];
+        $temp[2][1]['url_sdk'] = $tran['url_sdk'];
         //生成签名
-        $parm_2_2 = $this->_wapPaySignApply($parm_2_1);
-        $data['sign'] = $parm_2_2['param'];
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $data;
+        $temp[2][2] = $this->_wapPaySignApply($temp[2][1]);
+        $data['sign'] = $temp[2][2]['param'];
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $data;
         return $result;
     }
 
@@ -659,22 +659,22 @@ class Alipay extends Alibaba
             } else if ($tran['trade_status'] == 'TRADE_SUCCESS') {
                 $verify_result = true;
             } else if ($tran['trade_status'] == 'TRADE_FINISHED') {
-                $result[1] = fxy_lang(['pay', 'complete']);
-                $result[2]['data'] = $tran;
+                $result[2] = fxy_lang(['pay', 'complete']);
+                $result[3] = $tran;
                 return $result;
             }
         }
         //验证支付结果
         if ($verify_result) {
-            $result[1] = fxy_lang(['pay', 'success']);
-            $result[2]['data'] = $tran;
+            $result[2] = fxy_lang(['pay', 'success']);
+            $result[3] = $tran;
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = fxy_lang(['pay', 'fail']);
-            $result[2]['data']['result'] = $verify_result;
-            $result[2]['data']['param'] = $tran;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['pay', 'fail']);
+            $result[3]['result'] = $verify_result;
+            $result[3]['param'] = $tran;
             return $result;
         }
     }
@@ -714,19 +714,19 @@ class Alipay extends Alibaba
             return $record;
         } else if (isset($record['error_response']['code'])) {
             $result[0] = false;
-            $result[1] = $record['error_response']['sub_msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['error_response']['sub_msg'];
+            $result[3] = $record;
             return $result;
         } else if (isset($record['alipay_trade_refund_response']['code']) && $record['alipay_trade_refund_response']['code'] != '10000') {
             $result[0] = false;
-            $result[1] = $record['alipay_trade_refund_response']['sub_msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['alipay_trade_refund_response']['sub_msg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
         return $record;
@@ -806,8 +806,8 @@ class Alipay extends Alibaba
         //初始化变量
         $result = fsi_result();
         $result[0] = false;
-        $result[1] = fxy_lang(['pay', 'not2', 'open3']);
-        $result[3] = 1002;
+        $result[1] = 1002;
+        $result[2] = fxy_lang(['pay', 'not2', 'open3']);
         return $result;
     }
 }
@@ -841,14 +841,14 @@ class Taobao extends Alibaba
         $response = fss_http($conf['domain'], $conf['data'], [], 'post');
         $response = json_decode($response, true);
         if (!$response['code']) {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $response;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $response;
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = fxy_lang(['request', 'fail']);
-            $result[2]['data'] = $response;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['request', 'fail']);
+            $result[3] = $response;
             return $result;
         }
     }
@@ -884,14 +884,14 @@ class Aliyun extends Alibaba
         ];
         $record = $this->ddns($param);
         if (!isset($record['Code'])) {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = [$record];
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = [$record];
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $record['Message'];
-            $result[2]['data'] = [$record];
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $record['Message'];
+            $result[3] = [$record];
             return $result;
         }
     }
@@ -918,7 +918,7 @@ class Aliyun extends Alibaba
         //配置参数
         $record = $this->describeDomainRecords();
         if (!$record[0]) return $record;
-        $data = $record[2]['data'][0];
+        $data = $record[3][0];
         $list = $data['DomainRecords']['Record'];
         //获取指定解析
         $RR = null;
@@ -929,13 +929,13 @@ class Aliyun extends Alibaba
             }
         }
         if ($RR !== null) {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = [$RR];
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = [$RR];
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = fxy_lang(['record', 'not', 'exists']);
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['record', 'not', 'exists']);
             return $result;
         }
     }
@@ -967,7 +967,7 @@ class Aliyun extends Alibaba
         //查询域名解析ID
         $record = $this->getRecordId();
         if (!$record[0]) return $record;
-        $RecordId = $record[2]['data'][0]['RecordId'];
+        $RecordId = $record[3][0]['RecordId'];
         //配置参数
         $param = [
             'Action' => 'UpdateDomainRecord',
@@ -978,14 +978,14 @@ class Aliyun extends Alibaba
         ];
         $record = $this->ddns($param);
         if (!isset($record['Code'])) {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = [$record];
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = [$record];
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $record['Message'];
-            $result[2]['data'] = [$record];
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $record['Message'];
+            $result[3] = [$record];
             return $result;
         }
     }

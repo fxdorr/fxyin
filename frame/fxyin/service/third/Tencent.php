@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Name fxyin
 // +----------------------------------------------------------------------
-// | Author wztqy <wztqy@139.com>
+// | Author wztqy <tqy@fxri.net>
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 fxri. All rights reserved.
 // +----------------------------------------------------------------------
@@ -59,13 +59,13 @@ class Qq extends Tencent
             return $record;
         } else if (isset($record['data']['ret']) && $record['data']['ret']) {
             $result[0] = false;
-            $result[1] = $record['data']['msg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $record['data']['msg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -149,8 +149,8 @@ class WeChat extends Tencent
         $conf['param'] = dso_splice($conf['param'], 'scope=' . $conf['scope'], '&');
         $conf['param'] = dso_splice($conf['param'], 'state=' . $conf['state'], '&');
         $conf['domain'] = dso_splice($conf['domain'], $conf['param'] . '#wechat_redirect', '?');
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $conf;
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $conf;
         return $result;
     }
 
@@ -174,9 +174,9 @@ class WeChat extends Tencent
         $tokens = $this->_webAuthToken($tran);
         if (isset($tokens['errcode'])) {
             $result[0] = false;
-            $result[1] = $tokens['errmsg'];
-            $result[2]['data'] = $tokens;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $tokens['errmsg'];
+            $result[3] = $tokens;
             return $result;
         }
         $trans = $this->_webAuthInfo($tokens);
@@ -185,8 +185,8 @@ class WeChat extends Tencent
         $parm['unionId'] = $tokens['unionid'];
         $parm['nickname'] = $trans['nickname'];
         $data['account'] = $parm['unionId'];
-        $result[1] = fxy_lang(['request', 'success']);
-        $result[2]['data'] = $data;
+        $result[2] = fxy_lang(['request', 'success']);
+        $result[3] = $data;
         return $result;
     }
 
@@ -205,13 +205,13 @@ class WeChat extends Tencent
             return $record;
         } else if (isset($record['errcode'])) {
             $result[0] = false;
-            $result[1] = $record['errmsg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['errmsg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -270,8 +270,8 @@ class WeChat extends Tencent
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -326,13 +326,13 @@ class WeChat extends Tencent
             return $record;
         } else if (isset($record['errcode'])) {
             $result[0] = false;
-            $result[1] = $record['errmsg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['errmsg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -382,13 +382,13 @@ class WeChat extends Tencent
             return $record;
         } else if (isset($record['errcode']) && $record['errcode'] != 0) {
             $result[0] = false;
-            $result[1] = $record['errmsg'];
-            $result[2]['data'] = $record;
-            $result[3] = 1004;
+            $result[1] = 1004;
+            $result[2] = $record['errmsg'];
+            $result[3] = $record;
             return $result;
         } else {
-            $result[1] = fxy_lang(['request', 'success']);
-            $result[2]['data'] = $record;
+            $result[2] = fxy_lang(['request', 'success']);
+            $result[3] = $record;
             return $result;
         }
     }
@@ -494,13 +494,13 @@ class WeChat extends Tencent
             'body' => $conf['body'], 'attach' => $conf['attach'], 'url_notify' => $conf['url_notify'],
         ];
         $tran = fsi_param([$tran, $predefined], '1.1.2');
-        $parm_2_1['body'] = $tran['body'];
-        $parm_2_1['attach'] = $tran['attach'];
-        $parm_2_1['sn'] = $parm['sn'];
-        $parm_2_1['money'] = $parm['money'] * 100;
-        $parm_2_1['dateline'] = date("YmdHis", $parm['dateline']);
-        $parm_2_1['url_notify'] = $tran['url_notify'];
-        $parm_2_1['openid'] = $parm['openid'];
+        $temp[2][1]['body'] = $tran['body'];
+        $temp[2][1]['attach'] = $tran['attach'];
+        $temp[2][1]['sn'] = $parm['sn'];
+        $temp[2][1]['money'] = $parm['money'] * 100;
+        $temp[2][1]['dateline'] = date("YmdHis", $parm['dateline']);
+        $temp[2][1]['url_notify'] = $tran['url_notify'];
+        $temp[2][1]['openid'] = $parm['openid'];
         //在微信系统中下单
         ini_set('date.timezone', 'Asia/Shanghai');
         //加载SDK
@@ -508,33 +508,33 @@ class WeChat extends Tencent
         //统一下单
         $input = new \WxPayUnifiedOrder();
         //设置商品或支付单简要描述
-        $input->SetBody($parm_2_1['body']);
+        $input->SetBody($temp[2][1]['body']);
         //设置附加数据
-        $input->SetAttach($parm_2_1['attach']);
+        $input->SetAttach($temp[2][1]['attach']);
         //设置商户系统内部的订单号
-        $input->SetOut_trade_no($parm_2_1['sn']);
+        $input->SetOut_trade_no($temp[2][1]['sn']);
         //设置订单总金额
-        $input->SetTotal_fee($parm_2_1['money']);
+        $input->SetTotal_fee($temp[2][1]['money']);
         //设置订单生成时间
-        $input->SetTime_start($parm_2_1['dateline']);
+        $input->SetTime_start($temp[2][1]['dateline']);
         //设置接收微信支付异步通知回调地址
-        $input->SetNotify_url($parm_2_1['url_notify']);
+        $input->SetNotify_url($temp[2][1]['url_notify']);
         //用户在商户appid下的唯一标识
-        $input->SetOpenid($parm_2_1['openid']);
+        $input->SetOpenid($temp[2][1]['openid']);
         //设置取值如下：JSAPI，NATIVE，APP
         $input->SetTrade_type("JSAPI");
         //交互订单
         $order = \WxPayApi::unifiedOrder($input, 15);
         if ($order && $order['return_code'] == 'SUCCESS' && $order['result_code'] == 'SUCCESS') {
             //签名参数
-            $parm_3_1['appId'] = $order['appid'];
-            $parm_3_1['timeStamp'] = time();
-            $parm_3_1['nonceStr'] = $order['nonce_str'];
-            $parm_3_1['package'] = 'prepay_id=' . $order['prepay_id'];
-            $parm_3_1['signType'] = 'MD5';
-            ksort($parm_3_1);
+            $temp[3][1]['appId'] = $order['appid'];
+            $temp[3][1]['timeStamp'] = time();
+            $temp[3][1]['nonceStr'] = $order['nonce_str'];
+            $temp[3][1]['package'] = 'prepay_id=' . $order['prepay_id'];
+            $temp[3][1]['signType'] = 'MD5';
+            ksort($temp[3][1]);
             $buff = "";
-            foreach ($parm_3_1 as $k => $v) {
+            foreach ($temp[3][1] as $k => $v) {
                 if ($k != "sign" && $v != "" && !is_array($v)) {
                     $buff .= $k . "=" . $v . "&";
                 }
@@ -547,20 +547,20 @@ class WeChat extends Tencent
             //签名步骤四：所有字符转为大写
             $getsign = strtoupper($string);
             //返回参数
-            $parm_3_2['app_id'] = $parm_3_1['appId'];
-            $parm_3_2['time_stamp'] = $parm_3_1['timeStamp'];
-            $parm_3_2['nonce_str'] = $parm_3_1['nonceStr'];
-            $parm_3_2['package'] = $parm_3_1['package'];
-            $parm_3_2['sign_type'] = $parm_3_1['signType'];
-            $parm_3_2['sign'] = $getsign;
-            $result[1] = fxy_lang(['pay', 'success']);
-            $result[2]['data'] = $parm_3_2;
+            $temp[3][2]['app_id'] = $temp[3][1]['appId'];
+            $temp[3][2]['time_stamp'] = $temp[3][1]['timeStamp'];
+            $temp[3][2]['nonce_str'] = $temp[3][1]['nonceStr'];
+            $temp[3][2]['package'] = $temp[3][1]['package'];
+            $temp[3][2]['sign_type'] = $temp[3][1]['signType'];
+            $temp[3][2]['sign'] = $getsign;
+            $result[2] = fxy_lang(['pay', 'success']);
+            $result[3] = $temp[3][2];
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $order['return_msg'];
-            $result[2]['data'] = $order;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $order['return_msg'];
+            $result[3] = $order;
             return $result;
         }
     }
@@ -599,12 +599,12 @@ class WeChat extends Tencent
             'body' => $conf['body'], 'attach' => $conf['attach'], 'url_notify' => $conf['url_notify'],
         ];
         $tran = fsi_param([$tran, $predefined], '1.1.2');
-        $parm_2_1['body'] = $tran['body'];
-        $parm_2_1['attach'] = $tran['attach'];
-        $parm_2_1['sn'] = $parm['sn'];
-        $parm_2_1['money'] = $parm['money'] * 100;
-        $parm_2_1['dateline'] = date("YmdHis", $parm['dateline']);
-        $parm_2_1['url_notify'] = $tran['url_notify'];
+        $temp[2][1]['body'] = $tran['body'];
+        $temp[2][1]['attach'] = $tran['attach'];
+        $temp[2][1]['sn'] = $parm['sn'];
+        $temp[2][1]['money'] = $parm['money'] * 100;
+        $temp[2][1]['dateline'] = date("YmdHis", $parm['dateline']);
+        $temp[2][1]['url_notify'] = $tran['url_notify'];
         //在微信系统中下单
         ini_set('date.timezone', 'Asia/Shanghai');
         //加载SDK
@@ -612,32 +612,32 @@ class WeChat extends Tencent
         //统一下单
         $input = new \WxPayUnifiedOrder();
         //设置商品或支付单简要描述
-        $input->SetBody($parm_2_1['body']);
+        $input->SetBody($temp[2][1]['body']);
         //设置附加数据
-        $input->SetAttach($parm_2_1['attach']);
+        $input->SetAttach($temp[2][1]['attach']);
         //设置商户系统内部的订单号
-        $input->SetOut_trade_no($parm_2_1['sn']);
+        $input->SetOut_trade_no($temp[2][1]['sn']);
         //设置订单总金额
-        $input->SetTotal_fee($parm_2_1['money']);
+        $input->SetTotal_fee($temp[2][1]['money']);
         //设置订单生成时间
-        $input->SetTime_start($parm_2_1['dateline']);
+        $input->SetTime_start($temp[2][1]['dateline']);
         //设置接收微信支付异步通知回调地址
-        $input->SetNotify_url($parm_2_1['url_notify']);
+        $input->SetNotify_url($temp[2][1]['url_notify']);
         //设置取值如下：JSAPI，NATIVE，APP
         $input->SetTrade_type("APP");
         //交互订单
         $order = \WxPayApi::unifiedOrder($input, 15);
         if ($order && $order['return_code'] == 'SUCCESS' && $order['result_code'] == 'SUCCESS') {
             //签名参数
-            $parm_3_1['appid'] = $order['appid'];
-            $parm_3_1['partnerid'] = $order['mch_id'];
-            $parm_3_1['prepayid'] = $order['prepay_id'];
-            $parm_3_1['package'] = 'Sign=WXPay';
-            $parm_3_1['noncestr'] = $order['nonce_str'];
-            $parm_3_1['timestamp'] = time();
-            ksort($parm_3_1);
+            $temp[3][1]['appid'] = $order['appid'];
+            $temp[3][1]['partnerid'] = $order['mch_id'];
+            $temp[3][1]['prepayid'] = $order['prepay_id'];
+            $temp[3][1]['package'] = 'Sign=WXPay';
+            $temp[3][1]['noncestr'] = $order['nonce_str'];
+            $temp[3][1]['timestamp'] = time();
+            ksort($temp[3][1]);
             $buff = "";
-            foreach ($parm_3_1 as $k => $v) {
+            foreach ($temp[3][1] as $k => $v) {
                 if ($k != "sign" && $v != "" && !is_array($v)) {
                     $buff .= $k . "=" . $v . "&";
                 }
@@ -650,23 +650,23 @@ class WeChat extends Tencent
             //签名步骤四：所有字符转为大写
             $getsign = strtoupper($string);
             //返回参数
-            $parm_3_2['app_id'] = $order['appid'];
-            $parm_3_2['mch_id'] = $order['mch_id'];
-            $parm_3_2['nonce_str'] = $order['nonce_str'];
-            $parm_3_2['prepay_id'] = $order['prepay_id'];
-            $parm_3_2['sign'] = $getsign;
-            $parm_3_2['sign_type'] = 'MD5';
-            $parm_3_2['time_stamp'] = $parm_3_1['timestamp'];
-            $parm_3_2['package'] = $parm_3_1['package'];
-            $parm_3_2['trade_type'] = $order['trade_type'];
-            $result[1] = fxy_lang(['pay', 'success']);
-            $result[2]['data'] = $parm_3_2;
+            $temp[3][2]['app_id'] = $order['appid'];
+            $temp[3][2]['mch_id'] = $order['mch_id'];
+            $temp[3][2]['nonce_str'] = $order['nonce_str'];
+            $temp[3][2]['prepay_id'] = $order['prepay_id'];
+            $temp[3][2]['sign'] = $getsign;
+            $temp[3][2]['sign_type'] = 'MD5';
+            $temp[3][2]['time_stamp'] = $temp[3][1]['timestamp'];
+            $temp[3][2]['package'] = $temp[3][1]['package'];
+            $temp[3][2]['trade_type'] = $order['trade_type'];
+            $result[2] = fxy_lang(['pay', 'success']);
+            $result[3] = $temp[3][2];
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $order['return_msg'];
-            $result[2]['data'] = $order;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $order['return_msg'];
+            $result[3] = $order;
             return $result;
         }
     }
@@ -685,12 +685,12 @@ class WeChat extends Tencent
         if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
         } else {
-            $xml = file_get_contents("php://input");
+            $xml = file_get_contents('php://input');
         }
         if (empty($xml)) {
             $result[0] = false;
-            $result[1] = fxy_lang(['not2', 'find', 'parameter']);
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = fxy_lang(['not2', 'find', 'parameter']);
             return $result;
         }
         $res = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -717,14 +717,14 @@ class WeChat extends Tencent
         //设置超时时间为15s
         $order = \WxPayApi::orderQuery($input, 15);
         if (array_key_exists("return_code", $order) && array_key_exists("result_code", $order) && $order["return_code"] == "SUCCESS" && $order["result_code"] == "SUCCESS") {
-            $result[1] = fxy_lang(['pay', 'success']);
-            $result[2]['data'] = $order;
+            $result[2] = fxy_lang(['pay', 'success']);
+            $result[3] = $order;
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $order['return_msg'];
-            $result[2]['data'] = $order;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $order['return_msg'];
+            $result[3] = $order;
             return $result;
         }
     }
@@ -798,13 +798,13 @@ class WeChat extends Tencent
         //SDK地址
         $conf['url_sdk'] = fxy_config('third_wechat')['app_pay']['url_sdk'];
         //初始化环境变量
-        $parm_2_1['mch_id'] = $conf['mch_id'];
-        $parm_2_1['refund_sn'] = $parm['refund_sn'];
-        $parm_2_1['deal_money'] = $parm['deal_money'] * 100;
-        $parm_2_1['refund_money'] = $parm['refund_money'] * 100;
-        $parm_2_1['pay_sn'] = $parm['pay_sn'];
-        $parm_2_1['deal_sn'] = $parm['deal_sn'];
-        $parm_2_1['refund_remark'] = $parm['refund_remark'];
+        $temp[2][1]['mch_id'] = $conf['mch_id'];
+        $temp[2][1]['refund_sn'] = $parm['refund_sn'];
+        $temp[2][1]['deal_money'] = $parm['deal_money'] * 100;
+        $temp[2][1]['refund_money'] = $parm['refund_money'] * 100;
+        $temp[2][1]['pay_sn'] = $parm['pay_sn'];
+        $temp[2][1]['deal_sn'] = $parm['deal_sn'];
+        $temp[2][1]['refund_remark'] = $parm['refund_remark'];
         //在微信系统中下单
         ini_set('date.timezone', 'Asia/Shanghai');
         //加载SDK
@@ -812,34 +812,34 @@ class WeChat extends Tencent
         //申请退款
         $input = new \WxPayRefund();
         //设置操作员帐号, 默认为商户号
-        $input->SetOp_user_id($parm_2_1['mch_id']);
+        $input->SetOp_user_id($temp[2][1]['mch_id']);
         //设置商户系统内部的订单号
-        $input->SetOut_trade_no($parm_2_1['deal_sn']);
+        $input->SetOut_trade_no($temp[2][1]['deal_sn']);
         //设置微信订单号
-        $input->SetTransaction_id($parm_2_1['pay_sn']);
+        $input->SetTransaction_id($temp[2][1]['pay_sn']);
         //设置商户系统内部的退款单号
-        $input->SetOut_refund_no($parm_2_1['refund_sn']);
+        $input->SetOut_refund_no($temp[2][1]['refund_sn']);
         //设置订单总金额
-        $input->SetTotal_fee($parm_2_1['deal_money']);
+        $input->SetTotal_fee($temp[2][1]['deal_money']);
         //设置退款总金额
-        $input->SetRefund_fee($parm_2_1['refund_money']);
+        $input->SetRefund_fee($temp[2][1]['refund_money']);
         //交互订单
         $order = \WxPayApi::refund($input, 15);
         if ($order && $order['return_code'] == 'SUCCESS' && $order['result_code'] == 'SUCCESS') {
-            $result[1] = fxy_lang(['pay', 'success']);
-            $result[2]['data'] = $order;
+            $result[2] = fxy_lang(['pay', 'success']);
+            $result[3] = $order;
             return $result;
         } else if (isset($order['err_code_des'])) {
             $result[0] = false;
-            $result[1] = $order['err_code_des'];
-            $result[2]['data'] = $order;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $order['err_code_des'];
+            $result[3] = $order;
             return $result;
         } else {
             $result[0] = false;
-            $result[1] = $order['return_msg'];
-            $result[2]['data'] = $order;
-            $result[3] = 1002;
+            $result[1] = 1002;
+            $result[2] = $order['return_msg'];
+            $result[3] = $order;
             return $result;
         }
     }
@@ -853,8 +853,8 @@ class WeChat extends Tencent
         //初始化变量
         $result = fsi_result();
         $result[0] = false;
-        $result[1] = fxy_lang(['pay', 'not2', 'open3']);
-        $result[3] = 1002;
+        $result[1] = 1002;
+        $result[2] = fxy_lang(['pay', 'not2', 'open3']);
         return $result;
     }
 }
