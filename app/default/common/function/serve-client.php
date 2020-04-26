@@ -224,25 +224,32 @@ function ftc_method($size = -1)
 function ftc_param($param = null, $method = null)
 {
     //初始化变量
-    $base['get'] = $_GET;
-    $base['post'] = $_POST;
-    $base['input'] = file_get_contents('php://input');
+    $input = file_get_contents('php://input');
     $predefined = [
-        //GET-POST-INPUT
-        'get', 'post', 'input',
+        //GET-POST-PUT
+        'get' => $_GET, 'post' => $_POST, 'put' => $input,
+        //PATCH-DELETE-INPUT
+        'patch' => $input, 'delete' => $input, 'input' => $input,
     ];
-    $base = fsi_param([$base, $predefined], '1.2.3');
-    $data = array_values($base);
-    $data = array_merge(...$data);
-    //识别参数
-    $method = strtolower($method);
-    switch ($method) {
-        case 'get':
-        case 'post':
-        case 'input':
-            //方法入参
-            $data = $base[$method];
-            break;
+    $base = fsi_param([null, $predefined], '1.1.3');
+    $data = array_merge(...array_values($base));
+    //识别方法
+    $method = fmo_explode(',', strtolower($method));
+    foreach ($method as $key => $value) {
+        if ($key == 0) {
+            $data = [];
+        }
+        switch ($value) {
+            case 'get':
+            case 'post':
+            case 'put':
+            case 'patch':
+            case 'delete':
+            case 'input':
+                //提取入参
+                $data = array_merge($data, $base[$value]);
+                break;
+        }
     }
     if (is_array($param)) {
         //获取指定参数数组
@@ -253,39 +260,6 @@ function ftc_param($param = null, $method = null)
     } else {
         //获取全部参数
         $echo = $data;
-    }
-    return $echo;
-}
-
-/**
- * 框架-模块-操作-提取数组
- * @param array $base 基础
- * @param array $data 数据
- * @return array
- */
-function fmo_pick($base, $data)
-{
-    //初始化变量
-    $echo = [];
-    if (!is_array($base) || !is_array($data)) {
-        return $echo;
-    }
-    //处理数据
-    foreach ($data as $key => $value) {
-        //提取匹配数据
-        if (is_array($value)) {
-            if (array_key_exists($key, $base)) {
-                $echo[$key] = fmo_pick($base[$key], $value);
-            } else {
-                $echo[$key] = null;
-            }
-        } else {
-            if (array_key_exists($value, $base)) {
-                $echo[$value] = $base[$value];
-            } else {
-                $echo[$value] = null;
-            }
-        }
     }
     return $echo;
 }

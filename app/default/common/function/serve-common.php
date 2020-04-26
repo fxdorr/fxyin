@@ -22,7 +22,8 @@ use fxyin\Db;
 function fcc_format($data, $type)
 {
     //初始化变量
-    $param = ftc_param(['base' => ['debug']]);
+    $debug['switch'] = fxy_config('fxy_debug');
+    $debug['level'] = ftc_param(['base' => ['debug']])['base']['debug'];
     $echo = [];
     switch ($type) {
         default:
@@ -40,16 +41,39 @@ function fcc_format($data, $type)
                 }
             }
             //调试模式
-            $debug = fxy_config('fxy_debug');
-            if ($debug && $param['base']['debug']) {
-                $echo['debug'] = [
-                    'get' => $_GET,
-                    'post' => $_POST,
-                    'request' => $_REQUEST,
-                    'files' => $_FILES,
-                    'input' => file_get_contents('php://input'),
-                    'server' => $_SERVER,
-                ];
+            if ($debug['switch'] && $debug['level']) {
+                $echo['debug'] = [];
+                $debug['level'] = fmo_explode(',', strtolower($debug['level']));
+                foreach ($debug['level'] as $key => $value) {
+                    switch ($value) {
+                        case '1':
+                            //全部
+                            $echo['debug']['param'] = ftc_param();
+                            $echo['debug']['get'] = $_GET;
+                            $echo['debug']['post'] = $_POST;
+                            $echo['debug']['request'] = $_REQUEST;
+                            $echo['debug']['input'] = file_get_contents('php://input');
+                            $echo['debug']['files'] = $_FILES;
+                            $echo['debug']['server'] = $_SERVER;
+                            break;
+                        case '2':
+                            //请求入参
+                            $echo['debug']['param'] = ftc_param();
+                            $echo['debug']['get'] = $_GET;
+                            $echo['debug']['post'] = $_POST;
+                            $echo['debug']['request'] = $_REQUEST;
+                            $echo['debug']['input'] = file_get_contents('php://input');
+                            break;
+                        case '3':
+                            //上传文件
+                            $echo['debug']['files'] = $_FILES;
+                            break;
+                        case '4':
+                            //服务器
+                            $echo['debug']['server'] = $_SERVER;
+                            break;
+                    }
+                }
             }
             //空对象处理
             $echo = fmo_oempty($echo);
@@ -94,17 +118,18 @@ function fsi_result()
 
 /**
  * 框架-服务-初始化-参数
- * @param array $trans 参数数组
+ * @param array $param 参数
  * @param integer $mode 模式
  * @return array
  */
-function fsi_param($trans, $mode = null)
+function fsi_param($param, $mode = null)
 {
     //初始化变量
+    $echo = [];
     switch ($mode) {
         default:
             //默认
-            $result = $trans;
+            $echo = $param;
             break;
         case '1.1.1':
             //数组覆盖-融合-值不存在
@@ -112,12 +137,12 @@ function fsi_param($trans, $mode = null)
             //     'data' => null,
             // ];
             // data => mixed
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$key])) {
-                    $trans[0][$key] = $value;
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$key])) {
+                    $echo[$key] = $value;
                 }
             }
-            $result = $trans[0];
             break;
         case '1.1.2':
             //数组覆盖-融合-值不存在或为空字符串
@@ -125,12 +150,12 @@ function fsi_param($trans, $mode = null)
             //     'data' => null,
             // ];
             // data => mixed
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$key]) || '' === $trans[0][$key]) {
-                    $trans[0][$key] = $value;
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$key]) || '' === $echo[$key]) {
+                    $echo[$key] = $value;
                 }
             }
-            $result = $trans[0];
             break;
         case '1.1.3':
             //数组覆盖-融合-值不存在或为非数组
@@ -139,25 +164,21 @@ function fsi_param($trans, $mode = null)
             // ];
             // data => array
             // data => json
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$key])) {
-                    $trans[0][$key] = $value;
-                } else if (is_json($trans[0][$key])) {
-                    $trans[0][$key] = fmf_json($trans[0][$key], 'decode');
-                } else if (!is_array($trans[0][$key])) {
-                    $trans[0][$key] = $value;
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$key])) {
+                    $echo[$key] = $value;
                 }
             }
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value])) {
-                    $trans[0][$value] = [];
-                } else if (is_json($trans[0][$value])) {
-                    $trans[0][$value] = fmf_json($trans[0][$value], 'decode');
-                } else if (!is_array($trans[0][$value])) {
-                    $trans[0][$value] = [];
+            foreach ($param[1] as $key => $value) {
+                if (is_json($echo[$key])) {
+                    $echo[$key] = fmf_json($echo[$key], 'decode');
+                } else if (is_string($echo[$key])) {
+                    parse_str($echo[$key], $echo[$key]);
+                } else if (!is_array($echo[$key])) {
+                    $echo[$key] = [];
                 }
             }
-            $result = $trans[0];
             break;
         case '1.2.1':
             //数组覆盖-赋空-值不存在
@@ -165,12 +186,12 @@ function fsi_param($trans, $mode = null)
             //     'data',
             // ];
             // data => mixed
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value])) {
-                    $trans[0][$value] = null;
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$value])) {
+                    $echo[$value] = null;
                 }
             }
-            $result = $trans[0];
             break;
         case '1.2.2':
             //数组覆盖-赋空-值不存在或为空字符串
@@ -178,12 +199,12 @@ function fsi_param($trans, $mode = null)
             //     'data',
             // ];
             // data => mixed
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value]) || '' === $trans[0][$value]) {
-                    $trans[0][$value] = null;
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$value]) || '' === $echo[$value]) {
+                    $echo[$value] = null;
                 }
             }
-            $result = $trans[0];
             break;
         case '1.2.3':
             //数组覆盖-赋空-值不存在或为非数组
@@ -192,16 +213,18 @@ function fsi_param($trans, $mode = null)
             // ];
             // data => array
             // data => json
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value])) {
-                    $trans[0][$value] = [];
-                } else if (is_json($trans[0][$value])) {
-                    $trans[0][$value] = fmf_json($trans[0][$value], 'decode');
-                } else if (!is_array($trans[0][$value])) {
-                    $trans[0][$value] = [];
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$value])) {
+                    $echo[$value] = [];
+                } else if (is_json($echo[$value])) {
+                    $echo[$value] = fmf_json($echo[$value], 'decode');
+                } else if (is_string($echo[$value])) {
+                    parse_str($echo[$value], $echo[$value]);
+                } else if (!is_array($echo[$value])) {
+                    $echo[$value] = [];
                 }
             }
-            $result = $trans[0];
             break;
         case '1.2.4':
             //数组覆盖-赋空-值拆分数组
@@ -209,16 +232,16 @@ function fsi_param($trans, $mode = null)
             //     'data',
             // ];
             // data => 1,2,3,4
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value]) || '' === $trans[0][$value]) {
-                    $trans[0][$value] = [];
-                } else if (is_string($trans[0][$value]) || is_numeric($trans[0][$value])) {
-                    $trans[0][$value] = explode(',', $trans[0][$value]);
-                } else if (!is_array($trans[0][$value])) {
-                    $trans[0][$value] = [];
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
+                if (!isset($echo[$value]) || '' === $echo[$value]) {
+                    $echo[$value] = [];
+                } else if (is_string($echo[$value]) || is_numeric($echo[$value])) {
+                    $echo[$value] = explode(',', $echo[$value]);
+                } else if (!is_array($echo[$value])) {
+                    $echo[$value] = [];
                 }
             }
-            $result = $trans[0];
             break;
         case '1.3.1':
             //数组覆盖-倒融合-值不存在
@@ -226,12 +249,12 @@ function fsi_param($trans, $mode = null)
             //     'data' => null,
             // ];
             // data => mixed
-            foreach ($trans[1] as $key => $value) {
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
                 if (!is_null($value)) {
-                    $trans[0][$key] = $value;
+                    $echo[$key] = $value;
                 }
             }
-            $result = $trans[0];
             break;
         case '1.3.2':
             //数组覆盖-倒融合-赋空-值不存在
@@ -239,14 +262,14 @@ function fsi_param($trans, $mode = null)
             //     'data' => null,
             // ];
             // data => mixed
-            foreach ($trans[1] as $key => $value) {
+            $echo = $param[0];
+            foreach ($param[1] as $key => $value) {
                 if (!is_null($value)) {
-                    $trans[0][$key] = $value;
-                } else if (!isset($trans[0][$key]) || '' === $trans[0][$key]) {
-                    $trans[0][$key] = null;
+                    $echo[$key] = $value;
+                } else if (!isset($echo[$key]) || '' === $echo[$key]) {
+                    $echo[$key] = null;
                 }
             }
-            $result = $trans[0];
             break;
         case '2.1.1':
             //数组新建-融合-值不存在
@@ -254,15 +277,13 @@ function fsi_param($trans, $mode = null)
             //     'data' => null,
             // ];
             // data => mixed
-            $trans[2] = [];
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$key])) {
-                    $trans[2][$key] = $value;
+            foreach ($param[1] as $key => $value) {
+                if (!isset($param[0][$key])) {
+                    $echo[$key] = $value;
                 } else {
-                    $trans[2][$key] = $trans[0][$key];
+                    $echo[$key] = $param[0][$key];
                 }
             }
-            $result = $trans[2];
             break;
         case '2.1.2':
             //数组新建-融合-值不存在或为空字符串
@@ -270,15 +291,13 @@ function fsi_param($trans, $mode = null)
             //     'data' => null,
             // ];
             // data => mixed
-            $trans[2] = [];
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$key]) || '' === $trans[0][$key]) {
-                    $trans[2][$key] = $value;
+            foreach ($param[1] as $key => $value) {
+                if (!isset($param[0][$key]) || '' === $param[0][$key]) {
+                    $echo[$key] = $value;
                 } else {
-                    $trans[2][$key] = $trans[0][$key];
+                    $echo[$key] = $param[0][$key];
                 }
             }
-            $result = $trans[2];
             break;
         case '2.2.1':
             //数组新建-赋空-值不存在
@@ -286,15 +305,13 @@ function fsi_param($trans, $mode = null)
             //     'data',
             // ];
             // data => mixed
-            $trans[2] = [];
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value])) {
-                    $trans[2][$value] = null;
+            foreach ($param[1] as $key => $value) {
+                if (!isset($param[0][$value])) {
+                    $echo[$value] = null;
                 } else {
-                    $trans[2][$value] = $trans[0][$value];
+                    $echo[$value] = $param[0][$value];
                 }
             }
-            $result = $trans[2];
             break;
         case '2.2.2':
             //数组新建-赋空-值不存在或为空字符串
@@ -302,18 +319,16 @@ function fsi_param($trans, $mode = null)
             //     'data',
             // ];
             // data => mixed
-            $trans[2] = [];
-            foreach ($trans[1] as $key => $value) {
-                if (!isset($trans[0][$value]) || '' === $trans[0][$value]) {
-                    $trans[2][$value] = null;
+            foreach ($param[1] as $key => $value) {
+                if (!isset($param[0][$value]) || '' === $param[0][$value]) {
+                    $echo[$value] = null;
                 } else {
-                    $trans[2][$value] = $trans[0][$value];
+                    $echo[$value] = $param[0][$value];
                 }
             }
-            $result = $trans[2];
             break;
     }
-    return $result;
+    return $echo;
 }
 
 /**
@@ -331,8 +346,8 @@ function fsi_uuid($mode = null, $tran = [])
     ];
     $tran = fsi_param([$tran, $predefined], '1.1.2');
     switch ($mode) {
-        case 1:
         default:
+        case 1:
             //随机生成标准UUID
             if (empty($tran['uuid'])) {
                 $chars = strtoupper(md5(uniqid(mt_rand(), true)));
@@ -454,6 +469,9 @@ function fcs_database($type, $options = [])
 function fmo_explode($separator, $string)
 {
     //初始化变量
+    if (is_null($string) || '' == $string) {
+        return [];
+    }
     return array_values(array_unique(explode($separator, $string)));
 }
 
@@ -475,6 +493,42 @@ function fmo_oempty($param)
         }
     }
     return $param;
+}
+
+/**
+ * 框架-模块-操作-提取数组
+ * @param array $base 基础
+ * @param array $data 数据
+ * @return array
+ */
+function fmo_pick($base, $data)
+{
+    //初始化变量
+    $echo = [];
+    if (!is_array($base)) {
+        $base = [];
+    }
+    if (!is_array($data)) {
+        return $echo;
+    }
+    //处理数据
+    foreach ($data as $key => $value) {
+        //提取匹配数据
+        if (is_array($value)) {
+            if (array_key_exists($key, $base)) {
+                $echo[$key] = fmo_pick($base[$key], $value);
+            } else {
+                $echo[$key] = fmo_pick([], $value);
+            }
+        } else {
+            if (array_key_exists($value, $base)) {
+                $echo[$value] = $base[$value];
+            } else {
+                $echo[$value] = null;
+            }
+        }
+    }
+    return $echo;
 }
 
 /**
