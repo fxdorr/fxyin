@@ -1,10 +1,10 @@
 <?php
 // +----------------------------------------------------------------------
-// | Name fxyin
+// | Name 风音框架
 // +----------------------------------------------------------------------
-// | Author wztqy <tqy@fxri.net>
+// | Author 唐启云 <tqy@fxri.net>
 // +----------------------------------------------------------------------
-// | Copyright Copyright © 2016-2099 fxri. All rights reserved.
+// | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
@@ -38,10 +38,10 @@ function ftc_ip($type = 0)
 
 /**
  * 框架-终端-客户端-浏览器
- * @param integer $size 选择大小写
+ * @param integer $type 类型
  * @return mixed
  */
-function ftc_browser($size = -1)
+function ftc_browser($type = -1)
 {
     //初始化变量
     $echo = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : null;
@@ -80,7 +80,7 @@ function ftc_browser($size = -1)
         //其他
         $echo = "Others";
     }
-    switch ($size) {
+    switch ($type) {
         case 1:
             //格式化-小写
             $echo = strtolower($echo);
@@ -95,10 +95,10 @@ function ftc_browser($size = -1)
 
 /**
  * 框架-终端-客户端-系统
- * @param integer $size 选择大小写
+ * @param integer $type 类型
  * @return mixed
  */
-function ftc_system($size = -1)
+function ftc_system($type = -1)
 {
     //初始化变量
     $echo = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : null;
@@ -156,7 +156,7 @@ function ftc_system($size = -1)
     } else {
         $echo = 'Others';
     }
-    switch ($size) {
+    switch ($type) {
         case 1:
             //格式化-小写
             $echo = strtolower($echo);
@@ -171,15 +171,15 @@ function ftc_system($size = -1)
 
 /**
  * 框架-终端-客户端-请求方案
- * @param integer $size 选择大小写
+ * @param integer $type 类型
  * @return mixed
  */
-function ftc_scheme($size = -1)
+function ftc_scheme($type = -1)
 {
     //初始化变量
     $echo = isset($_SERVER['REQUEST_SCHEME']) ? strtolower($_SERVER['REQUEST_SCHEME']) : null;
     //开始检测
-    switch ($size) {
+    switch ($type) {
         case 1:
             //格式化-小写
             $echo = strtolower($echo);
@@ -194,15 +194,15 @@ function ftc_scheme($size = -1)
 
 /**
  * 框架-终端-客户端-请求方法
- * @param integer $size 选择大小写
+ * @param integer $type 类型
  * @return mixed
  */
-function ftc_method($size = -1)
+function ftc_method($type = -1)
 {
     //初始化变量
     $echo = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : null;
     //开始检测
-    switch ($size) {
+    switch ($type) {
         case 1:
             //格式化-小写
             $echo = strtolower($echo);
@@ -221,33 +221,35 @@ function ftc_method($size = -1)
  * @param string $method 方法
  * @return mixed
  */
-function ftc_param($param = null, $method = null)
+function ftc_param($param = null, $method = 'param')
 {
     //初始化变量
+    $data = [];
     $input = file_get_contents('php://input');
     $predefined = [
-        //GET-POST-PUT
-        'get' => $_GET, 'post' => $_POST, 'put' => $input,
-        //PATCH-DELETE-INPUT
-        'patch' => $input, 'delete' => $input, 'input' => $input,
+        //GET-POST-INPUT
+        'get' => $_GET, 'post' => $_POST, 'input' => $input,
     ];
     $base = fsi_param([null, $predefined], '1.1.3');
-    $data = array_merge(...array_values($base));
     //识别方法
     $method = fmo_explode(',', strtolower($method));
-    foreach ($method as $key => $value) {
-        if ($key == 0) {
-            $data = [];
-        }
+    foreach ($method as $value) {
         switch ($value) {
+            case 'param':
+                //全部入参
+                $data = array_merge(...array_values($base));
+                break;
             case 'get':
             case 'post':
-            case 'put':
-            case 'patch':
-            case 'delete':
             case 'input':
                 //提取入参
                 $data = array_merge($data, $base[$value]);
+                break;
+            case 'put':
+            case 'patch':
+            case 'delete':
+                //提取入参
+                $data = array_merge($data, $base['input']);
                 break;
         }
     }

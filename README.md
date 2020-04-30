@@ -7,6 +7,28 @@
 
 * 项目定位开发辅助框架
 
+## 基础部署
+
+~~~
+$root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+// 加载风音框架
+require $root . 'extend' . DIRECTORY_SEPARATOR . 'fxri' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'start.php';
+~~~
+
 ## 项目开发
 
 请参阅 [风音框架](https://gitee.com/fxri/fxyin)。
+
+## 版权信息
+
+名称：风音框架
+
+作者：唐启云 <tqy@fxri.net>
+
+版权：Copyright © 2016-2099 方弦研究所. All rights reserved.
+
+网站：[方弦研究信息网](https://www.fxri.net)
+
+风音框架遵循Apache2开源协议发布，并提供免费使用。
+
+本项目包含的第三方源码和二进制文件之版权信息另行标注。

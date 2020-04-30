@@ -1,10 +1,10 @@
 <?php
 // +----------------------------------------------------------------------
-// | Name fxyin
+// | Name 风音框架
 // +----------------------------------------------------------------------
-// | Author wztqy <tqy@fxri.net>
+// | Author 唐启云 <tqy@fxri.net>
 // +----------------------------------------------------------------------
-// | Copyright Copyright © 2016-2099 fxri. All rights reserved.
+// | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
@@ -22,9 +22,30 @@ use fxyin\Db;
 function fcc_format($data, $type)
 {
     //初始化变量
-    $debug['switch'] = fxy_config('fxy_debug');
-    $debug['level'] = ftc_param(['base' => ['debug']])['base']['debug'];
     $echo = [];
+    $debug['switch'] = fxy_config('fxy_debug');
+    $param = ftc_param();
+    $predefined = [
+        //基础
+        'base',
+    ];
+    $param = fsi_param([$param, $predefined], '1.2.3');
+    $predefined = [
+        //调试
+        'debug',
+    ];
+    $param['base'] = fsi_param([$param['base'], $predefined], '1.2.2');
+    $debug['level'] = $param['base']['debug'];
+    $debug['data'] = [
+        'param' => ftc_param(),
+        'get' => $_GET,
+        'post' => $_POST,
+        'input' => file_get_contents('php://input'),
+        'files' => $_FILES,
+        'server' => $_SERVER,
+        'cookie' => $_COOKIE,
+        'session' => $_SESSION,
+    ];
     switch ($type) {
         default:
             //默认
@@ -48,29 +69,24 @@ function fcc_format($data, $type)
                     switch ($value) {
                         case '1':
                             //全部
-                            $echo['debug']['param'] = ftc_param();
-                            $echo['debug']['get'] = $_GET;
-                            $echo['debug']['post'] = $_POST;
-                            $echo['debug']['request'] = $_REQUEST;
-                            $echo['debug']['input'] = file_get_contents('php://input');
-                            $echo['debug']['files'] = $_FILES;
-                            $echo['debug']['server'] = $_SERVER;
+                            $echo['debug'] = fsi_param([$echo['debug'], $debug['data']], '1.1.1');
                             break;
                         case '2':
                             //请求入参
-                            $echo['debug']['param'] = ftc_param();
-                            $echo['debug']['get'] = $_GET;
-                            $echo['debug']['post'] = $_POST;
-                            $echo['debug']['request'] = $_REQUEST;
-                            $echo['debug']['input'] = file_get_contents('php://input');
+                            $echo['debug']['param'] = $debug['data']['param'];
+                            $echo['debug']['get'] = $debug['data']['get'];
+                            $echo['debug']['post'] = $debug['data']['post'];
+                            $echo['debug']['input'] = $debug['data']['input'];
                             break;
                         case '3':
                             //上传文件
-                            $echo['debug']['files'] = $_FILES;
+                            $echo['debug']['files'] = $debug['data']['files'];
                             break;
                         case '4':
                             //服务器
-                            $echo['debug']['server'] = $_SERVER;
+                            $echo['debug']['server'] = $debug['data']['server'];
+                            $echo['debug']['cookie'] = $debug['data']['cookie'];
+                            $echo['debug']['session'] = $debug['data']['session'];
                             break;
                     }
                 }
@@ -95,7 +111,6 @@ function fco_return($var, $type = '')
     $type = strtolower($type);
     switch ($type) {
         default:
-            //默认
         case 'json':
             //返回JSON数据格式到客户端，包含状态信息
             exit(fxy_json($var)->send());
@@ -112,8 +127,8 @@ function fco_return($var, $type = '')
 function fsi_result()
 {
     //初始化变量
-    $data = fxy_config('result.template');
-    return $data;
+    $echo = fxy_config('result.template');
+    return $echo;
 }
 
 /**
@@ -413,9 +428,9 @@ function fsi_uuid($mode = null, $tran = [])
 function fcs_cache($type, $options = [])
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     if (!is_string($type)) {
-        return $data;
+        return $echo;
     }
     $type = strtolower($type);
     if (empty($options)) {
@@ -424,14 +439,14 @@ function fcs_cache($type, $options = [])
     switch ($type) {
         case 'redis':
             //redis数据库
-            $data = new Redis($options);
+            $echo = new Redis($options);
             break;
         case 'file':
             //文件系统
-            $data = new File($options);
+            $echo = new File($options);
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -443,9 +458,9 @@ function fcs_cache($type, $options = [])
 function fcs_database($type, $options = [])
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     if (!is_string($type)) {
-        return $data;
+        return $echo;
     }
     $type = strtolower($type);
     switch ($type) {
@@ -454,10 +469,10 @@ function fcs_database($type, $options = [])
             if (empty($options)) {
                 $options = fxy_config('database')['mongodb'];
             }
-            $data = Db::connect($options);
+            $echo = Db::connect($options);
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -532,6 +547,32 @@ function fmo_pick($base, $data)
 }
 
 /**
+ * 框架-模块-操作-追加数组
+ * @param array $args 数组集合
+ * @return mixed
+ */
+function fmo_append(...$args)
+{
+    //初始化变量
+    $echo = array_shift($args);
+    if (!is_array($echo)) {
+        $echo = [];
+    }
+    //追加数组
+    foreach ($args as $data) {
+        if (!is_array($data)) continue;
+        foreach ($data as $key => $value) {
+            if (is_string($key)) {
+                $echo[$key] = $value;
+            } else {
+                $echo[] = $value;
+            }
+        }
+    }
+    return $echo;
+}
+
+/**
  * 框架-模块-操作-合并数组
  * @param array $args 数组集合
  * @return mixed
@@ -539,16 +580,16 @@ function fmo_pick($base, $data)
 function fmo_merge(...$args)
 {
     //初始化变量
-    $data = [];
+    $echo = [];
     if (count($args) < 2) {
         return array_shift($args);
     } else if (count($args) > 2) {
-        $data[0] = array_shift($args);
-        $data[1] = fmo_merge(...$args);
+        $echo[0] = array_shift($args);
+        $echo[1] = fmo_merge(...$args);
     } else {
-        $data = $args;
+        $echo = $args;
     }
-    return fmo_cover($data);
+    return fmo_cover($echo);
 }
 
 /**
@@ -594,8 +635,8 @@ function fmo_plang($name, $mode = null)
         }
     }
     switch ($mode) {
-        case 1:
         default:
+        case 1:
             //模式-字符串
             echo $string;
             break;
@@ -616,7 +657,7 @@ function fmo_plang($name, $mode = null)
 function fcf_json($var, $type, $param = null)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
@@ -624,17 +665,17 @@ function fcf_json($var, $type, $param = null)
             if (is_null($param)) {
                 $param = JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES;
             }
-            $data = json_encode($var, $param);
+            $echo = json_encode($var, $param);
             break;
         case 'decode':
             //解码
             if (is_null($param)) {
                 $param = true;
             }
-            $data = json_decode($var, $param);
+            $echo = json_decode($var, $param);
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -659,23 +700,23 @@ function fcf_dump($param, $echo = true)
 function fcf_mtime($mtime = null)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     if (is_numeric($mtime)) {
         if (strlen($mtime) != 13) {
             return false;
         }
-        $data = date("Y-m-d H:i:s", substr($mtime, 0, 10));
-        $data = $data . '.' . substr($mtime, 10, 3);
+        $echo = date("Y-m-d H:i:s", substr($mtime, 0, 10));
+        $echo = $echo . '.' . substr($mtime, 10, 3);
     } else if (is_string($mtime)) {
-        $data = explode('.', $mtime);
-        $data = strtotime($data[0]) . $data[1];
-        $data = intval($data);
+        $echo = explode('.', $mtime);
+        $echo = strtotime($echo[0]) . $echo[1];
+        $echo = intval($echo);
     } else {
         $now = explode(' ', microtime());
-        $data = substr($now[1] . substr($now[0], 2), 0, 13);
-        $data = intval($data);
+        $echo = substr($now[1] . substr($now[0], 2), 0, 13);
+        $echo = intval($echo);
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -689,7 +730,7 @@ function fcf_mtime($mtime = null)
 function fcf_ftime($time = null, $type = null)
 {
     //初始化变量
-    $data = [];
+    $echo = [];
     if (!is_numeric($time)) {
         return false;
     }
@@ -717,8 +758,8 @@ function fcf_ftime($time = null, $type = null)
     ];
     $time_all = $time;
     switch ($type) {
-        case '1.1':
         default:
+        case '1.1':
             //秒
             break;
         case '1.2':
@@ -768,11 +809,11 @@ function fcf_ftime($time = null, $type = null)
         }
     }
     foreach ($time_list as $key => $value) {
-        $data[] = $value;
-        $data[] = $time_name[$key];
+        $echo[] = $value;
+        $echo[] = $time_name[$key];
     }
-    $data = fxy_lang($data);
-    return $data;
+    $echo = fxy_lang($echo);
+    return $echo;
 }
 
 /**
@@ -784,7 +825,7 @@ function fcf_ftime($time = null, $type = null)
 function fcf_ipv4($var, $type)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
@@ -798,17 +839,17 @@ function fcf_ipv4($var, $type)
                 $var[$key] = $value;
             }
             $var = implode('.', $var);
-            $data = ip2long($var);
-            if ($data !== false) {
-                $data = bindec(decbin($data));
+            $echo = ip2long($var);
+            if ($echo !== false) {
+                $echo = bindec(decbin($echo));
             }
             break;
         case 'decode':
             //解码
-            $data = long2ip($var);
+            $echo = long2ip($var);
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -846,7 +887,7 @@ function fcf_rand($length, $numeric = 0)
 function fcf_crypt($var, $type, $param = null)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
@@ -859,7 +900,7 @@ function fcf_crypt($var, $type, $param = null)
                 'iv' => null,
             ];
             $param = fsi_param([$param, $predefined], '1.1.2');
-            $data = openssl_encrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
+            $echo = openssl_encrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
             break;
         case 'decode':
             //解码
@@ -871,10 +912,10 @@ function fcf_crypt($var, $type, $param = null)
                 'iv' => null,
             ];
             $param = fsi_param([$param, $predefined], '1.1.2');
-            $data = openssl_decrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
+            $echo = openssl_decrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -886,7 +927,7 @@ function fcf_crypt($var, $type, $param = null)
 function fcf_convert($var, $type)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'hexstr':
@@ -902,7 +943,7 @@ function fcf_convert($var, $type)
                 $strs[] = bin2hex($str);
             }
             $strs = implode('', $strs);
-            $data = $strs;
+            $echo = $strs;
             break;
         case 'strhex':
             //字符串转16进制
@@ -923,10 +964,10 @@ function fcf_convert($var, $type)
                 $strs[] = chr(hexdec($str));
             }
             $strs = implode('', $strs);
-            $data = $strs;
+            $echo = $strs;
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -938,20 +979,20 @@ function fcf_convert($var, $type)
 function fcf_md5($var, $type = null)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     $type = intval($type);
     switch ($type) {
-        case 1:
         default:
+        case 1:
             //32位
-            $data = md5($var);
+            $echo = md5($var);
             break;
         case 2:
             //16位
-            $data = substr(md5($var), 8, 16);
+            $echo = substr(md5($var), 8, 16);
             break;
     }
-    return $data;
+    return $echo;
 }
 
 /**
@@ -974,7 +1015,7 @@ function fcf_exception($e)
 function fcf_token($var, $type)
 {
     //初始化变量
-    $data = null;
+    $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
@@ -1003,7 +1044,7 @@ function fcf_token($var, $type)
             $param = str_pad($param, $strmax, fcf_rand($strdiff / 2), STR_PAD_BOTH);
             //加密令牌
             $param = fmf_crypt($param, 'encode');
-            $data = bin2hex($param);
+            $echo = bin2hex($param);
             break;
         case 'decode':
             //解码
@@ -1027,10 +1068,10 @@ function fcf_token($var, $type)
             array_shift($param);
             array_pop($param);
             $param = implode(',', $param);
-            $data = $param;
+            $echo = $param;
             break;
     }
-    return $data;
+    return $echo;
 }
 
 
@@ -1044,7 +1085,7 @@ function fcf_token($var, $type)
 function fcf_rsapri($var, $type, $param = [])
 {
     //初始化变量
-    $data = [];
+    $echo = [];
     if (!is_string($var) || !is_array($param)) return false;
     $predefined = [
         'type', 'secret',
@@ -1071,7 +1112,7 @@ function fcf_rsapri($var, $type, $param = [])
                         break;
                 }
                 openssl_private_encrypt($value, $trans, $param['secret'], $param['type']);
-                $data[] = $trans;
+                $echo[] = $trans;
             }
             break;
         case 'decode':
@@ -1091,12 +1132,12 @@ function fcf_rsapri($var, $type, $param = [])
                         $trans = ltrim($trans, $param['pad']);
                         break;
                 }
-                $data[] = $trans;
+                $echo[] = $trans;
             }
             break;
     }
-    $data = implode('', $data);
-    return $data;
+    $echo = implode('', $echo);
+    return $echo;
 }
 
 /**
@@ -1109,7 +1150,7 @@ function fcf_rsapri($var, $type, $param = [])
 function fcf_rsapub($var, $type, $param = [])
 {
     //初始化变量
-    $data = [];
+    $echo = [];
     if (!is_string($var) || !is_array($param)) return false;
     $predefined = [
         'type', 'secret',
@@ -1136,7 +1177,7 @@ function fcf_rsapub($var, $type, $param = [])
                         break;
                 }
                 openssl_public_encrypt($value, $trans, $param['secret'], $param['type']);
-                $data[] = $trans;
+                $echo[] = $trans;
             }
             break;
         case 'decode':
@@ -1156,12 +1197,12 @@ function fcf_rsapub($var, $type, $param = [])
                         $trans = ltrim($trans, $param['pad']);
                         break;
                 }
-                $data[] = $trans;
+                $echo[] = $trans;
             }
             break;
     }
-    $data = implode('', $data);
-    return $data;
+    $echo = implode('', $echo);
+    return $echo;
 }
 
 /**
