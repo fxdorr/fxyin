@@ -34,6 +34,7 @@ function fcc_format($data, $type = 1)
         'server' => $_SERVER,
         'cookie' => $_COOKIE,
         'session' => $_SESSION,
+        'env' => $_ENV,
     ];
     switch ($type) {
         default:
@@ -85,6 +86,7 @@ function fcc_format($data, $type = 1)
                     $echo['debug']['server'] = $debug['data']['server'];
                     $echo['debug']['cookie'] = $debug['data']['cookie'];
                     $echo['debug']['session'] = $debug['data']['session'];
+                    $echo['debug']['env'] = $debug['data']['env'];
                     break;
             }
         }
