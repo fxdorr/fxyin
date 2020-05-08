@@ -11,7 +11,7 @@
 
 /**
  * 框架-终端-客户端-IP
- * @param integer $type 类型
+ * @param int $type 类型
  * @return mixed
  */
 function ftc_ip($type = 0)
@@ -38,7 +38,7 @@ function ftc_ip($type = 0)
 
 /**
  * 框架-终端-客户端-浏览器
- * @param integer $type 类型
+ * @param int $type 类型
  * @return mixed
  */
 function ftc_browser($type = -1)
@@ -95,7 +95,7 @@ function ftc_browser($type = -1)
 
 /**
  * 框架-终端-客户端-系统
- * @param integer $type 类型
+ * @param int $type 类型
  * @return mixed
  */
 function ftc_system($type = -1)
@@ -171,7 +171,7 @@ function ftc_system($type = -1)
 
 /**
  * 框架-终端-客户端-请求方案
- * @param integer $type 类型
+ * @param int $type 类型
  * @return mixed
  */
 function ftc_scheme($type = -1)
@@ -194,7 +194,7 @@ function ftc_scheme($type = -1)
 
 /**
  * 框架-终端-客户端-请求方法
- * @param integer $type 类型
+ * @param int $type 类型
  * @return mixed
  */
 function ftc_method($type = -1)

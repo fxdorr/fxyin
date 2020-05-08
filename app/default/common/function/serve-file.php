@@ -16,8 +16,8 @@ use fxyin\Image;
  * fco thumb
  * </p>
  * @param string $src
- * @param integer $width
- * @param integer $height
+ * @param int $width
+ * @param int $height
  * @param boolean $replace
  * @return string
  */
@@ -45,7 +45,7 @@ function fco_thumb($src = '', $width = 500, $height = 500, $replace = false)
  * 框架-公共-操作-格式化文件大小 <p>
  * fco format file size
  * </p>
- * @param integer $size 文件大小
+ * @param int $size 文件大小
  * @return string
  */
 function fco_ffsize($size)

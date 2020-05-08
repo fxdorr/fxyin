@@ -1234,7 +1234,7 @@ class Request
 
     /**
      * 获取客户端IP地址
-     * @param integer   $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
+     * @param int   $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
      * @param boolean   $adv 是否进行高级模式获取（有可能被伪装）
      * @return mixed
      */

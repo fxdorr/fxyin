@@ -16,26 +16,15 @@ use fxyin\Db;
 /**
  * 框架-公共-检查-格式
  * @param array $data 数据
- * @param string $type 类型
+ * @param int $type 类型
  * @return mixed
  */
-function fcc_format($data, $type)
+function fcc_format($data, $type = 1)
 {
     //初始化变量
     $echo = [];
-    $debug['switch'] = fxy_config('fxy_debug');
-    $param = ftc_param();
-    $predefined = [
-        //基础
-        'base',
-    ];
-    $param = fsi_param([$param, $predefined], '1.2.3');
-    $predefined = [
-        //调试
-        'debug',
-    ];
-    $param['base'] = fsi_param([$param['base'], $predefined], '1.2.2');
-    $debug['level'] = $param['base']['debug'];
+    $debug['switch'] = fxy_config('debug.switch');
+    $debug['level'] = fxy_config('debug.level');
     $debug['data'] = [
         'param' => ftc_param(),
         'get' => $_GET,
@@ -48,12 +37,13 @@ function fcc_format($data, $type)
     ];
     switch ($type) {
         default:
+        case 1:
             //默认
             $echo = $data;
             break;
-        case 1:
+        case 2:
             //通用
-            $base = fxy_config('result.format');
+            $base = fxy_config('echo.format');
             //处理数据
             $data[2] = fxy_lang($data[2]);
             foreach ($base as $key => $value) {
@@ -61,40 +51,46 @@ function fcc_format($data, $type)
                     $echo[$value] = $data[$key];
                 }
             }
-            //调试模式
-            if ($debug['switch'] && $debug['level']) {
-                $echo['debug'] = [];
-                $debug['level'] = fmo_explode(',', strtolower($debug['level']));
-                foreach ($debug['level'] as $key => $value) {
-                    switch ($value) {
-                        case '1':
-                            //全部
-                            $echo['debug'] = fsi_param([$echo['debug'], $debug['data']], '1.1.1');
-                            break;
-                        case '2':
-                            //请求入参
-                            $echo['debug']['param'] = $debug['data']['param'];
-                            $echo['debug']['get'] = $debug['data']['get'];
-                            $echo['debug']['post'] = $debug['data']['post'];
-                            $echo['debug']['input'] = $debug['data']['input'];
-                            break;
-                        case '3':
-                            //上传文件
-                            $echo['debug']['files'] = $debug['data']['files'];
-                            break;
-                        case '4':
-                            //服务器
-                            $echo['debug']['server'] = $debug['data']['server'];
-                            $echo['debug']['cookie'] = $debug['data']['cookie'];
-                            $echo['debug']['session'] = $debug['data']['session'];
-                            break;
-                    }
-                }
-            }
-            //空对象处理
-            $echo = fmo_oempty($echo);
             break;
     }
+    //调试模式
+    if ($debug['switch'] && $debug['level']) {
+        $echo['debug'] = ['' => null];
+        $debug['level'] = fmo_explode(',', strtolower($debug['level']));
+        foreach ($debug['level'] as $value) {
+            switch ($value) {
+                default:
+                    //匹配
+                    if (array_key_exists($value, $debug['data'])) {
+                        $echo['debug'][$value] = $debug['data'][$value];
+                    }
+                    break;
+                case '1':
+                    //全部
+                    $echo['debug'] = fsi_param([$echo['debug'], $debug['data']], '1.1.1');
+                    break;
+                case '2':
+                    //入参
+                    $echo['debug']['param'] = $debug['data']['param'];
+                    $echo['debug']['get'] = $debug['data']['get'];
+                    $echo['debug']['post'] = $debug['data']['post'];
+                    $echo['debug']['input'] = $debug['data']['input'];
+                    break;
+                case '3':
+                    //文件
+                    $echo['debug']['files'] = $debug['data']['files'];
+                    break;
+                case '4':
+                    //环境
+                    $echo['debug']['server'] = $debug['data']['server'];
+                    $echo['debug']['cookie'] = $debug['data']['cookie'];
+                    $echo['debug']['session'] = $debug['data']['session'];
+                    break;
+            }
+        }
+    }
+    //空对象处理
+    $echo = fmo_oempty($echo);
     return $echo;
 }
 
@@ -127,14 +123,14 @@ function fco_return($var, $type = '')
 function fsi_result()
 {
     //初始化变量
-    $echo = fxy_config('result.template');
+    $echo = fxy_config('echo.template');
     return $echo;
 }
 
 /**
  * 框架-服务-初始化-参数
  * @param array $param 参数
- * @param integer $mode 模式
+ * @param int $mode 模式
  * @return array
  */
 function fsi_param($param, $mode = null)
@@ -499,7 +495,16 @@ function fmo_oempty($param)
 {
     //初始化变量
     if (is_array($param)) {
-        if (isset($param['']) && count($param) == 1) {
+        //空数组直接返回
+        if (!count($param)) {
+            return $param;
+        }
+        //过滤空元素
+        if (array_key_exists('', $param) && is_null($param[''])) {
+            unset($param['']);
+        }
+        //处理数组
+        if (!count($param)) {
             $param = new \StdClass();
         } else {
             foreach ($param as $key => $value) {
@@ -622,7 +627,7 @@ function fmo_cover($args)
  * fmc print lang
  * </p>
  * @param array|string $name 语言变量名
- * @param integer $mode 模式
+ * @param int $mode 模式
  * @return mixed
  */
 function fmo_plang($name, $mode = null)
@@ -973,7 +978,7 @@ function fcf_convert($var, $type)
 /**
  * 框架-公共-函数-MD5
  * @param mixed $var 变量
- * @param integer $type 类型
+ * @param int $type 类型
  * @return mixed
  */
 function fcf_md5($var, $type = null)

@@ -24,7 +24,7 @@ function fts_ip()
 
 /**
  * 框架-终端-服务器-系统
- * @param integer $size 选择大小写
+ * @param int $size 选择大小写
  * @return mixed
  */
 function fts_system($size = -1)

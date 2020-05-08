@@ -186,7 +186,7 @@ class Response
 
     /**
      * 发送HTTP状态
-     * @param integer $code 状态码
+     * @param int $code 状态码
      * @return $this
      */
     public function code($code)

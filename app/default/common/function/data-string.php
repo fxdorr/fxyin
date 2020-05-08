@@ -76,7 +76,7 @@ function dsc_rhtml($string, $flags = null)
  * dso list to tree
  * </p>
  * @param array $list 未树化数组
- * @param integer $pId 初始父ID
+ * @param int $pId 初始父ID
  * @param string $pName 父名称
  * @param string $index 索引
  * @param string $cName 子名称
@@ -248,25 +248,25 @@ function dso_splice($string, $value, $separator = '')
  * 数据-结构-操作-过滤空参数 <p>
  * dsc filter parameter empty
  * </p>
- * @param array $tran 参数
+ * @param array $param 参数
  * @return mixed
  */
-function dso_fpempty($tran)
+function dso_fpempty($param)
 {
     //初始化变量
     $result = fsi_result();
-    if (!isset($tran)) {
+    if (!isset($param)) {
         $result[0] = false;
         $result[1] = 1000;
         $result[2] = fxy_lang(['lack', 'parameter']);
-    } else if (is_array($tran)) {
-        foreach ($tran as $key => $value) {
+    } else if (is_array($param)) {
+        foreach ($param as $key => $value) {
             if (is_null($value)) {
-                unset($tran[$key]);
+                unset($param[$key]);
             }
         }
         $result[2] = fxy_lang(['request', 'success']);
-        $result[3] = $tran;
+        $result[3] = $param;
     } else {
         $result[0] = false;
         $result[1] = 1001;
@@ -279,19 +279,19 @@ function dso_fpempty($tran)
  * 数据-结构-检查-空参数 <p>
  * dsc parameter empty
  * </p>
- * @param array $tran 参数
+ * @param array $param 参数
  * @return mixed
  */
-function dsc_pempty($tran)
+function dsc_pempty($param)
 {
     //初始化变量
     $result = fsi_result();
-    if (!isset($tran)) {
+    if (!isset($param)) {
         $result[0] = false;
         $result[1] = 1000;
         $result[2] = fxy_lang(['lack', 'parameter']);
-    } else if (is_array($tran)) {
-        foreach ($tran as $key => $value) {
+    } else if (is_array($param)) {
+        foreach ($param as $key => $value) {
             if (is_null($value) || $value === '') {
                 $varname = is_numeric($key) ? 'param' : $key;
                 $result[0] = false;
@@ -312,19 +312,19 @@ function dsc_pempty($tran)
  * 数据-结构-检查-非空参数 <p>
  * dsc un parameter empty
  * </p>
- * @param array $tran 参数
+ * @param array $param 参数
  * @return mixed
  */
-function dsc_unpempty($tran)
+function dsc_unpempty($param)
 {
     //初始化变量
     $result = fsi_result();
-    if (!isset($tran)) {
+    if (!isset($param)) {
         $result[0] = false;
         $result[1] = 1000;
         $result[2] = fxy_lang(['lack', 'parameter']);
-    } else if (is_array($tran)) {
-        foreach ($tran as $key => $value) {
+    } else if (is_array($param)) {
+        foreach ($param as $key => $value) {
             if (is_null($value) || $value === '') {
                 $result[0] = false;
                 $result[1] = 1000;
@@ -349,8 +349,8 @@ function dsc_unpempty($tran)
  * dsc string length
  * </p>
  * @param string $string 字符串
- * @param integer $slen 开始长度-start length
- * @param integer $elen 结束长度-end length
+ * @param int $slen 开始长度-start length
+ * @param int $elen 结束长度-end length
  * @return mixed
  */
 function dsc_strlen($string = null, $slen = 0, $elen = 0)
@@ -376,51 +376,51 @@ function dsc_strlen($string = null, $slen = 0, $elen = 0)
 
 /**
  * 数据-结构-操作-组装
- * @param array $tran 参数数组
- * @param integer $mode 组装模式
+ * @param array $param 参数
+ * @param int $mode 模式
  * @return string
  */
-function dso_assemble($tran, $mode = null)
+function dso_assemble($param, $mode = null)
 {
     //初始化变量
     $data = '';
     $string = '';
-    $mode = !empty($tran) && is_array($tran) ? $mode : null;
+    $mode = !empty($param) && is_array($param) ? $mode : null;
     if ($mode) {
-        $tran = dsc_fhtml($tran);
+        $param = dsc_fhtml($param);
     }
     switch ($mode) {
         case 1:
             //$key='$value',$key='$value'
-            foreach ($tran as $key => $value) {
+            foreach ($param as $key => $value) {
                 $string = dso_splice($string, $key . '=\'' . $value . '\'', ',');
             }
             $data = $string;
             break;
         case 2:
             //$key,$key
-            foreach ($tran as $key => $value) {
+            foreach ($param as $key => $value) {
                 $string = dso_splice($string, $key, ',');
             }
             $data = $string;
             break;
         case 3:
             //'$value','$value'
-            foreach ($tran as $key => $value) {
+            foreach ($param as $key => $value) {
                 $string = dso_splice($string, "'" . $value . "'", ',');
             }
             $data = $string;
             break;
         case 4:
             //$value,$value
-            foreach ($tran as $key => $value) {
+            foreach ($param as $key => $value) {
                 $string = dso_splice($string, $value, ',');
             }
             $data = $string;
             break;
         case 5:
             //$key=$value,$key=$value
-            foreach ($tran as $key => $value) {
+            foreach ($param as $key => $value) {
                 $string = dso_splice($string, $key . '=' . $value, ',');
             }
             $data = $string;
@@ -436,7 +436,7 @@ function dso_assemble($tran, $mode = null)
  * @param string $string 原始字符串
  * @param string $operation 加解密类型
  * @param string $key 密钥
- * @param integer $expiry 有效期
+ * @param int $expiry 有效期
  * @return string
  */
 function fco_authcode($string, $operation = 'decode', $key = '', $expiry = 0)

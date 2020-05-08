@@ -152,7 +152,7 @@ if (!function_exists('fxy_json')) {
     /**
      * 获取\think\response\Json对象实例
      * @param mixed   $data 返回的数据
-     * @param integer $code 状态码
+     * @param int $code 状态码
      * @param array   $header 头部
      * @param array   $options 参数
      * @return \think\response\Json
@@ -168,7 +168,7 @@ if (!function_exists('fxy_xml')) {
     /**
      * 获取\think\response\Xml对象实例
      * @param mixed   $data    返回的数据
-     * @param integer $code    状态码
+     * @param int $code    状态码
      * @param array   $header  头部
      * @param array   $options 参数
      * @return \think\response\Xml

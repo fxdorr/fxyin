@@ -16,7 +16,7 @@
  * @param string $value 值
  * @param string $comparison 表达式
  * @param string $logic 逻辑
- * @param integer $rank 排序
+ * @param int $rank 排序
  * @return string
  */
 function dqa_where($var, $key, $value, $comparison, $logic, $rank)
@@ -51,57 +51,45 @@ function dqa_where_safe($var, &$comparison)
     //拆解表达式
     switch ($comparison) {
         default:
-            if (is_array($var)) {
-                $values = $var;
-            } else {
-                $values = [$var];
+            if (!is_array($var)) {
+                $var = [$var];
             }
             break;
         case 'in':
         case 'not in':
-            if (is_array($var)) {
-                $values = $var;
-            } else {
-                $values = explode(',', $var);
+            if (!is_array($var)) {
+                $var = explode(',', $var);
             }
             break;
         case 'like':
         case 'not like':
-            if (is_array($var)) {
-                $values = $var;
-            } else {
-                $values = [$var];
+            if (!is_array($var)) {
+                $var = [$var];
             }
             break;
         case 'like fuzzy':
         case 'not like fuzzy':
-            if (is_array($var)) {
-                $values = $var;
-            } else {
-                $values = [$var];
+            if (!is_array($var)) {
+                $var = [$var];
             }
             break;
         case 'between':
         case 'not between':
-            if (is_array($var)) {
-                $values = $var;
-            } else if (mb_strpos($var, ' and ', null, 'utf-8') !== false) {
-                $values = explode(' and ', $var);
+            if (mb_strpos($var, ' and ', null, 'utf-8') !== false) {
+                $var = explode(' and ', $var);
             } else {
-                $values = explode(',', $var);
+                $var = explode(',', $var);
             }
         case 'find_in_set':
-            if (is_array($var)) {
-                $values = $var;
-            } else {
-                $values = explode(',', $var);
+            if (!is_array($var)) {
+                $var = explode(',', $var);
             }
             break;
     }
     //过滤表达式
     $search = ["\\", "\'", "&", "\"", "<", ">"];
     $replace = ["\\\\", "\\\'", "&amp;", "&quot;", "&lt;", "&gt;"];
-    foreach ($values as $key => $value) {
+    foreach ($var as $key => $value) {
         //包装表达式
         switch ($comparison) {
             case 'like':
@@ -116,50 +104,50 @@ function dqa_where_safe($var, &$comparison)
                 break;
         }
         foreach ($search as $key2 => $value2) {
-            $values[$key] = str_replace($value2, $replace[$key2], $values[$key]);
+            $var[$key] = str_replace($value2, $replace[$key2], $var[$key]);
         }
         //包装表达式
         switch ($comparison) {
             default:
-                $values[$key] = '\'' . $values[$key] . '\'';
+                $var[$key] = '\'' . $var[$key] . '\'';
                 break;
             case 'like fuzzy':
             case 'not like fuzzy':
-                $values[$key] = '\'%' . $values[$key] . '%\'';
+                $var[$key] = '\'%' . $var[$key] . '%\'';
                 break;
             case 'find_in_set':
-                $values[$key] = $values[$key];
+                $var[$key] = $var[$key];
                 break;
         }
     }
     //组装表达式
     switch ($comparison) {
         default:
-            $var = implode('', $values);
+            $var = implode('', $var);
             break;
         case 'in':
         case 'not in':
-            if (!count($values)) {
-                $values[] = "''";
+            if (!count($var)) {
+                $var[] = "''";
             }
-            $var = implode(',', $values);
+            $var = implode(',', $var);
             break;
         case 'like':
         case 'not like':
-            $var = implode('', $values) . " escape '/'";
+            $var = implode('', $var) . " escape '/'";
             break;
         case 'like fuzzy':
         case 'not like fuzzy':
-            $var = implode('', $values) . " escape '/'";
+            $var = implode('', $var) . " escape '/'";
             break;
         case 'between':
         case 'not between':
-            $var = implode(' and ', $values);
+            $var = implode(' and ', $var);
         case 'find_in_set':
-            if (!count($values)) {
-                $values[] = "''";
+            if (!count($var)) {
+                $var[] = "''";
             }
-            $var = implode(',', $values);
+            $var = implode(',', $var);
             break;
     }
     //解析表达式
@@ -356,7 +344,7 @@ function dqa_elfirst($field)
 /**
  * 数据-查询-组装-日期时间
  * @param string $timestamp 时间戳
- * @param integer $mode 模式
+ * @param int $mode 模式
  * @return mixed
  */
 function dqa_datetime($timestamp = '', $mode = -1)
@@ -397,7 +385,7 @@ function dqa_datetime($timestamp = '', $mode = -1)
  * </p>
  * @param string $field 字段名
  * @param string $param 参数
- * @param integer $mode 模式
+ * @param int $mode 模式
  * @return string
  */
 function dqa_fjson($field, $param, $mode = null)
@@ -420,7 +408,7 @@ function dqa_fjson($field, $param, $mode = null)
  * </p>
  * @param string $field 字段名
  * @param string $replace 替换值
- * @param integer $mode 模式
+ * @param int $mode 模式
  * @return string
  */
 function dqa_fsempty($field, $replace = '', $mode = null)
@@ -450,14 +438,29 @@ function dqa_fsempty($field, $replace = '', $mode = null)
  * </p>
  * @param string $field 字段名
  * @param string $replace 替换值
+ * @param int $type 类型
  * @return string
  */
-function dqa_fdempty($field, $replace = '')
+function dqa_fdempty($field, $replace = '', $type = 1)
 {
     if (!dsc_pempty([$field])[0]) {
         $field = '\'' . $field . '\'';
     }
-    $bool = 'from_unixtime(' . $field . ')';
+    switch ($type) {
+        default:
+        case 1:
+            //日期时间
+            $bool = 'from_unixtime(' . $field . ')';
+            break;
+        case 2:
+            //日期
+            $bool = 'from_unixtime(' . $field . ',\'%Y-%m-%d\')';
+            break;
+        case 3:
+            //时间
+            $bool = 'from_unixtime(' . $field . ',\'%H:%i:%S\')';
+            break;
+    }
     if (!dsc_pempty([$replace])[0]) {
         $replace = $bool;
     } else {
@@ -477,6 +480,7 @@ function dqa_fdempty($field, $replace = '')
  */
 function dqc_upcompare($data_new, $data_old)
 {
+    //初始化变量
     $result = fsi_result();
     if (!isset($data_new)) {
         $result[0] = false;
@@ -486,9 +490,10 @@ function dqc_upcompare($data_new, $data_old)
         $result[2] = fxy_lang(['lack', 'old', 'data']);
     } else if (is_array($data_new) && is_array($data_old)) {
         foreach ($data_new as $key => $value) {
-            if ($data_new[$key] != $data_old[$key]) {
+            if ($value != $data_old[$key]) {
                 $result[0] = false;
                 $result[2] = fxy_lang(['data', '[', fxy_config('lang')['prefix'] . $key, ']', 'not', 'same']);
+                break;
             }
         }
     } else {

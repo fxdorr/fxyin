@@ -14,14 +14,22 @@
  * @return array
  */
 return [
-    //框架调试模式
-    'fxy_debug' => false,
-    //框架日志模式
-    'fxy_log' => false,
-    //框架日志等级
-    'fxy_log_level' => '1,2,3,4,5,6',
-    //结果模板
-    'result' => [
+    //调试模式
+    'debug' => [
+        //开关
+        'switch' => true,
+        //等级
+        'level' => null,
+    ],
+    //日志模式
+    'log' => [
+        //开关
+        'switch' => false,
+        //等级
+        'level' => '1,2,3,4,5,6',
+    ],
+    //响应模板
+    'echo' => [
         //模板
         'template' => [
             //逻辑状态
@@ -33,7 +41,7 @@ return [
             //响应数据
             3 => [],
             //扩展数据
-            4 => ['' => ''],
+            4 => ['' => null],
         ],
         //格式
         'format' => [
