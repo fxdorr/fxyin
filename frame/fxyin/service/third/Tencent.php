@@ -89,9 +89,9 @@ class Qq extends Tencent
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用钥匙
-        $conf['app_key'] = fxy_config('third_qq')['web_auth_info']['app_key'];
+        $conf['app_key'] = fxy_config('third.qq.web_auth_info.app_key');
         //接口域
-        $conf['domain'] = fxy_config('third_qq')['web_auth_info']['domain'];
+        $conf['domain'] = fxy_config('third.qq.web_auth_info.domain');
         $conf['data']['access_token'] = $parm['access_token'];
         $conf['data']['openid'] = $parm['openid'];
         $conf['data']['oauth_consumer_key'] = $conf['app_key'];
@@ -127,21 +127,21 @@ class WeChat extends Tencent
         ];
         $tran = fsi_param([$tran, $predefined], '1.2.2');
         //应用钥匙
-        $conf['app_key'] = fxy_config('third_wechat')['web_grant_token']['app_key'];
+        $conf['app_key'] = fxy_config('third.wechat.web_grant_token.app_key');
         //应用授权作用域
-        $conf['scope'] = fxy_config('third_wechat')['web_grant_token']['scope'];
+        $conf['scope'] = fxy_config('third.wechat.web_grant_token.scope');
         //重定向状态码
-        $conf['state'] = fxy_config('third_wechat')['web_grant_token']['state'];
+        $conf['state'] = fxy_config('third.wechat.web_grant_token.state');
         //返回类型
-        $conf['response_type'] = fxy_config('third_wechat')['web_grant_token']['response_type'];
+        $conf['response_type'] = fxy_config('third.wechat.web_grant_token.response_type');
         //重定向地址
         $conf['url_redirect'] = $tran['url_redirect'];
         $predefined = [
-            'url_redirect' => fxy_config('third_wechat')['web_grant_token']['url_redirect'],
+            'url_redirect' => fxy_config('third.wechat.web_grant_token.url_redirect'),
         ];
         $conf = fsi_param([$conf, $predefined], '1.1.2');
         //接口域
-        $conf['domain'] = fxy_config('third_wechat')['web_grant_token']['domain'];
+        $conf['domain'] = fxy_config('third.wechat.web_grant_token.domain');
         //拼接请求域
         $conf['param'] = dso_splice($conf['param'], 'appid=' . $conf['app_key'], '&');
         $conf['param'] = dso_splice($conf['param'], 'redirect_uri=' . $conf['url_redirect'], '&');
@@ -234,13 +234,13 @@ class WeChat extends Tencent
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用钥匙
-        $conf['app_key'] = fxy_config('third_wechat')['web_auth_token']['app_key'];
+        $conf['app_key'] = fxy_config('third.wechat.web_auth_token.app_key');
         //应用密钥
-        $conf['app_secret'] = fxy_config('third_wechat')['web_auth_token']['app_secret'];
+        $conf['app_secret'] = fxy_config('third.wechat.web_auth_token.app_secret');
         //授权类型
-        $conf['grant_type'] = fxy_config('third_wechat')['web_auth_token']['grant_type'];
+        $conf['grant_type'] = fxy_config('third.wechat.web_auth_token.grant_type');
         //接口域
-        $conf['domain'] = fxy_config('third_wechat')['web_auth_token']['domain'];
+        $conf['domain'] = fxy_config('third.wechat.web_auth_token.domain');
         $conf['data']['appid'] = $conf['app_key'];
         $conf['data']['secret'] = $conf['app_secret'];
         $conf['data']['code'] = $parm['code'];
@@ -296,9 +296,9 @@ class WeChat extends Tencent
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //语言
-        $conf['lang'] = fxy_config('third_wechat')['web_auth_info']['lang'];
+        $conf['lang'] = fxy_config('third.wechat.web_auth_info.lang');
         //接口域
-        $conf['domain'] = fxy_config('third_wechat')['web_auth_info']['domain'];
+        $conf['domain'] = fxy_config('third.wechat.web_auth_info.domain');
         $conf['data']['access_token'] = $parm['access_token'];
         $conf['data']['openid'] = $parm['openid'];
         $conf['data']['lang'] = $conf['lang'];
@@ -347,13 +347,13 @@ class WeChat extends Tencent
         $conf['param'] = '';
         $result = fsi_result();
         //应用钥匙
-        $conf['app_key'] = fxy_config('third_wechat')['jssdk_grant_access_token']['app_key'];
+        $conf['app_key'] = fxy_config('third.wechat.jssdk_grant_access_token.app_key');
         //应用密钥
-        $conf['app_secret'] = fxy_config('third_wechat')['jssdk_grant_access_token']['app_secret'];
+        $conf['app_secret'] = fxy_config('third.wechat.jssdk_grant_access_token.app_secret');
         //授权类型
-        $conf['grant_type'] = fxy_config('third_wechat')['jssdk_grant_access_token']['grant_type'];
+        $conf['grant_type'] = fxy_config('third.wechat.jssdk_grant_access_token.grant_type');
         //接口域
-        $conf['domain'] = fxy_config('third_wechat')['jssdk_grant_access_token']['domain'];
+        $conf['domain'] = fxy_config('third.wechat.jssdk_grant_access_token.domain');
         $conf['data']['appid'] = $conf['app_key'];
         $conf['data']['secret'] = $conf['app_secret'];
         $conf['data']['grant_type'] = $conf['grant_type'];
@@ -410,9 +410,9 @@ class WeChat extends Tencent
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //授权类型
-        $conf['type'] = fxy_config('third_wechat')['jssdk_grant_jsapi_ticket']['type'];
+        $conf['type'] = fxy_config('third.wechat.jssdk_grant_jsapi_ticket.type');
         //接口域
-        $conf['domain'] = fxy_config('third_wechat')['jssdk_grant_jsapi_ticket']['domain'];
+        $conf['domain'] = fxy_config('third.wechat.jssdk_grant_jsapi_ticket.domain');
         $conf['data']['access_token'] = $parm['access_token'];
         $conf['data']['type'] = $conf['type'];
         //拼接请求域
@@ -482,13 +482,13 @@ class WeChat extends Tencent
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //附加数据
-        $conf['attach'] = fxy_config('third_wechat')['app_pay']['attach'];
+        $conf['attach'] = fxy_config('third.wechat.app_pay.attach');
         //商品描述
-        $conf['body'] = fxy_config('third_wechat')['app_pay']['body'];
+        $conf['body'] = fxy_config('third.wechat.app_pay.body');
         //回调地址
-        $conf['url_notify'] = fxy_config('third_wechat')['app_pay']['url_notify'];
+        $conf['url_notify'] = fxy_config('third.wechat.app_pay.url_notify');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_wechat')['app_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.wechat.app_pay.url_sdk');
         //初始化环境变量
         $predefined = [
             'body' => $conf['body'], 'attach' => $conf['attach'], 'url_notify' => $conf['url_notify'],
@@ -587,13 +587,13 @@ class WeChat extends Tencent
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //附加数据
-        $conf['attach'] = fxy_config('third_wechat')['app_pay']['attach'];
+        $conf['attach'] = fxy_config('third.wechat.app_pay.attach');
         //商品描述
-        $conf['body'] = fxy_config('third_wechat')['app_pay']['body'];
+        $conf['body'] = fxy_config('third.wechat.app_pay.body');
         //回调地址
-        $conf['url_notify'] = fxy_config('third_wechat')['app_pay']['url_notify'];
+        $conf['url_notify'] = fxy_config('third.wechat.app_pay.url_notify');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_wechat')['app_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.wechat.app_pay.url_sdk');
         //初始化环境变量
         $predefined = [
             'body' => $conf['body'], 'attach' => $conf['attach'], 'url_notify' => $conf['url_notify'],
@@ -680,7 +680,7 @@ class WeChat extends Tencent
         //初始化变量
         $result = fsi_result();
         //商户号
-        $conf['mch_id'] = fxy_config('third_wechat')['app_pay']['mch_id'];
+        $conf['mch_id'] = fxy_config('third.wechat.app_pay.mch_id');
         //服务处理
         if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
@@ -699,15 +699,15 @@ class WeChat extends Tencent
         if ($order['mch_id'] == $conf['mch_id']) {
             //公众号支付返回，由微信支付系统触发回调
             //SDK地址
-            $conf['url_sdk'] = fxy_config('third_wechat')['app_pay']['url_sdk'];
+            $conf['url_sdk'] = fxy_config('third.wechat.app_pay.url_sdk');
             //SDK通知
-            $conf['url_sdk_notify'] = fxy_config('third_wechat')['app_pay']['url_sdk_notify'];
+            $conf['url_sdk_notify'] = fxy_config('third.wechat.app_pay.url_sdk_notify');
         } else {
             //APP支付回调，由微信支付系统触发回调
             //SDK地址
-            $conf['url_sdk'] = fxy_config('third_wechat')['app_pay']['url_sdk'];
+            $conf['url_sdk'] = fxy_config('third.wechat.app_pay.url_sdk');
             //SDK通知
-            $conf['url_sdk_notify'] = fxy_config('third_wechat')['app_pay']['url_sdk_notify'];
+            $conf['url_sdk_notify'] = fxy_config('third.wechat.app_pay.url_sdk_notify');
         }
         //加载SDK
         fxy_load($conf['url_sdk']);
@@ -794,9 +794,9 @@ class WeChat extends Tencent
         if (!$pempty[0]) return $pempty;
         $parm['refund_remark'] = $tran['refund_remark'];
         //商户号
-        $conf['mch_id'] = fxy_config('third_wechat')['app_pay']['mch_id'];
+        $conf['mch_id'] = fxy_config('third.wechat.app_pay.mch_id');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_wechat')['app_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.wechat.app_pay.url_sdk');
         //初始化环境变量
         $tray['2_1']['mch_id'] = $conf['mch_id'];
         $tray['2_1']['refund_sn'] = $parm['refund_sn'];

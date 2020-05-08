@@ -78,7 +78,7 @@ class ToolService extends Tool
         $parm['margin'] = $tran['margin'];
         $parm['print'] = $tran['print'];
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_tool')['qrcode']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.tool.qrcode.url_sdk');
         //引入核心库文件
         fxy_load($conf['url_sdk']);
         //调用QRcode类的静态方法png生成二维码图片

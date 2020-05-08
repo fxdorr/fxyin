@@ -63,8 +63,6 @@ class Config
             $type = pathinfo($file, PATHINFO_EXTENSION);
             if ('php' == $type) {
                 return self::set(include $file, $name, $range);
-            } elseif ('yaml' == $type && function_exists('yaml_parse_file')) {
-                return self::set(yaml_parse_file($file), $name, $range);
             } else {
                 return self::parse($file, $type, $name, $range);
             }
@@ -75,76 +73,80 @@ class Config
 
     /**
      * 检测配置是否存在
-     * @param string    $name 配置参数名（支持二级配置 .号分割）
+     * @param string    $name 配置参数名（支持多级配置 .号分割）
      * @param string    $range  作用域
      * @return bool
      */
     public static function has($name, $range = '')
     {
+        //获取作用域
         $range = $range ?: self::$range;
-
-        if (!strpos($name, '.')) {
-            return isset(self::$config[$range][strtolower($name)]);
-        } else {
-            // 二维数组设置和获取支持
-            $name = explode('.', $name, 2);
-            return isset(self::$config[$range][strtolower($name[0])][$name[1]]);
+        //解析配置参数名
+        $name = explode('.', $name);
+        $config = self::$config[$range];
+        foreach ($name as $elem) {
+            if (isset($config[$elem])) {
+                $config = $config[$elem];
+            } else {
+                return false;
+            }
         }
+        return true;
     }
 
     /**
      * 获取配置参数 为空则获取所有配置
-     * @param string    $name 配置参数名（支持二级配置 .号分割）
+     * @param string    $name 配置参数名（支持多级配置 .号分割）
      * @param string    $range  作用域
      * @return mixed
      */
     public static function get($name = null, $range = '')
     {
+        //获取作用域
         $range = $range ?: self::$range;
-        // 无参数时获取所有
+        //无参数时获取所有
         if (empty($name) && isset(self::$config[$range])) {
             return self::$config[$range];
         }
-
-        if (!strpos($name, '.')) {
-            $name = strtolower($name);
-            return isset(self::$config[$range][$name]) ? self::$config[$range][$name] : null;
-        } else {
-            // 二维数组设置和获取支持
-            $name    = explode('.', $name, 2);
-            $name[0] = strtolower($name[0]);
-            return isset(self::$config[$range][$name[0]][$name[1]]) ? self::$config[$range][$name[0]][$name[1]] : null;
+        //解析配置参数名
+        $name = explode('.', $name);
+        $config = self::$config[$range];
+        foreach ($name as $elem) {
+            if (isset($config[$elem])) {
+                $config = $config[$elem];
+            } else {
+                return null;
+            }
         }
+        return $config;
     }
 
     /**
      * 设置配置参数 name为数组则为批量设置
-     * @param array|string  $name 配置参数名（支持二级配置 .号分割）
+     * @param array|string  $name 配置参数名（支持多级配置 .号分割）
      * @param mixed         $value 配置值
      * @param string        $range  作用域
      * @return mixed
      */
     public static function set($name, $value = null, $range = '')
     {
+        //获取作用域
         $range = $range ?: self::$range;
         if (!isset(self::$config[$range])) {
             self::$config[$range] = [];
         }
         if (is_string($name)) {
-            if (!strpos($name, '.')) {
-                self::$config[$range][strtolower($name)] = $value;
-            } else {
-                // 二维数组设置和获取支持
-                $name                                                 = explode('.', $name, 2);
-                self::$config[$range][strtolower($name[0])][$name[1]] = $value;
+            //解析配置参数名
+            $name = array_reverse(explode('.', $name));
+            foreach ($name as $elem) {
+                $value = [$elem => $value];
             }
+            self::$config[$range] = fmo_merge(self::$config[$range], $value);
             return;
         } elseif (is_array($name)) {
             // 批量设置
             if (!empty($value)) {
-                self::$config[$range][$value] = isset(self::$config[$range][$value]) ?
-                array_merge(self::$config[$range][$value], $name) :
-                self::$config[$range][$value] = $name;
+                self::$config[$range][$value] = isset(self::$config[$range][$value]) ? array_merge(self::$config[$range][$value], $name) : self::$config[$range][$value] = $name;
                 return self::$config[$range][$value];
             } else {
                 return self::$config[$range] = array_merge(self::$config[$range], array_change_key_case($name));

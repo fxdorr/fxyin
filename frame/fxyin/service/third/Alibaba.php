@@ -60,19 +60,19 @@ class Alipay extends Alibaba
         ];
         $tran = fsi_param([$tran, $predefined], '1.2.2');
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['web_grant_token']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.web_grant_token.app_id');
         //应用授权作用域
-        $conf['scope'] = fxy_config('third_alipay')['web_grant_token']['scope'];
+        $conf['scope'] = fxy_config('third.alipay.web_grant_token.scope');
         //重定向状态码
-        $conf['state'] = fxy_config('third_alipay')['web_grant_token']['state'];
+        $conf['state'] = fxy_config('third.alipay.web_grant_token.state');
         //重定向地址
         $conf['url_redirect'] = $tran['url_redirect'];
         $predefined = [
-            'url_redirect' => fxy_config('third_alipay')['web_grant_token']['url_redirect'],
+            'url_redirect' => fxy_config('third.alipay.web_grant_token.url_redirect'),
         ];
         $conf = fsi_param([$conf, $predefined], '1.1.2');
         //接口域
-        $conf['domain'] = fxy_config('third_alipay')['web_grant_token']['domain'];
+        $conf['domain'] = fxy_config('third.alipay.web_grant_token.domain');
         //拼接请求域
         $conf['param'] = dso_splice($conf['param'], 'app_id=' . $conf['app_id'], '&');
         $conf['param'] = dso_splice($conf['param'], 'redirect_uri=' . $conf['url_redirect'], '&');
@@ -128,15 +128,15 @@ class Alipay extends Alibaba
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['web_auth_token']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.web_auth_token.app_id');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['web_auth_token']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.web_auth_token.sign_type');
         //授权类型
-        $conf['grant_type'] = fxy_config('third_alipay')['web_auth_token']['grant_type'];
+        $conf['grant_type'] = fxy_config('third.alipay.web_auth_token.grant_type');
         //商户私钥
-        $conf['url_pri_key'] = fxy_config('third_alipay')['web_auth_token']['url_pri_key'];
+        $conf['url_pri_key'] = fxy_config('third.alipay.web_auth_token.url_pri_key');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['web_auth_token']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.web_auth_token.url_sdk');
         fxy_load($conf['url_sdk']);
         //服务处理
         $client = new \AopClient();
@@ -198,15 +198,15 @@ class Alipay extends Alibaba
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['web_refresh_token']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.web_refresh_token.app_id');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['web_refresh_token']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.web_refresh_token.sign_type');
         //授权类型
-        $conf['grant_type'] = fxy_config('third_alipay')['web_refresh_token']['grant_type'];
+        $conf['grant_type'] = fxy_config('third.alipay.web_refresh_token.grant_type');
         //商户私钥
-        $conf['url_pri_key'] = fxy_config('third_alipay')['web_refresh_token']['url_pri_key'];
+        $conf['url_pri_key'] = fxy_config('third.alipay.web_refresh_token.url_pri_key');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['web_refresh_token']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.web_refresh_token.url_sdk');
         fxy_load($conf['url_sdk']);
         //服务处理
         $client = new \AopClient();
@@ -274,13 +274,13 @@ class Alipay extends Alibaba
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['web_auth_info']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.web_auth_info.app_id');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['web_auth_info']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.web_auth_info.sign_type');
         //商户私钥
-        $conf['url_pri_key'] = fxy_config('third_alipay')['web_auth_info']['url_pri_key'];
+        $conf['url_pri_key'] = fxy_config('third.alipay.web_auth_info.url_pri_key');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['web_auth_info']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.web_auth_info.url_sdk');
         fxy_load($conf['url_sdk']);
         //服务处理
         $client = new \AopClient();
@@ -316,35 +316,35 @@ class Alipay extends Alibaba
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['app_pay']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.app_pay.app_id');
         //商品描述
-        $conf['body'] = fxy_config('third_alipay')['app_pay']['body'];
+        $conf['body'] = fxy_config('third.alipay.app_pay.body');
         //请求字符集
-        $conf['charset'] = fxy_config('third_alipay')['app_pay']['charset'];
+        $conf['charset'] = fxy_config('third.alipay.app_pay.charset');
         //合作伙伴ID
-        $conf['partner'] = fxy_config('third_alipay')['app_pay']['partner'];
+        $conf['partner'] = fxy_config('third.alipay.app_pay.partner');
         //请求格式
-        $conf['format'] = fxy_config('third_alipay')['app_pay']['format'];
+        $conf['format'] = fxy_config('third.alipay.app_pay.format');
         //服务版本
-        $conf['version'] = fxy_config('third_alipay')['app_pay']['version'];
+        $conf['version'] = fxy_config('third.alipay.app_pay.version');
         //卖家账号
-        $conf['seller_id'] = fxy_config('third_alipay')['app_pay']['seller_id'];
+        $conf['seller_id'] = fxy_config('third.alipay.app_pay.seller_id');
         //应用服务
-        $conf['service'] = fxy_config('third_alipay')['app_pay']['service'];
+        $conf['service'] = fxy_config('third.alipay.app_pay.service');
         //签名
-        $conf['sign'] = fxy_config('third_alipay')['app_pay']['sign'];
+        $conf['sign'] = fxy_config('third.alipay.app_pay.sign');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['app_pay']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.app_pay.sign_type');
         //商品名称
-        $conf['subject'] = fxy_config('third_alipay')['app_pay']['subject'];
+        $conf['subject'] = fxy_config('third.alipay.app_pay.subject');
         //销售产品码
-        $conf['product_code'] = fxy_config('third_alipay')['app_pay']['product_code'];
+        $conf['product_code'] = fxy_config('third.alipay.app_pay.product_code');
         //回调地址
-        $conf['url_notify'] = fxy_config('third_alipay')['app_pay']['url_notify'];
+        $conf['url_notify'] = fxy_config('third.alipay.app_pay.url_notify');
         //商户私钥
-        $conf['url_pri_key'] = fxy_config('third_alipay')['app_pay']['url_pri_key'];
+        $conf['url_pri_key'] = fxy_config('third.alipay.app_pay.url_pri_key');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['app_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.app_pay.url_sdk');
         //初始化环境变量
         $predefined = [
             'app_id' => $conf['app_id'], 'service' => $conf['service'], 'partner' => $conf['partner'],
@@ -454,11 +454,11 @@ class Alipay extends Alibaba
         $tran = $this->data;
         $result = fsi_result();
         //支付宝公钥
-        $conf['url_pub_key'] = fxy_config('third_alipay')['app_pay']['url_pub_key'];
+        $conf['url_pub_key'] = fxy_config('third.alipay.app_pay.url_pub_key');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['app_pay']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.app_pay.sign_type');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['app_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.app_pay.url_sdk');
         fxy_load($conf['url_sdk']);
         //服务处理
         $client = new \AopClient();
@@ -514,37 +514,37 @@ class Alipay extends Alibaba
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['wap_pay']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.wap_pay.app_id');
         //商品描述
-        $conf['body'] = fxy_config('third_alipay')['wap_pay']['body'];
+        $conf['body'] = fxy_config('third.alipay.wap_pay.body');
         //请求字符集
-        $conf['charset'] = fxy_config('third_alipay')['wap_pay']['charset'];
+        $conf['charset'] = fxy_config('third.alipay.wap_pay.charset');
         //合作伙伴ID
-        $conf['partner'] = fxy_config('third_alipay')['wap_pay']['partner'];
+        $conf['partner'] = fxy_config('third.alipay.wap_pay.partner');
         //请求格式
-        $conf['format'] = fxy_config('third_alipay')['wap_pay']['format'];
+        $conf['format'] = fxy_config('third.alipay.wap_pay.format');
         //服务版本
-        $conf['version'] = fxy_config('third_alipay')['wap_pay']['version'];
+        $conf['version'] = fxy_config('third.alipay.wap_pay.version');
         //卖家账号
-        $conf['seller_id'] = fxy_config('third_alipay')['wap_pay']['seller_id'];
+        $conf['seller_id'] = fxy_config('third.alipay.wap_pay.seller_id');
         //应用服务
-        $conf['service'] = fxy_config('third_alipay')['wap_pay']['service'];
+        $conf['service'] = fxy_config('third.alipay.wap_pay.service');
         //签名
-        $conf['sign'] = fxy_config('third_alipay')['wap_pay']['sign'];
+        $conf['sign'] = fxy_config('third.alipay.wap_pay.sign');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['wap_pay']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.wap_pay.sign_type');
         //商品名称
-        $conf['subject'] = fxy_config('third_alipay')['wap_pay']['subject'];
+        $conf['subject'] = fxy_config('third.alipay.wap_pay.subject');
         //销售产品码
-        $conf['product_code'] = fxy_config('third_alipay')['wap_pay']['product_code'];
+        $conf['product_code'] = fxy_config('third.alipay.wap_pay.product_code');
         //返回地址
-        $conf['url_return'] = fxy_config('third_alipay')['wap_pay']['url_return'];
+        $conf['url_return'] = fxy_config('third.alipay.wap_pay.url_return');
         //回调地址
-        $conf['url_notify'] = fxy_config('third_alipay')['wap_pay']['url_notify'];
+        $conf['url_notify'] = fxy_config('third.alipay.wap_pay.url_notify');
         //商户私钥
-        $conf['url_pri_key'] = fxy_config('third_alipay')['wap_pay']['url_pri_key'];
+        $conf['url_pri_key'] = fxy_config('third.alipay.wap_pay.url_pri_key');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['wap_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.wap_pay.url_sdk');
         //初始化环境变量
         $predefined = [
             'app_id' => $conf['app_id'], 'service' => $conf['service'], 'partner' => $conf['partner'],
@@ -639,11 +639,11 @@ class Alipay extends Alibaba
         $tran = $this->data;
         $result = fsi_result();
         //支付宝公钥
-        $conf['url_pub_key'] = fxy_config('third_alipay')['wap_pay']['url_pub_key'];
+        $conf['url_pub_key'] = fxy_config('third.alipay.wap_pay.url_pub_key');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['wap_pay']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.wap_pay.sign_type');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['wap_pay']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.wap_pay.url_sdk');
         fxy_load($conf['url_sdk']);
         //服务处理
         $client = new \AopClient();
@@ -763,13 +763,13 @@ class Alipay extends Alibaba
         if (!$pempty[0]) return $pempty;
         $parm['refund_remark'] = $tran['refund_remark'];
         //应用ID
-        $conf['app_id'] = fxy_config('third_alipay')['web_auth_info']['app_id'];
+        $conf['app_id'] = fxy_config('third.alipay.web_auth_info.app_id');
         //签名类型
-        $conf['sign_type'] = fxy_config('third_alipay')['web_auth_info']['sign_type'];
+        $conf['sign_type'] = fxy_config('third.alipay.web_auth_info.sign_type');
         //商户私钥
-        $conf['url_pri_key'] = fxy_config('third_alipay')['web_auth_info']['url_pri_key'];
+        $conf['url_pri_key'] = fxy_config('third.alipay.web_auth_info.url_pri_key');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('third_alipay')['web_auth_info']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('third.alipay.web_auth_info.url_sdk');
         //加载SDK
         fxy_load($conf['url_sdk']);
         //公共参数
@@ -836,7 +836,7 @@ class Taobao extends Alibaba
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //接口域
-        $conf['domain'] = fxy_config('third_taobao')['location']['domain'];
+        $conf['domain'] = fxy_config('third.taobao.location.domain');
         $conf['data']['ip'] = $parm['ip'];
         $response = fss_http($conf['domain'], $conf['data'], [], 'post');
         $response = json_decode($response, true);
@@ -1003,7 +1003,7 @@ class Aliyun extends Alibaba
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
-            'key' => fxy_config('third_aliyun')['ddns']['access_key_id'], 'secret' => fxy_config('third_aliyun')['ddns']['access_key_secret'],
+            'key' => fxy_config('third.aliyun.ddns.access_key_id'), 'secret' => fxy_config('third.aliyun.ddns.access_key_secret'),
         ];
         $tran = fsi_param([$tran, $predefined], '1.1.2');
         $parm['key'] = $tran['key'];

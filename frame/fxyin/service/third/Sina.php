@@ -60,9 +60,9 @@ class SinaOpen extends Sina
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //返回格式
-        $conf['format'] = fxy_config('third_sina')['location']['format'];
+        $conf['format'] = fxy_config('third.sina.location.format');
         //接口域
-        $conf['domain'] = fxy_config('third_sina')['location']['domain'];
+        $conf['domain'] = fxy_config('third.sina.location.domain');
         $conf['data']['format'] = $conf['format'];
         $conf['data']['ip'] = $parm['ip'];
         $conf['param'] = dso_splice($conf['param'], 'format=' . $conf['data']['format'], '&');

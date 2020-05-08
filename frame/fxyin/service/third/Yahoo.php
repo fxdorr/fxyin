@@ -60,14 +60,14 @@ class Yahwea extends Yahoo
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //环境
-        $conf['env'] = fxy_config('third_yahwea')['weather']['env'];
+        $conf['env'] = fxy_config('third.yahwea.weather.env');
         //请求格式
-        $conf['format'] = fxy_config('third_yahwea')['weather']['format'];
+        $conf['format'] = fxy_config('third.yahwea.weather.format');
         //查询语句
-        $conf['query'] = fxy_config('third_yahwea')['weather']['query'];
+        $conf['query'] = fxy_config('third.yahwea.weather.query');
         $conf['query'] = str_replace('cityname', $parm['ctname'], $conf['query']);
         //接口域
-        $conf['domain'] = fxy_config('third_yahwea')['weather']['domain'];
+        $conf['domain'] = fxy_config('third.yahwea.weather.domain');
         $conf['data']['q'] = $conf['query'];
         $conf['data']['format'] = $conf['format'];
         $conf['data']['env'] = $conf['env'];

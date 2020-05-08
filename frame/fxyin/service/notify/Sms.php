@@ -44,11 +44,11 @@ class Sms extends Notify
         $parm['_param'] = $tran['_param'];
         //初始化环境变量
         //应用钥匙
-        $conf['appkey'] = fxy_config('notify_sms')['alidayu']['app_key'];
+        $conf['appkey'] = fxy_config('notify.sms.alidayu.app_key');
         //应用密钥
-        $conf['secretKey'] = fxy_config('notify_sms')['alidayu']['app_secret'];
+        $conf['secretKey'] = fxy_config('notify.sms.alidayu.app_secret');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('notify_sms')['alidayu']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('notify.sms.alidayu.url_sdk');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
             $pempty[2] = fxy_lang(['lack', 'api', 'config']);
@@ -107,11 +107,11 @@ class Sms extends Notify
         if (!$pempty[0]) return $pempty;
         //初始化环境变量
         //企业账号
-        $conf['corporation'] = fxy_config('notify_sms')['webservice']['corporation'];
+        $conf['corporation'] = fxy_config('notify.sms.webservice.corporation');
         //接入号即服务代码
-        $conf['src_tele_num'] = fxy_config('notify_sms')['webservice']['src_tele_num'];
+        $conf['src_tele_num'] = fxy_config('notify.sms.webservice.src_tele_num');
         //接口域
-        $conf['domain'] = fxy_config('notify_sms')['webservice']['domain'];
+        $conf['domain'] = fxy_config('notify.sms.webservice.domain');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
             $pempty[2] = fxy_lang(['lack', 'api', 'config']);

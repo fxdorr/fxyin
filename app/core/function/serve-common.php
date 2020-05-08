@@ -23,8 +23,8 @@ function fcc_format($data, $type = 1)
 {
     //初始化变量
     $echo = [];
-    $debug['switch'] = fxy_config('debug.switch');
-    $debug['level'] = fxy_config('debug.level');
+    $debug['switch'] = fxy_config('app.debug.switch');
+    $debug['level'] = fxy_config('app.debug.level');
     $debug['data'] = [
         'param' => ftc_param(),
         'get' => $_GET,
@@ -43,7 +43,7 @@ function fcc_format($data, $type = 1)
             break;
         case 2:
             //通用
-            $base = fxy_config('echo.format');
+            $base = fxy_config('app.echo.format');
             //处理数据
             $data[2] = fxy_lang($data[2]);
             foreach ($base as $key => $value) {
@@ -123,7 +123,7 @@ function fco_return($var, $type = '')
 function fsi_result()
 {
     //初始化变量
-    $echo = fxy_config('echo.template');
+    $echo = fxy_config('app.echo.template');
     return $echo;
 }
 
@@ -430,7 +430,7 @@ function fcs_cache($type, $options = [])
     }
     $type = strtolower($type);
     if (empty($options)) {
-        $options = fxy_config('cache')[$type];
+        $options = fxy_config('app.cache')[$type];
     }
     switch ($type) {
         case 'redis':

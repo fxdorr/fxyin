@@ -39,18 +39,18 @@ class Flashsms extends Notify
         if (!$pempty[0]) return $pempty;
         //初始化环境变量
         //用户ID
-        $conf['uid'] = fxy_config('notify_flashsms')['common']['uid'];
+        $conf['uid'] = fxy_config('notify.flashsms.common.uid');
         //用户安全子系统标识，即能力工具箱分配的Appkey
         //应用钥匙
-        $conf['app_key'] = fxy_config('notify_flashsms')['common']['app_key'];
+        $conf['app_key'] = fxy_config('notify.flashsms.common.app_key');
         //应用密钥
-        $conf['app_secret'] = fxy_config('notify_flashsms')['common']['app_secret'];
+        $conf['app_secret'] = fxy_config('notify.flashsms.common.app_secret');
         //消息的源地址，即开发者的接入码。[示例] 1065795555
-        $conf['from'] = fxy_config('notify_flashsms')['common']['from'];
+        $conf['from'] = fxy_config('notify.flashsms.common.from');
         //因PHP的加密结果不匹配，密码摘要采用JAVA加密
-        $conf['digest'] = fxy_config('notify_flashsms')['common']['digest'];
+        $conf['digest'] = fxy_config('notify.flashsms.common.digest');
         //接口域
-        $conf['domain'] = fxy_config('notify_flashsms')['common']['domain'];
+        $conf['domain'] = fxy_config('notify.flashsms.common.domain');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
             $pempty[2] = fxy_lang(['lack', 'api', 'config']);

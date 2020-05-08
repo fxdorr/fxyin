@@ -61,11 +61,11 @@ class Lbsyun extends Baidu
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //应用钥匙
-        $conf['app_key'] = fxy_config('third_baidu')['location']['app_key'];
+        $conf['app_key'] = fxy_config('third.baidu.location.app_key');
         //坐标
-        $conf['coor'] = fxy_config('third_baidu')['location']['coor'];
+        $conf['coor'] = fxy_config('third.baidu.location.coor');
         //接口域
-        $conf['domain'] = fxy_config('third_baidu')['location']['domain'];
+        $conf['domain'] = fxy_config('third.baidu.location.domain');
         $conf['data']['ak'] = $conf['app_key'];
         $conf['data']['ip'] = $parm['ip'];
         $conf['data']['coor'] = $conf['coor'];

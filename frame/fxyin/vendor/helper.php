@@ -29,7 +29,6 @@ if (!function_exists('fxy_dump')) {
      */
     function fxy_dump($var, $echo = true, $label = null)
     {
-        if (function_exists('dump')) return dump($var, $echo, $label);
         return Debug::dump($var, $echo, $label);
     }
 }
@@ -46,8 +45,6 @@ if (!function_exists('fxy_session')) {
     {
         if (PHP_SAPI === 'cli') {
             return;
-        } else if (function_exists('session')) {
-            return session($name, $value, $prefix);
         }
         if (is_array($name)) {
             // 初始化
@@ -80,8 +77,6 @@ if (!function_exists('fxy_cookie')) {
     {
         if (PHP_SAPI === 'cli') {
             return;
-        } else if (function_exists('cookie')) {
-            return cookie($name, $value, $option);
         }
         if (is_array($name)) {
             // 初始化
@@ -113,7 +108,6 @@ if (!function_exists('fxy_cache')) {
      */
     function fxy_cache($name, $value = '', $options = null, $tag = null)
     {
-        if (function_exists('cache')) return cache($name, $value, $options, $tag);
         if (is_array($options)) {
             // 缓存操作的同时初始化
             Cache::connect($options);
@@ -159,7 +153,6 @@ if (!function_exists('fxy_json')) {
      */
     function fxy_json($data = [], $code = 200, $header = [], $options = [])
     {
-        if (function_exists('json')) return json($data, $code, $header, $options);
         return Response::create($data, 'json', $code, $header, $options);
     }
 }
@@ -175,7 +168,6 @@ if (!function_exists('fxy_xml')) {
      */
     function fxy_xml($data = [], $code = 200, $header = [], $options = [])
     {
-        if (function_exists('xml')) return xml($data, $code, $header, $options);
         return Response::create($data, 'xml', $code, $header, $options);
     }
 }

@@ -15,7 +15,7 @@
  */
 return [
     //短信配置
-    'notify_sms' => [
+    'sms' => [
         //温州移动供应接口
         'webservice' => [
             //企业账号
@@ -36,7 +36,7 @@ return [
         ],
     ],
     //邮箱配置
-    'notify_email' => [
+    'email' => [
         //公共配置
         'common' => [
             //SMTP服务器
@@ -52,7 +52,7 @@ return [
         ],
     ],
     //推送配置
-    'notify_push' => [
+    'push' => [
         //极光推送
         'jpush' => [
             //应用钥匙
@@ -64,7 +64,7 @@ return [
         ],
     ],
     //闪信配置
-    'notify_flashsms' => [
+    'flashsms' => [
         //公共配置
         'common' => [
             //用户ID

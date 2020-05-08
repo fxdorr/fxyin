@@ -15,7 +15,7 @@
  */
 return [
     //百度配置
-    'third_baidu' => [
+    'baidu' => [
         //定位配置
         'location' => [
             //应用钥匙
@@ -36,7 +36,7 @@ return [
         ],
     ],
     //中国天气配置
-    'third_cnwea' => [
+    'cnwea' => [
         //天气配置
         'weather' => [
             //接口域
@@ -49,7 +49,7 @@ return [
         ],
     ],
     //微信配置
-    'third_wechat' => [
+    'wechat' => [
         //网页授权配置
         'web_grant_token' => [
             //应用钥匙
@@ -136,7 +136,7 @@ return [
         ],
     ],
     //淘宝配置
-    'third_taobao' => [
+    'taobao' => [
         //定位配置
         'location' => [
             //接口域
@@ -144,7 +144,7 @@ return [
         ],
     ],
     //新浪配置
-    'third_sina' => [
+    'sina' => [
         //定位配置
         'location' => [
             //返回格式
@@ -154,7 +154,7 @@ return [
         ],
     ],
     //QQ配置
-    'third_qq' => [
+    'qq' => [
         //网页鉴权配置
         'web_auth_token' => [
             //应用钥匙
@@ -173,7 +173,7 @@ return [
         ],
     ],
     //支付宝配置
-    'third_alipay' => [
+    'alipay' => [
         //网页授权配置
         'web_grant_token' => [
             //应用ID
@@ -196,7 +196,7 @@ return [
             //授权类型
             'grant_type' => 'authorization_code',
             //商户私钥
-            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'fxy_module' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
             //SDK地址
             'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
         ],
@@ -209,7 +209,7 @@ return [
             //授权类型
             'grant_type' => 'refresh_token',
             //商户私钥
-            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'fxy_module' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
             //SDK地址
             'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
         ],
@@ -220,7 +220,7 @@ return [
             //签名类型
             'sign_type' => 'RSA2',
             //商户私钥
-            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'fxy_module' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
             //SDK地址
             'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
         ],
@@ -294,15 +294,15 @@ return [
             //回调地址
             'url_notify' => '',
             //商户私钥
-            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'fxy_module' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
             //支付宝公钥
-            'url_pub_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'fxy_module' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'alipay_public_key_rsa2.pem',
+            'url_pub_key' => $_ENV['book']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'alipay_public_key_rsa2.pem',
             //SDK地址
             'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
         ],
     ],
     //工具配置
-    'third_tool' => [
+    'tool' => [
         //二维码
         'qrcode' => [
             //SDK地址
@@ -310,7 +310,7 @@ return [
         ],
     ],
     //雅虎天气配置
-    'third_yahwea' => [
+    'yahwea' => [
         //天气配置
         'weather' => [
             //查询语句
@@ -324,7 +324,7 @@ return [
         ],
     ],
     //阿里云配置
-    'third_aliyun' => [
+    'aliyun' => [
         //动态域名服务
         'ddns' => [
             //访问ID

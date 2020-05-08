@@ -42,15 +42,15 @@ class Email extends Notify
         if (!$pempty[0]) return $pempty;
         //初始化环境变量
         //SMTP服务器
-        $conf['smtpserver'] = fxy_config('notify_email')['common']['smtpserver'];
+        $conf['smtpserver'] = fxy_config('notify.email.common.smtpserver');
         //SMTP服务器端口
-        $conf['smtpserverport'] = fxy_config('notify_email')['common']['smtpport'];
+        $conf['smtpserverport'] = fxy_config('notify.email.common.smtpport');
         //SMTP服务器的用户邮箱
-        $conf['smtpusermail'] = fxy_config('notify_email')['common']['formmail'];
+        $conf['smtpusermail'] = fxy_config('notify.email.common.formmail');
         //SMTP服务器的用户帐号
-        $conf['smtpuser'] = fxy_config('notify_email')['common']['mailuser'];
+        $conf['smtpuser'] = fxy_config('notify.email.common.mailuser');
         //SMTP服务器的用户密码
-        $conf['smtppass'] = fxy_config('notify_email')['common']['mailpass'];
+        $conf['smtppass'] = fxy_config('notify.email.common.mailpass');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
             $pempty[2] = fxy_lang(['lack', 'api', 'config']);

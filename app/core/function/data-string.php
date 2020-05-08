@@ -444,7 +444,7 @@ function fco_authcode($string, $operation = 'decode', $key = '', $expiry = 0)
     //初始化变量
     $ckey_length = 4;
     $operation = strtolower($operation);
-    $key = md5($key != '' ? $key : fxy_config('authkey'));
+    $key = md5($key != '' ? $key : fxy_config('app.authkey'));
     $keya = md5(substr($key, 0, 16));
     $keyb = md5(substr($key, 16, 16));
     $keyc = $ckey_length ? ($operation == 'decode' ? substr($string, 0, $ckey_length) : substr(md5(microtime()), -$ckey_length)) : '';

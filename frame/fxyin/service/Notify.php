@@ -51,7 +51,7 @@ class Notify extends Service
         $result = fsi_result();
         $result[0] = false;
         $result[1] = 1002;
-        $result[2] = fxy_lang(['notify', 'service', '[', fxy_config('lang')['prefix'] . $this->getSupplier(), ']', 'not2', 'find2']);
+        $result[2] = fxy_lang(['notify', 'service', '[', fxy_config('app.lang.prefix') . $this->getSupplier(), ']', 'not2', 'find2']);
         return $result;
     }
 }

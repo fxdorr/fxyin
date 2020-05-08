@@ -59,7 +59,7 @@ class Cnwea extends Cma
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //接口域
-        $conf['domain'] = fxy_config('third_cnwea')['weather']['domain'];
+        $conf['domain'] = fxy_config('third.cnwea.weather.domain');
         $conf['domain'] = $conf['domain'] . $parm['ctid'] . '.html';
         $response = fss_http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
@@ -94,7 +94,7 @@ class Cnwea extends Cma
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         //接口域
-        $conf['domain'] = fxy_config('third_cnwea')['weather2']['domain'];
+        $conf['domain'] = fxy_config('third.cnwea.weather2.domain');
         $conf['domain'] = $conf['domain'] . $parm['ctid'] . '.html';
         $response = fss_http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);

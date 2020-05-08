@@ -64,11 +64,11 @@ class Push extends Notify
         $parm['_param']['_set_options'] = fsi_param([$parm['_param']['_set_options'], $predefined], '1.1.2');
         //初始化环境变量
         //应用钥匙
-        $conf['app_key'] = fxy_config('notify_push')['jpush']['app_key'];
+        $conf['app_key'] = fxy_config('notify.push.jpush.app_key');
         //应用密钥
-        $conf['app_secret'] = fxy_config('notify_push')['jpush']['app_secret'];
+        $conf['app_secret'] = fxy_config('notify.push.jpush.app_secret');
         //SDK地址
-        $conf['url_sdk'] = fxy_config('notify_push')['jpush']['url_sdk'];
+        $conf['url_sdk'] = fxy_config('notify.push.jpush.url_sdk');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
             $pempty[2] = fxy_lang(['lack', 'api', 'config']);

@@ -75,9 +75,9 @@ if (!function_exists('fxy_lang_list')) {
         } else {
             if (is_null($name)) {
                 $langs = 'null';
-            } else if (strpos($name, fxy_config('lang')['prefix']) === 0) {
-                $langs = ltrim($name, fxy_config('lang')['prefix']);
-            } else if (strpos($name, fxy_config('lang')['ignore']) === 0) {
+            } else if (strpos($name, fxy_config('app.lang.prefix')) === 0) {
+                $langs = ltrim($name, fxy_config('app.lang.prefix'));
+            } else if (strpos($name, fxy_config('app.lang.ignore')) === 0) {
                 $langs = '';
             } else {
                 if (is_numeric($name)) {

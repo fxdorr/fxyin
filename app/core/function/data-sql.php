@@ -492,7 +492,7 @@ function dqc_upcompare($data_new, $data_old)
         foreach ($data_new as $key => $value) {
             if ($value != $data_old[$key]) {
                 $result[0] = false;
-                $result[2] = fxy_lang(['data', '[', fxy_config('lang')['prefix'] . $key, ']', 'not', 'same']);
+                $result[2] = fxy_lang(['data', '[', fxy_config('app.lang.prefix') . $key, ']', 'not', 'same']);
                 break;
             }
         }

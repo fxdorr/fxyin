@@ -137,7 +137,7 @@ function fcf_delFiles($var)
 function fcf_initMediaEnv()
 {
     //配置参数
-    $config = fxy_config('file_media');
+    $config = fxy_config('app.media');
     $system = fts_system(1);
     foreach ($config as $key => $value) {
         switch ($system) {
@@ -156,7 +156,7 @@ function fcf_initMediaEnv()
                 break;
         }
     }
-    fxy_config('file_media', $config);
+    fxy_config('app.media', $config);
 }
 
 /**
@@ -174,7 +174,7 @@ function fcf_getMediaInfo($var, $type)
             //媒体-视频
             try {
                 //配置参数
-                $config = fxy_config('file_media.video');
+                $config = fxy_config('app.media.video');
                 if (is_null($config['bin'])) return;
                 $command = sprintf($config['bin'], $var);
                 ob_start();
