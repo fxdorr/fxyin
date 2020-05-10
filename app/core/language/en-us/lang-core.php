@@ -256,6 +256,7 @@ return [
     'loop'                                  =>  'loop',
     'option'                                =>  'option',
     'play'                                  =>  'play',
+    'limit'                                 =>  'limit',
     
     // system noun-system noun
     'fxroy'                                 =>  'fxroy',

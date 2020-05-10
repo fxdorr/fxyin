@@ -166,7 +166,7 @@ return [
     'english2'                              =>  '英文',
     'seller2'                               =>  '商家',
     'choice'                                =>  '选择',
-    'page'                                  =>  '页面',
+    'page'                                  =>  '页码',
     'page2'                                 =>  '页',
     'relationship'                          =>  '关系',
     'prompt'                                =>  '提示',
@@ -256,6 +256,7 @@ return [
     'loop'                                  =>  '循环',
     'option'                                =>  '选项',
     'play'                                  =>  '播放',
+    'limit'                                 =>  '条数',
     
     // 系统名词-system noun
     'fxroy'                                 =>  '方弦',

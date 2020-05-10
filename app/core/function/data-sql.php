@@ -75,11 +75,12 @@ function dqa_where_safe($var, &$comparison)
             break;
         case 'between':
         case 'not between':
-            if (mb_strpos($var, ' and ', null, 'utf-8') !== false) {
+            if (is_string($var) && mb_strpos($var, ' and ', null, 'utf-8') !== false) {
                 $var = explode(' and ', $var);
-            } else {
+            } else if (!is_array($var)) {
                 $var = explode(',', $var);
             }
+            break;
         case 'find_in_set':
             if (!is_array($var)) {
                 $var = explode(',', $var);
@@ -143,6 +144,7 @@ function dqa_where_safe($var, &$comparison)
         case 'between':
         case 'not between':
             $var = implode(' and ', $var);
+            break;
         case 'find_in_set':
             if (!count($var)) {
                 $var[] = "''";
