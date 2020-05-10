@@ -104,11 +104,11 @@ return [
             //回调地址
             'url_notify' => '',
             //商户私钥
-            'url_pri_key' => '',
+            'url_pri_key' => null,
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'tencent' . DIRECTORY_SEPARATOR . 'wxpay' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'WxPay.Api.php',
+            'url_sdk' => null,
             //SDK通知
-            'url_sdk_notify' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'tencent' . DIRECTORY_SEPARATOR . 'wxpay' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'WxPay.Notify.php',
+            'url_sdk_notify' => null,
             //代理地址
             'proxy_host' => '0.0.0.0',
             //代理端口
@@ -196,9 +196,9 @@ return [
             //授权类型
             'grant_type' => 'authorization_code',
             //商户私钥
-            'url_pri_key' => $_ENV['base']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => null,
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
+            'url_sdk' => null,
         ],
         //网页刷新鉴权配置
         'web_refresh_token' => [
@@ -209,9 +209,9 @@ return [
             //授权类型
             'grant_type' => 'refresh_token',
             //商户私钥
-            'url_pri_key' => $_ENV['base']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => null,
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
+            'url_sdk' => null,
         ],
         //网页个人信息配置
         'web_auth_info' => [
@@ -220,9 +220,9 @@ return [
             //签名类型
             'sign_type' => 'RSA2',
             //商户私钥
-            'url_pri_key' => $_ENV['base']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => null,
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
+            'url_sdk' => null,
         ],
         //应用支付
         'app_pay' => [
@@ -255,11 +255,11 @@ return [
             //回调地址
             'url_notify' => '',
             //商户私钥
-            'url_pri_key' => '',
+            'url_pri_key' => null,
             //支付宝公钥
-            'url_pub_key' => '',
+            'url_pub_key' => null,
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
+            'url_sdk' => null,
         ],
         //手机支付
         'wap_pay' => [
@@ -294,11 +294,11 @@ return [
             //回调地址
             'url_notify' => '',
             //商户私钥
-            'url_pri_key' => $_ENV['base']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'rsa2_private_key.pem',
+            'url_pri_key' => null,
             //支付宝公钥
-            'url_pub_key' => $_ENV['base']['app_path'] . 'core' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipay' . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'alipay_public_key_rsa2.pem',
+            'url_pub_key' => null,
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'alibaba' . DIRECTORY_SEPARATOR . 'alipaysdk' . DIRECTORY_SEPARATOR . 'AopSdk.php',
+            'url_sdk' => null,
         ],
     ],
     //工具配置
@@ -306,7 +306,7 @@ return [
         //二维码
         'qrcode' => [
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'third' . DIRECTORY_SEPARATOR . 'tool' . DIRECTORY_SEPARATOR . 'phpqrcode' . DIRECTORY_SEPARATOR . 'phpqrcode.php',
+            'url_sdk' => null,
         ],
     ],
     //雅虎天气配置

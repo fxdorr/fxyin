@@ -32,7 +32,7 @@ return [
             //应用密钥
             'app_secret' => '',
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'notify' . DIRECTORY_SEPARATOR . 'sms' . DIRECTORY_SEPARATOR . 'alidayu' . DIRECTORY_SEPARATOR . 'TopSdk.php',
+            'url_sdk' => null,
         ],
     ],
     //邮箱配置
@@ -60,7 +60,7 @@ return [
             //应用密钥
             'app_secret' => '',
             //SDK地址
-            'url_sdk' => $_ENV['fxy']['core_path'] . 'service' . DIRECTORY_SEPARATOR . 'driver' . DIRECTORY_SEPARATOR . 'notify' . DIRECTORY_SEPARATOR . 'push' . DIRECTORY_SEPARATOR . 'jpush' . DIRECTORY_SEPARATOR . 'autoload.php',
+            'url_sdk' => null,
         ],
     ],
     //闪信配置
