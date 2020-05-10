@@ -345,40 +345,40 @@ function dqa_elfirst($field)
 
 /**
  * 数据-查询-组装-日期时间
- * @param string $timestamp 时间戳
- * @param int $mode 模式
- * @return mixed
+ * @param string $time 时间
+ * @param int $type 类型
+ * @return string
  */
-function dqa_datetime($timestamp = '', $mode = -1)
+function dqa_datetime($time = null, $type = -1)
 {
-    $timestamp = dsc_pempty(['timestamp' => $timestamp])[0] ? $timestamp : time();
-    switch ($mode) {
-        default:
-            $date = $timestamp;
-            break;
+    $time = dsc_pempty([$time])[0] ? $time : time();
+    if (is_string($time)) {
+        $time = strtotime($time);
+    }
+    switch ($type) {
         case 1:
-            $date = strtotime(date('Y-m-d 00:00:00', $timestamp)) . " and " . strtotime(date('Y-m-d 23:59:59', $timestamp));
+            $time = strtotime(date('Y-m-d 00:00:00', $time)) . " and " . strtotime(date('Y-m-d 23:59:59', $time));
             break;
         case 2:
-            $date = strtotime(date('Y-m-d 00:00:00', $timestamp));
+            $time = strtotime(date('Y-m-d 00:00:00', $time));
             break;
         case 3:
-            $date = strtotime(date('Y-m-d 23:59:59', $timestamp));
+            $time = strtotime(date('Y-m-d 23:59:59', $time));
             break;
         case 4:
-            $date = strtotime(date('Y-m-d H:i:s', $timestamp));
+            $time = strtotime(date('Y-m-d H:i:s', $time));
             break;
         case 5:
-            $date = date('Y-m-d 00:00:00', $timestamp);
+            $time = date('Y-m-d 00:00:00', $time);
             break;
         case 6:
-            $date = date('Y-m-d 23:59:59', $timestamp);
+            $time = date('Y-m-d 23:59:59', $time);
             break;
         case 7:
-            $date = date('Y-m-d H:i:s', $timestamp);
+            $time = date('Y-m-d H:i:s', $time);
             break;
     }
-    return $date;
+    return $time;
 }
 
 /**

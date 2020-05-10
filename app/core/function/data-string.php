@@ -293,10 +293,10 @@ function dsc_pempty($param)
     } else if (is_array($param)) {
         foreach ($param as $key => $value) {
             if (is_null($value) || $value === '') {
-                $varname = is_numeric($key) ? 'param' : $key;
+                $name = is_numeric($key) ? 'param' : $key;
                 $result[0] = false;
                 $result[1] = 1000;
-                $result[2] = fxy_lang(['lack', $varname]);
+                $result[2] = fxy_lang(['lack', $name]);
                 break;
             }
         }
