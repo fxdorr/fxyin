@@ -20,6 +20,21 @@ return [
         'switch' => true,
         //等级
         'level' => null,
+        //数据
+        'data' => [
+            //入参
+            'param' => ftc_param(),
+            'get' => $_GET ?? null,
+            'post' => $_POST ?? null,
+            'input' => file_get_contents('php://input'),
+            //文件
+            'files' => $_FILES ?? null,
+            //环境
+            'server' => $_SERVER ?? null,
+            'cookie' => $_COOKIE ?? null,
+            'session' => $_SESSION ?? null,
+            'env' => $_ENV ?? null,
+        ],
     ],
     //日志配置
     'log' => [

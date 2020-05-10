@@ -25,17 +25,7 @@ function fcc_format($data, $type = 1)
     $echo = [];
     $debug['switch'] = fxy_config('app.debug.switch');
     $debug['level'] = fxy_config('app.debug.level');
-    $debug['data'] = [
-        'param' => ftc_param(),
-        'get' => $_GET,
-        'post' => $_POST,
-        'input' => file_get_contents('php://input'),
-        'files' => $_FILES,
-        'server' => $_SERVER,
-        'cookie' => $_COOKIE,
-        'session' => $_SESSION,
-        'env' => $_ENV,
-    ];
+    $debug['data'] = fxy_config('app.debug.data');
     switch ($type) {
         default:
         case 1:
