@@ -645,6 +645,42 @@ function fmo_plang($name, $mode = null)
 }
 
 /**
+ * 框架-模块-函数-Json格式
+ * @param mixed $var 变量
+ * @param string $type 类型
+ * @return mixed
+ */
+function fmf_json($var, $type)
+{
+    //初始化变量
+    $echo = null;
+    $type = strtolower($type);
+    switch ($type) {
+        case 'encode':
+            //编码
+            //检查参数
+            if (!is_json($var) && !is_array($var)) {
+                $var = $var;
+            } else if (is_array($var)) {
+                $var = fcf_json($var, 'encode');
+            }
+            $echo = $var;
+            break;
+        case 'decode':
+            //解码
+            //检查参数
+            if (!is_json($var) && !is_array($var)) {
+                $var = [];
+            } else if (is_json($var)) {
+                $var = fcf_json($var, 'decode');
+            }
+            $echo = $var;
+            break;
+    }
+    return $echo;
+}
+
+/**
  * 框架-公共-函数-Json
  * @param mixed $var 变量
  * @param string $type 类型
@@ -1001,6 +1037,41 @@ function fcf_exception($e)
 {
     //返回异常
     return $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine();
+}
+
+/**
+ * 框架-模块-函数-Crypt <p>
+ * fmf crypt
+ * </p>
+ * @param mixed $var 变量
+ * @param string $type 类型
+ * @param string $param 参数
+ * @return mixed
+ */
+function fmf_crypt($var, $type, $param = null)
+{
+    //初始化变量
+    $config = fxy_config('safe.base');
+    if (!$config['crypt_switch']) return $var;
+    $data = null;
+    if (!is_array($param)) {
+        $param = null;
+    }
+    $predefined = [
+        'method' => $config['crypt_method'], 'password' => $config['crypt_key'], 'options' => $config['crypt_options'],
+        'iv' => $config['crypt_iv'],
+    ];
+    $param = fsi_param([$param, $predefined], '1.1.2');
+    $type = strtolower($type);
+    switch ($type) {
+        case 'encode':
+            $data = fcf_crypt($var, 'encode', $param);
+            break;
+        case 'decode':
+            $data = fcf_crypt($var, 'decode', $param);
+            break;
+    }
+    return $data;
 }
 
 /**
