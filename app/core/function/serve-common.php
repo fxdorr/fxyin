@@ -455,7 +455,7 @@ function fcs_database($type, $options = [])
         case 'mongodb':
             //mongodb数据库
             if (empty($options)) {
-                $options = fxy_config('database')['mongodb'];
+                $options = fxy_config('database.mongodb');
             }
             $echo = Db::connect($options);
             break;
