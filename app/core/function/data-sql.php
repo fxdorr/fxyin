@@ -26,6 +26,9 @@ function dqa_where($var, $key, $value, $comparison, $logic, $rank)
     }
     //过滤非法字符
     $safe = dqa_where_safe($value, $comparison);
+    if (false === $safe) {
+        return $var;
+    }
     //搭建函数组合
     $build = dqa_where_build($key, $safe, $comparison);
     $data = [
@@ -79,6 +82,9 @@ function dqa_where_safe($var, &$comparison)
                 $var = explode(' and ', $var);
             } else if (!is_array($var)) {
                 $var = explode(',', $var);
+            }
+            if (count($var) < 2) {
+                return false;
             }
             break;
         case 'find_in_set':
@@ -202,9 +208,10 @@ function dqa_where_build($key, $value, $comparison)
 /**
  * 数据-查询-组装-Where-Make
  * @param array $var 变量
+ * @param int $type 类型
  * @return string
  */
-function dqa_where_make($var)
+function dqa_where_make($var, $type = 1)
 {
     $data = [];
     if (!is_array($var)) {
@@ -224,6 +231,16 @@ function dqa_where_make($var)
         $data[$key] = $value;
     }
     $data = implode(' and ', $data);
+    switch ($type) {
+        default:
+        case 1:
+            //无处理
+            break;
+        case 2:
+            //拼接Where
+            $data = strlen($data) > 0 ? 'where ' . $data : $data;
+            break;
+    }
     return $data;
 }
 
@@ -352,29 +369,36 @@ function dqa_elfirst($field)
 function dqa_datetime($time = null, $type = -1)
 {
     $time = dsc_pempty([$time])[0] ? $time : time();
-    if (is_string($time)) {
+    if (is_string($time) && !is_numeric($time)) {
         $time = strtotime($time);
     }
     switch ($type) {
         case 1:
+            //日期转时间戳
             $time = strtotime(date('Y-m-d 00:00:00', $time)) . " and " . strtotime(date('Y-m-d 23:59:59', $time));
             break;
         case 2:
+            //日期转时间戳
             $time = strtotime(date('Y-m-d 00:00:00', $time));
             break;
         case 3:
+            //日期转时间戳
             $time = strtotime(date('Y-m-d 23:59:59', $time));
             break;
         case 4:
+            //日期转时间戳
             $time = strtotime(date('Y-m-d H:i:s', $time));
             break;
         case 5:
+            //时间戳转日期
             $time = date('Y-m-d 00:00:00', $time);
             break;
         case 6:
+            //时间戳转日期
             $time = date('Y-m-d 23:59:59', $time);
             break;
         case 7:
+            //时间戳转日期
             $time = date('Y-m-d H:i:s', $time);
             break;
     }
@@ -395,9 +419,11 @@ function dqa_fjson($field, $param, $mode = null)
     switch ($mode) {
         default:
         case 1:
+            //默认
             $result = "if(json_valid({$field}), trim(both '\"' from {$field}->'{$param}'), {$field})";
             break;
         case 2:
+            //非Json则替换
             $result = "if(json_valid({$field}), {$field}, '{}')";
             break;
     }
@@ -413,7 +439,7 @@ function dqa_fjson($field, $param, $mode = null)
  * @param int $mode 模式
  * @return string
  */
-function dqa_fsempty($field, $replace = '', $mode = null)
+function dqa_fsempty($field, $replace = '', $mode = 1)
 {
     if (!dsc_pempty([$field])[0]) {
         $field = '\'' . $field . '\'';
@@ -421,6 +447,7 @@ function dqa_fsempty($field, $replace = '', $mode = null)
     switch ($mode) {
         default:
         case 1:
+            //默认
             if (is_numeric($replace)) {
                 $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
             } else {
@@ -428,6 +455,7 @@ function dqa_fsempty($field, $replace = '', $mode = null)
             }
             break;
         case 2:
+            //为空则替换
             $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
             break;
     }
@@ -463,12 +491,12 @@ function dqa_fdempty($field, $replace = '', $type = 1)
             $bool = 'from_unixtime(' . $field . ',\'%H:%i:%S\')';
             break;
     }
-    if (!dsc_pempty([$replace])[0]) {
+    if (is_null($replace)) {
         $replace = $bool;
     } else {
         $replace = '\'' . $replace . '\'';
     }
-    $result = 'if(' . $field . '=0,' . $replace . ',' . $bool . ')';
+    $result = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $bool . ')';
     return $result;
 }
 

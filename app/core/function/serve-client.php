@@ -224,7 +224,7 @@ function ftc_method($type = -1)
 function ftc_param($param = null, $method = 'param')
 {
     //初始化变量
-    $data = [];
+    $echo = [];
     $input = file_get_contents('php://input');
     $predefined = [
         //GET-POST-INPUT
@@ -237,31 +237,28 @@ function ftc_param($param = null, $method = 'param')
         switch ($value) {
             case 'param':
                 //全部入参
-                $data = array_merge(...array_values($base));
+                $echo = array_merge(...array_values($base));
                 break;
             case 'get':
             case 'post':
             case 'input':
                 //提取入参
-                $data = array_merge($data, $base[$value]);
+                $echo = array_merge($echo, $base[$value]);
                 break;
             case 'put':
             case 'patch':
             case 'delete':
                 //提取入参
-                $data = array_merge($data, $base['input']);
+                $echo = array_merge($echo, $base['input']);
                 break;
         }
     }
     if (is_array($param)) {
         //获取指定参数数组
-        $echo = fmo_pick($data, $param);
+        $echo = fmo_pick($echo, $param);
     } else if (is_string($param)) {
         //获取指定参数
-        $echo = $data[$param] ?? null;
-    } else {
-        //获取全部参数
-        $echo = $data;
+        $echo = $echo[$param] ?? null;
     }
     return $echo;
 }
