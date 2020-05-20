@@ -28,24 +28,6 @@ class Config
     }
 
     /**
-     * 解析配置文件或内容
-     * @param string    $config 配置文件路径或内容
-     * @param string    $type 配置解析类型
-     * @param string    $name 配置名（如设置即表示二级配置）
-     * @param string    $range  作用域
-     * @return mixed
-     */
-    public static function parse($config, $type = '', $name = '', $range = '')
-    {
-        $range = $range ?: self::$range;
-        if (empty($type)) {
-            $type = pathinfo($config, PATHINFO_EXTENSION);
-        }
-        $class = false !== strpos($type, '\\') ? $type : '\\fxyin\\config\\driver\\' . ucwords($type);
-        return self::set((new $class())->parse($config), $name, $range);
-    }
-
-    /**
      * 加载配置文件（PHP格式）
      * @param string    $file 配置文件名
      * @param string    $name 配置名（如设置即表示二级配置）
@@ -60,12 +42,7 @@ class Config
         }
         if (is_file($file)) {
             $name = strtolower($name);
-            $type = pathinfo($file, PATHINFO_EXTENSION);
-            if ('php' == $type) {
-                return self::set(include $file, $name, $range);
-            } else {
-                return self::parse($file, $type, $name, $range);
-            }
+            return self::set(include $file, $name, $range);
         } else {
             return self::$config[$range];
         }

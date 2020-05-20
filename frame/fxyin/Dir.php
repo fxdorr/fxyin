@@ -13,7 +13,6 @@ namespace fxyin;
 //类定义开始
 class Dir
 {
-
     private $_values = array();
     public $error = "";
 
@@ -96,11 +95,11 @@ class Dir
                 $dir[$i]['isReadable'] = is_readable($file);
                 $dir[$i]['isWritable'] = is_writable($file);
             }
-            $cmp_func = create_function('$a,$b', '
-            $k  =  "isDir";
-            if($a[$k]  ==  $b[$k])  return  0;
-            return  $a[$k]>$b[$k]?-1:1;
-            ');
+            $cmp_func = function ($a, $b) {
+                $k  =  "isDir";
+                if ($a[$k]  ==  $b[$k]) return 0;
+                return  $a[$k] > $b[$k] ? -1 : 1;
+            };
             // 对结果排序 保证目录在前面
             usort($dir, $cmp_func);
             $this->_values = $dir;

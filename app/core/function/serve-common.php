@@ -11,7 +11,6 @@
 
 use fxyin\cache\driver\Redis;
 use fxyin\cache\driver\File;
-use fxyin\Db;
 
 /**
  * 框架-公共-检查-格式
@@ -102,9 +101,6 @@ function fco_return($var, $type = '')
         case 'json':
             //返回JSON数据格式到客户端，包含状态信息
             exit(fxy_json($var)->send());
-        case 'xml':
-            //返回xml格式数据
-            exit(fxy_xml($var)->send());
     }
 }
 
@@ -432,32 +428,6 @@ function fcs_cache($type, $options = [])
         case 'file':
             //文件系统
             $echo = new File($options);
-            break;
-    }
-    return $echo;
-}
-
-/**
- * 框架-公共-服务-数据库
- * @param array $type 类型
- * @param array $options 参数
- * @return MongoDB|Redis
- */
-function fcs_database($type, $options = [])
-{
-    //初始化变量
-    $echo = null;
-    if (!is_string($type)) {
-        return $echo;
-    }
-    $type = strtolower($type);
-    switch ($type) {
-        case 'mongodb':
-            //mongodb数据库
-            if (empty($options)) {
-                $options = fxy_config('database.mongodb');
-            }
-            $echo = Db::connect($options);
             break;
     }
     return $echo;

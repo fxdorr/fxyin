@@ -9,38 +9,6 @@
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
 
-use fxyin\Image;
-
-/**
- * 框架-公共-操作-缩略图 <p>
- * fco thumb
- * </p>
- * @param string $src
- * @param int $width
- * @param int $height
- * @param boolean $replace
- * @return string
- */
-function fco_thumb($src = '', $width = 500, $height = 500, $replace = false)
-{
-    if (is_file($src) && file_exists($src)) {
-        $ext = pathinfo($src, PATHINFO_EXTENSION);
-        $name = basename($src, '.' . $ext);
-        $dir = dirname($src);
-        if (in_array($ext, array('gif', 'jpg', 'jpeg', 'bmp', 'png'))) {
-            $name = $name . '_thumb_' . $width . '_' . $height . '.' . $ext;
-            $file = $dir . '/' . $name;
-            if (!file_exists($file) || $replace == true) {
-                $image = new \fxyin\file\driver\Image($src);
-                $image->thumb($width, $height, 1);
-                $image->save($file);
-            }
-            return $file;
-        }
-    }
-    return $src;
-}
-
 /**
  * 框架-公共-操作-格式化文件大小 <p>
  * fco format file size

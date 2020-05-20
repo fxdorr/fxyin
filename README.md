@@ -1,4 +1,4 @@
-风音框架 V1.0
+风音框架 V1.1
 ===============
 
 > 运行环境要求PHP7.1+
@@ -12,7 +12,11 @@
 ~~~
 $root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 // 加载风音框架
-require $root . 'extend' . DIRECTORY_SEPARATOR . 'fxri' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'start.php';
+require $root . 'extend' . DIRECTORY_SEPARATOR . 'fxri' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'autoload.php';
+// 初始化环境
+\fxyin\Env::init($root);
+// 初始化应用
+\fxyin\App::init();
 ~~~
 
 ## 项目开发
