@@ -26,7 +26,7 @@ class Flashsms extends Notify
      */
     public function common()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -37,68 +37,68 @@ class Flashsms extends Notify
         $parm['content'] = $tran['content'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //初始化环境变量
-        //用户ID
-        $conf['uid'] = fxy_config('notify.flashsms.common.uid');
-        //用户安全子系统标识，即能力工具箱分配的Appkey
-        //应用钥匙
-        $conf['app_key'] = fxy_config('notify.flashsms.common.app_key');
-        //应用密钥
-        $conf['app_secret'] = fxy_config('notify.flashsms.common.app_secret');
-        //消息的源地址，即开发者的接入码。[示例] 1065795555
-        $conf['from'] = fxy_config('notify.flashsms.common.from');
-        //因PHP的加密结果不匹配，密码摘要采用JAVA加密
-        $conf['digest'] = fxy_config('notify.flashsms.common.digest');
-        //接口域
-        $conf['domain'] = fxy_config('notify.flashsms.common.domain');
+        // 初始化环境变量
+        // 用户ID
+        $conf['uid'] = \fxapp\Base::config('notify.flashsms.common.uid');
+        // 用户安全子系统标识，即能力工具箱分配的Appkey
+        // 应用钥匙
+        $conf['app_key'] = \fxapp\Base::config('notify.flashsms.common.app_key');
+        // 应用密钥
+        $conf['app_secret'] = \fxapp\Base::config('notify.flashsms.common.app_secret');
+        // 消息的源地址，即开发者的接入码。[示例] 1065795555
+        $conf['from'] = \fxapp\Base::config('notify.flashsms.common.from');
+        // 因PHP的加密结果不匹配，密码摘要采用JAVA加密
+        $conf['digest'] = \fxapp\Base::config('notify.flashsms.common.digest');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('notify.flashsms.common.domain');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
-        //待发数据
+        // 待发数据
         $parm_2 = [
-            //消息的源地址，即开发者的接入码。[示例] 1065795555
+            // 消息的源地址，即开发者的接入码。[示例] 1065795555
             'From' => $conf['from'],
-            //消息的目的地址，终端用户的手机号码。[示例] ["8618625150488","8618625150489"]
+            // 消息的目的地址，终端用户的手机号码。[示例] ["8618625150488","8618625150489"]
             'To' => $parm['account'],
-            //短信内容。[示例] hello world!
+            // 短信内容。[示例] hello world!
             'Body' => $parm['content'],
         ];
         $parm_3['data'] = fcf_json($parm_2, 'encode');
         $parm_3['data_count'] = strlen($parm_3['data']);
-        //请求头配置
+        // 请求头配置
         $parm_3['app_key'] = $conf['app_key'];
-        //随机数。参见OASIS WS-Security standard。
+        // 随机数。参见OASIS WS-Security standard。
         $parm_3['nonce'] = fcf_rand(24);
         $parm_3['time'] = time() - 28800;
-        //创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
+        // 创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
         $parm_3['created'] = date('Y-m-d', $parm_3['time']) . 'T' . date('H:i:s', $parm_3['time']) . 'Z';
         $parm_3['password'] = $conf['app_secret'];
     //  $parm_3['passworddigest'] = base64_encode(hash('sha256', $parm_3['nonce'].$parm_3['created'].$parm_3['password']));
         $conf['digest'] = dso_splice($conf['digest'], 'digest=' . $parm_3['nonce'] . $parm_3['created'] . $parm_3['password'], '?');
         $parm_3['digest'] = json_decode(fss_http($conf['digest'], '', [], 'post'), true);
-        //密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。
+        // 密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。
         $parm_3['passworddigest'] = $parm_3['digest']['info'];
         $parm_3['header'] = [
-            //认证鉴权方式。能力工具箱采用 WSSE  UsernameToken，该参数固定为 “WSSE”。
-            //认证鉴权方，能力工具箱中默认为“SDP”。
-            //能力工具箱采用WSSE 的UsernameToken，该参数应该填为 “UsernameToken”。
-            //认证类型，固定为”Appkey”。
+            // 认证鉴权方式。能力工具箱采用 WSSE  UsernameToken，该参数固定为 “WSSE”。
+            // 认证鉴权方，能力工具箱中默认为“SDP”。
+            // 能力工具箱采用WSSE 的UsernameToken，该参数应该填为 “UsernameToken”。
+            // 认证类型，固定为”Appkey”。
             'Authorization:WSSE realm="SDP", profile="UsernameToken",type="Appkey"',
-            //标识WSSE的认证类型： 能力工具箱使用WSSE的 UsernameToken进行认证，本参数填写“UsernameToken”。
-            //用户安全子系统标识，即能力工具箱分配的Appkey。
-            //密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。
-            //随机数。参见OASIS WS-Security standard。
-            //创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
+            // 标识WSSE的认证类型： 能力工具箱使用WSSE的 UsernameToken进行认证，本参数填写“UsernameToken”。
+            // 用户安全子系统标识，即能力工具箱分配的Appkey。
+            // 密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。
+            // 随机数。参见OASIS WS-Security standard。
+            // 创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
             'X-WSSE:UsernameToken Username="' . $parm_3['app_key'] . '",PasswordDigest="' . $parm_3['passworddigest'] . '",Nonce="' . $parm_3['nonce'] . '",Created="' . $parm_3['created'] . '"',
             'Accept:text/json',
             'Content-Type:application/json;charset=UTF-8',
             'Content-Length: ' . $parm_3['data_count']
         ];
-        //发送请求
+        // 发送请求
         $record = fss_http($conf['domain'], $parm_3['data'], $parm_3['header']);
-        //响应解析
+        // 响应解析
         $record = json_decode($record, true);
         if (empty($record) || isset($record['Code'])) {
             $errinfo = '发送失败！';
@@ -191,14 +191,14 @@ class Flashsms extends Notify
                     $errinfo = '短信或彩信内容或主题的长度大于最大长度。';
                     break;
             }
-            //返回发送失败的提示
+            // 返回发送失败的提示
             $result[0] = false;
             $result[1] = 1002;
             $result[2] = $errinfo;
             return $result;
         } else {
-            //发送成功
-            $result[2] = fxy_lang(['send', 'success']);
+            // 发送成功
+            $result[2] = \fxapp\Base::lang(['send', 'success']);
             return $result;
         }
     }

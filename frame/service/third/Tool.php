@@ -55,7 +55,7 @@ class ToolService extends Tool
      */
     public function qrcodeMake()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -77,16 +77,16 @@ class ToolService extends Tool
         $parm['size'] = $tran['size'];
         $parm['margin'] = $tran['margin'];
         $parm['print'] = $tran['print'];
-        //SDK地址
-        $conf['url_sdk'] = fxy_config('third.tool.qrcode.url_sdk');
-        //引入核心库文件
-        fxy_load($conf['url_sdk']);
-        //调用QRcode类的静态方法png生成二维码图片
+        // SDK地址
+        $conf['url_sdk'] = \fxapp\Base::config('third.tool.qrcode.url_sdk');
+        // 引入核心库文件
+        \fxapp\Base::load($conf['url_sdk']);
+        // 调用QRcode类的静态方法png生成二维码图片
         if (!is_dir(dirname($parm['file_url']))) {
             \fxyin\Dir::create(dirname($parm['file_url']));
         }
         \QRcode::png($parm['content'], $parm['file_url'], $parm['level'], $parm['size'], $parm['margin'], $parm['print']);
-        $result[2] = fxy_lang(['request', 'success']);
+        $result[2] = \fxapp\Base::lang(['request', 'success']);
         $result[3] = $parm;
         return $result;
     }
@@ -100,7 +100,7 @@ class ToolService extends Tool
      */
     public function excelExport()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -116,14 +116,14 @@ class ToolService extends Tool
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         $parm['file_name'] = $tran['file_name'];
-        //服务处理
+        // 服务处理
         header("Content-type:application/octet-stream");
         header("Accept-Ranges:bytes");
         header("Content-type:application/vnd.ms-excel.numberformat:@");
         header("Content-Disposition:attachment;filename=" . $parm['file_name'] . ".xls");
         header("Pragma: no-cache");
         header("Expires: 0");
-        //导出xls开始
+        // 导出xls开始
         if (!empty($parm['title'])) {
             foreach ($parm['title'] as $key => $value) {
                 $parm['title'][$key] = iconv("UTF-8", "GB2312", $value);
@@ -149,7 +149,7 @@ class ToolService extends Tool
      */
     public function excelImport()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
     }

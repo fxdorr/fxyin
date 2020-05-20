@@ -30,7 +30,7 @@ function fts_ip()
 function fts_system($type = -1)
 {
     $echo = php_uname();
-    //开始检测
+    // 开始检测
     if (preg_match("/win/i", $echo) && preg_match("/95/i", $echo)) {
         $echo = 'Windows 95';
     } else if (preg_match("/win 9x/i", $echo) && preg_match("/4.90/i", $echo)) {
@@ -86,11 +86,11 @@ function fts_system($type = -1)
     }
     switch ($type) {
         case 1:
-            //格式化-小写
+            // 格式化-小写
             $echo = strtolower($echo);
             break;
         case 2:
-            //格式化-大写
+            // 格式化-大写
             $echo = strtoupper($echo);
             break;
     }

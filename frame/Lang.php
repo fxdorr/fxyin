@@ -156,10 +156,10 @@ class Lang
             if (PHP_SAPI !== 'cli') {
                 setcookie(self::$langCookieVar, $langSet, self::$langCookieExpire);
             }
-        } elseif ($_COOKIE[self::$langCookieVar]) {
+        } else if ($_COOKIE[self::$langCookieVar]) {
             // 获取上次用户的选择
             $langSet = strtolower($_COOKIE[self::$langCookieVar]);
-        } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        } else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // 自动侦测浏览器语言
             preg_match('/^([a-z\d\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);
             $langSet = strtolower($matches[1]);

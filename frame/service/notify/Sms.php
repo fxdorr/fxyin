@@ -26,7 +26,7 @@ class Sms extends Notify
      */
     public function alidayu()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -42,20 +42,20 @@ class Sms extends Notify
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         $parm['_param'] = $tran['_param'];
-        //初始化环境变量
-        //应用钥匙
-        $conf['appkey'] = fxy_config('notify.sms.alidayu.app_key');
-        //应用密钥
-        $conf['secretKey'] = fxy_config('notify.sms.alidayu.app_secret');
-        //SDK地址
-        $conf['url_sdk'] = fxy_config('notify.sms.alidayu.url_sdk');
+        // 初始化环境变量
+        // 应用钥匙
+        $conf['appkey'] = \fxapp\Base::config('notify.sms.alidayu.app_key');
+        // 应用密钥
+        $conf['secretKey'] = \fxapp\Base::config('notify.sms.alidayu.app_secret');
+        // SDK地址
+        $conf['url_sdk'] = \fxapp\Base::config('notify.sms.alidayu.url_sdk');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
-        fxy_load($conf['url_sdk']);
-        //开始执行
+        \fxapp\Base::load($conf['url_sdk']);
+        // 开始执行
         $c = new \TopClient;
         $c->appkey = $conf['appkey'];
         $c->secretKey = $conf['secretKey'];
@@ -71,16 +71,16 @@ class Sms extends Notify
         $record['msg'] = $resp->msg;
         $record['sub_msg'] = $resp->sub_msg;
         if ($record['status']) {
-            $result[2] = fxy_lang(['send', 'success']);
+            $result[2] = \fxapp\Base::lang(['send', 'success']);
             return $result;
         } else {
             $result[0] = false;
             $result[1] = 1002;
             $result[2] = $record['sub_msg'] ?: $record['msg'];
             if ($result[2] == '触发业务流控') {
-                $result[2] = fxy_lang(['send', 'fail', ',', 'sms', 'interval', '1', 'minute']);
+                $result[2] = \fxapp\Base::lang(['send', 'fail', ',', 'sms', 'interval', '1', 'minute']);
             } else {
-                $result[2] = fxy_lang(['send', 'fail', ',', $result[2]]);
+                $result[2] = \fxapp\Base::lang(['send', 'fail', ',', $result[2]]);
             }
             return $result;
         }
@@ -94,7 +94,7 @@ class Sms extends Notify
      */
     public function webservice()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -105,25 +105,25 @@ class Sms extends Notify
         $parm['content'] = $tran['content'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //初始化环境变量
-        //企业账号
-        $conf['corporation'] = fxy_config('notify.sms.webservice.corporation');
-        //接入号即服务代码
-        $conf['src_tele_num'] = fxy_config('notify.sms.webservice.src_tele_num');
-        //接口域
-        $conf['domain'] = fxy_config('notify.sms.webservice.domain');
+        // 初始化环境变量
+        // 企业账号
+        $conf['corporation'] = \fxapp\Base::config('notify.sms.webservice.corporation');
+        // 接入号即服务代码
+        $conf['src_tele_num'] = \fxapp\Base::config('notify.sms.webservice.src_tele_num');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('notify.sms.webservice.domain');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
-        //设置配置
+        // 设置配置
         $conf['message_id'] = -1;
         $conf['password'] = (int) substr($parm['account'], 7, 4) * 3 + 6016;
         $conf['src_tele_num'] = $conf['src_tele_num'];
         $conf['dest_tele_num'] = $parm['account'];
         $conf['message'] = $parm['content'];
-        //开始执行
+        // 开始执行
         $wsdl = $conf['domain'];
         $client = new \SoapClient($wsdl);
         $corporation = $conf['corporation'];
@@ -142,8 +142,8 @@ class Sms extends Notify
         $doc = new \SimpleXMLElement($record->out);
         $status = $doc->info->state;
         if ($status == 0) {
-            //发送成功
-            $result[2] = fxy_lang(['send', 'success']);
+            // 发送成功
+            $result[2] = \fxapp\Base::lang(['send', 'success']);
             return $result;
         } else {
             $errinfo = '发送失败！';
@@ -170,7 +170,7 @@ class Sms extends Notify
                     $errinfo = '验证码不匹配！';
                     break;
             }
-            //返回发送失败的提示
+            // 返回发送失败的提示
             $result[0] = false;
             $result[1] = 1002;
             $result[2] = $errinfo;

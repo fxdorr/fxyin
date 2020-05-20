@@ -20,22 +20,22 @@ use fxyin\cache\driver\File;
  */
 function fcc_format($data, $type = 1)
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
-    $debug['switch'] = fxy_config('app.debug.switch');
-    $debug['level'] = fxy_config('app.debug.level');
-    $debug['data'] = fxy_config('app.debug.data');
+    $debug['switch'] = \fxapp\Base::config('app.debug.switch');
+    $debug['level'] = \fxapp\Base::config('app.debug.level');
+    $debug['data'] = \fxapp\Base::config('app.debug.data');
     switch ($type) {
         default:
         case 1:
-            //默认
+            // 默认
             $echo = $data;
             break;
         case 2:
-            //通用
-            $base = fxy_config('app.echo.format');
-            //处理数据
-            $data[2] = fxy_lang($data[2]);
+            // 通用
+            $base = \fxapp\Base::config('app.echo.format');
+            // 处理数据
+            $data[2] = \fxapp\Base::lang($data[2]);
             foreach ($base as $key => $value) {
                 if (array_key_exists($key, $data)) {
                     $echo[$value] = $data[$key];
@@ -43,35 +43,35 @@ function fcc_format($data, $type = 1)
             }
             break;
     }
-    //调试模式
+    // 调试模式
     if ($debug['switch'] && $debug['level']) {
         $echo['debug'] = ['' => null];
         $debug['level'] = fmo_explode(',', strtolower($debug['level']));
         foreach ($debug['level'] as $value) {
             switch ($value) {
                 default:
-                    //匹配
+                    // 匹配
                     if (array_key_exists($value, $debug['data'])) {
                         $echo['debug'][$value] = $debug['data'][$value];
                     }
                     break;
                 case '1':
-                    //全部
+                    // 全部
                     $echo['debug'] = fsi_param([$echo['debug'], $debug['data']], '1.1.1');
                     break;
                 case '2':
-                    //入参
+                    // 入参
                     $echo['debug']['param'] = $debug['data']['param'];
                     $echo['debug']['get'] = $debug['data']['get'];
                     $echo['debug']['post'] = $debug['data']['post'];
                     $echo['debug']['input'] = $debug['data']['input'];
                     break;
                 case '3':
-                    //文件
+                    // 文件
                     $echo['debug']['files'] = $debug['data']['files'];
                     break;
                 case '4':
-                    //环境
+                    // 环境
                     $echo['debug']['server'] = $debug['data']['server'];
                     $echo['debug']['cookie'] = $debug['data']['cookie'];
                     $echo['debug']['session'] = $debug['data']['session'];
@@ -80,7 +80,7 @@ function fcc_format($data, $type = 1)
             }
         }
     }
-    //空对象处理
+    // 空对象处理
     $echo = fmo_oempty($echo);
     return $echo;
 }
@@ -93,14 +93,14 @@ function fcc_format($data, $type = 1)
  */
 function fco_return($var, $type = '')
 {
-    //返回格式
+    // 返回格式
     $type = !empty($type) ? $type : 'json';
     $type = strtolower($type);
     switch ($type) {
         default:
         case 'json':
-            //返回JSON数据格式到客户端，包含状态信息
-            exit(fxy_json($var)->send());
+            // 返回JSON数据格式到客户端，包含状态信息
+            exit(\fxapp\Base::json($var)->send());
     }
 }
 
@@ -110,8 +110,8 @@ function fco_return($var, $type = '')
  */
 function fsi_result()
 {
-    //初始化变量
-    $echo = fxy_config('app.echo.template');
+    // 初始化变量
+    $echo = \fxapp\Base::config('app.echo.template');
     return $echo;
 }
 
@@ -123,15 +123,15 @@ function fsi_result()
  */
 function fsi_param($param, $mode = null)
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     switch ($mode) {
         default:
-            //默认
+            // 默认
             $echo = $param;
             break;
         case '1.1.1':
-            //数组覆盖-融合-值不存在
+            // 数组覆盖-融合-值不存在
             // $predefined = [
             //     'data' => null,
             // ];
@@ -144,7 +144,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.1.2':
-            //数组覆盖-融合-值不存在或为空字符串
+            // 数组覆盖-融合-值不存在或为空字符串
             // $predefined = [
             //     'data' => null,
             // ];
@@ -157,7 +157,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.1.3':
-            //数组覆盖-融合-值不存在或为非数组
+            // 数组覆盖-融合-值不存在或为非数组
             // $predefined = [
             //     'data' => null,
             // ];
@@ -180,7 +180,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.2.1':
-            //数组覆盖-赋空-值不存在
+            // 数组覆盖-赋空-值不存在
             // $predefined = [
             //     'data',
             // ];
@@ -193,7 +193,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.2.2':
-            //数组覆盖-赋空-值不存在或为空字符串
+            // 数组覆盖-赋空-值不存在或为空字符串
             // $predefined = [
             //     'data',
             // ];
@@ -206,7 +206,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.2.3':
-            //数组覆盖-赋空-值不存在或为非数组
+            // 数组覆盖-赋空-值不存在或为非数组
             // $predefined = [
             //     'data',
             // ];
@@ -226,7 +226,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.2.4':
-            //数组覆盖-赋空-值拆分数组
+            // 数组覆盖-赋空-值拆分数组
             // $predefined = [
             //     'data',
             // ];
@@ -243,7 +243,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.3.1':
-            //数组覆盖-倒融合-值不存在
+            // 数组覆盖-倒融合-值不存在
             // $predefined = [
             //     'data' => null,
             // ];
@@ -256,7 +256,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '1.3.2':
-            //数组覆盖-倒融合-赋空-值不存在
+            // 数组覆盖-倒融合-赋空-值不存在
             // $predefined = [
             //     'data' => null,
             // ];
@@ -271,7 +271,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '2.1.1':
-            //数组新建-融合-值不存在
+            // 数组新建-融合-值不存在
             // $predefined = [
             //     'data' => null,
             // ];
@@ -285,7 +285,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '2.1.2':
-            //数组新建-融合-值不存在或为空字符串
+            // 数组新建-融合-值不存在或为空字符串
             // $predefined = [
             //     'data' => null,
             // ];
@@ -299,7 +299,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '2.2.1':
-            //数组新建-赋空-值不存在
+            // 数组新建-赋空-值不存在
             // $predefined = [
             //     'data',
             // ];
@@ -313,7 +313,7 @@ function fsi_param($param, $mode = null)
             }
             break;
         case '2.2.2':
-            //数组新建-赋空-值不存在或为空字符串
+            // 数组新建-赋空-值不存在或为空字符串
             // $predefined = [
             //     'data',
             // ];
@@ -338,7 +338,7 @@ function fsi_param($param, $mode = null)
  */
 function fsi_uuid($mode = null, $tran = [])
 {
-    //初始化变量
+    // 初始化变量
     $uuid = '';
     $predefined = [
         'uuid' => '', 'prefix' => '', 'style' => '',
@@ -347,7 +347,7 @@ function fsi_uuid($mode = null, $tran = [])
     switch ($mode) {
         default:
         case 1:
-            //随机生成标准UUID
+            // 随机生成标准UUID
             if (empty($tran['uuid'])) {
                 $chars = strtoupper(md5(uniqid(mt_rand(), true)));
             } else {
@@ -361,7 +361,7 @@ function fsi_uuid($mode = null, $tran = [])
             $uuid = $tran['prefix'] . $uuid;
             break;
         case 2:
-            //随机生成大写UUID或将现有UUID大写
+            // 随机生成大写UUID或将现有UUID大写
             if (empty($tran['uuid'])) {
                 $chars = strtoupper(md5(uniqid(mt_rand(), true)));
             } else {
@@ -370,7 +370,7 @@ function fsi_uuid($mode = null, $tran = [])
             $uuid = $chars;
             break;
         case 3:
-            //随机生成大写UUID或将现有UUIDMD5并大写
+            // 随机生成大写UUID或将现有UUIDMD5并大写
             if (empty($tran['uuid'])) {
                 $chars = strtoupper(md5(uniqid(mt_rand(), true)));
             } else {
@@ -383,19 +383,19 @@ function fsi_uuid($mode = null, $tran = [])
     foreach ($tran['style'] as $key => $value) {
         switch ($value) {
             case 1:
-                //32位-大写
+                // 32位-大写
                 $uuid = strtoupper($uuid);
                 break;
             case 2:
-                //32位-小写
+                // 32位-小写
                 $uuid = strtolower($uuid);
                 break;
             case 3:
-                //16位-大写
+                // 16位-大写
                 $uuid = strtoupper(substr($uuid, 8, 16));
                 break;
             case 4:
-                //16位-小写
+                // 16位-小写
                 $uuid = strtolower(substr($uuid, 8, 16));
                 break;
         }
@@ -411,22 +411,22 @@ function fsi_uuid($mode = null, $tran = [])
  */
 function fcs_cache($type, $options = [])
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     if (!is_string($type)) {
         return $echo;
     }
     $type = strtolower($type);
     if (empty($options)) {
-        $options = fxy_config('app.cache')[$type];
+        $options = \fxapp\Base::config('app.cache')[$type];
     }
     switch ($type) {
         case 'redis':
-            //redis数据库
+            // redis数据库
             $echo = new Redis($options);
             break;
         case 'file':
-            //文件系统
+            // 文件系统
             $echo = new File($options);
             break;
     }
@@ -441,7 +441,7 @@ function fcs_cache($type, $options = [])
  */
 function fmo_explode($separator, $string)
 {
-    //初始化变量
+    // 初始化变量
     if (is_null($string) || '' == $string) {
         return [];
     }
@@ -455,17 +455,17 @@ function fmo_explode($separator, $string)
  */
 function fmo_oempty($param)
 {
-    //初始化变量
+    // 初始化变量
     if (is_array($param)) {
-        //空数组直接返回
+        // 空数组直接返回
         if (!count($param)) {
             return $param;
         }
-        //过滤空元素
+        // 过滤空元素
         if (array_key_exists('', $param) && is_null($param[''])) {
             unset($param['']);
         }
-        //处理数组
+        // 处理数组
         if (!count($param)) {
             $param = new \StdClass();
         } else {
@@ -485,7 +485,7 @@ function fmo_oempty($param)
  */
 function fmo_pick($base, $data)
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     if (!is_array($base)) {
         $base = [];
@@ -493,9 +493,9 @@ function fmo_pick($base, $data)
     if (!is_array($data)) {
         return $echo;
     }
-    //处理数据
+    // 处理数据
     foreach ($data as $key => $value) {
-        //提取匹配数据
+        // 提取匹配数据
         if (is_array($value)) {
             if (array_key_exists($key, $base)) {
                 $echo[$key] = fmo_pick($base[$key], $value);
@@ -520,12 +520,12 @@ function fmo_pick($base, $data)
  */
 function fmo_append(...$args)
 {
-    //初始化变量
+    // 初始化变量
     $echo = array_shift($args);
     if (!is_array($echo)) {
         $echo = [];
     }
-    //追加数组
+    // 追加数组
     foreach ($args as $data) {
         if (!is_array($data)) continue;
         foreach ($data as $key => $value) {
@@ -546,7 +546,7 @@ function fmo_append(...$args)
  */
 function fmo_merge(...$args)
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     if (count($args) < 2) {
         return array_shift($args);
@@ -566,11 +566,11 @@ function fmo_merge(...$args)
  */
 function fmo_cover($args)
 {
-    //初始化变量
+    // 初始化变量
     if (!is_array($args[0])) {
         $args[0] = $args[1];
     } else if (is_array($args[1])) {
-        //数组融合，已存在配置参数则覆盖
+        // 数组融合，已存在配置参数则覆盖
         foreach ($args[1] as $key => $value) {
             if (!isset($args[0][$key])) {
                 $args[0][$key] = $value;
@@ -594,8 +594,8 @@ function fmo_cover($args)
  */
 function fmo_plang($name, $mode = null)
 {
-    //初始化变量
-    $string = fxy_lang($name);
+    // 初始化变量
+    $string = \fxapp\Base::lang($name);
     if (is_null($mode)) {
         if (is_array($string)) {
             $mode = 2;
@@ -604,11 +604,11 @@ function fmo_plang($name, $mode = null)
     switch ($mode) {
         default:
         case 1:
-            //模式-字符串
+            // 模式-字符串
             echo $string;
             break;
         case 2:
-            //模式-数组
+            // 模式-数组
             print_r($string);
             break;
     }
@@ -622,13 +622,13 @@ function fmo_plang($name, $mode = null)
  */
 function fmf_json($var, $type)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
-            //检查参数
+            // 编码
+            // 检查参数
             if (!is_json($var) && !is_array($var)) {
                 $var = $var;
             } else if (is_array($var)) {
@@ -637,8 +637,8 @@ function fmf_json($var, $type)
             $echo = $var;
             break;
         case 'decode':
-            //解码
-            //检查参数
+            // 解码
+            // 检查参数
             if (!is_json($var) && !is_array($var)) {
                 $var = [];
             } else if (is_json($var)) {
@@ -659,19 +659,19 @@ function fmf_json($var, $type)
  */
 function fcf_json($var, $type, $param = null)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
+            // 编码
             if (is_null($param)) {
                 $param = JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES;
             }
             $echo = json_encode($var, $param);
             break;
         case 'decode':
-            //解码
+            // 解码
             if (is_null($param)) {
                 $param = true;
             }
@@ -689,8 +689,8 @@ function fcf_json($var, $type, $param = null)
  */
 function fcf_dump($param, $echo = true)
 {
-    //初始化变量
-    fxy_dump($param, $echo, fcf_mtime(fcf_mtime()));
+    // 初始化变量
+    \fxapp\Base::dump($param, $echo, fcf_mtime(fcf_mtime()));
 }
 
 /**
@@ -702,7 +702,7 @@ function fcf_dump($param, $echo = true)
  */
 function fcf_mtime($mtime = null)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     if (is_numeric($mtime)) {
         if (strlen($mtime) != 13) {
@@ -732,14 +732,14 @@ function fcf_mtime($mtime = null)
  */
 function fcf_ftime($time = null, $type = null)
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     if (!is_numeric($time)) {
         return false;
     }
-    //时间列表
+    // 时间列表
     $time_list = [];
-    //时间开关
+    // 时间开关
     $time_switch = [
         0 => false,
         1 => true,
@@ -749,7 +749,7 @@ function fcf_ftime($time = null, $type = null)
         5 => true,
         6 => true,
     ];
-    //时间名称
+    // 时间名称
     $time_name = [
         0 => 'millisecond',
         1 => 'sec',
@@ -763,49 +763,49 @@ function fcf_ftime($time = null, $type = null)
     switch ($type) {
         default:
         case '1.1':
-            //秒
+            // 秒
             break;
         case '1.2':
-            //毫秒
+            // 毫秒
             $time_switch[0] = true;
             break;
     }
-    //毫秒
+    // 毫秒
     if ($time_switch[0]) {
         $time_list[0] = $time_all % 1000;
         $time_all = intval($time_all / 1000);
     }
-    //秒
+    // 秒
     if ($time_switch[1]) {
         $time_list[1] = $time_all % 60;
         $time_all = intval($time_all / 60);
     }
-    //分钟
+    // 分钟
     if ($time_switch[2]) {
         $time_list[2] = $time_all % 60;
         $time_all = intval($time_all / 60);
     }
-    //小时
+    // 小时
     if ($time_switch[3]) {
         $time_list[3] = $time_all % 24;
         $time_all = intval($time_all / 24);
     }
-    //天
+    // 天
     if ($time_switch[4]) {
         $time_list[4] = $time_all % 30;
         $time_all = intval($time_all / 30);
     }
-    //月
+    // 月
     if ($time_switch[5]) {
         $time_list[5] = $time_all % 12;
         $time_all = intval($time_all / 12);
     }
-    //年
+    // 年
     if ($time_switch[6]) {
         $time_list[6] = $time_all;
     }
     krsort($time_list);
-    //去除0
+    // 去除0
     foreach ($time_list as $key => $value) {
         if ($value == 0) {
             unset($time_list[$key]);
@@ -815,7 +815,7 @@ function fcf_ftime($time = null, $type = null)
         $echo[] = $value;
         $echo[] = $time_name[$key];
     }
-    $echo = fxy_lang($echo);
+    $echo = \fxapp\Base::lang($echo);
     return $echo;
 }
 
@@ -827,12 +827,12 @@ function fcf_ftime($time = null, $type = null)
  */
 function fcf_ipv4($var, $type)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
+            // 编码
             $var = explode('.', $var);
             foreach ($var as $key => $value) {
                 $value = ltrim($value, 0);
@@ -848,7 +848,7 @@ function fcf_ipv4($var, $type)
             }
             break;
         case 'decode':
-            //解码
+            // 解码
             $echo = long2ip($var);
             break;
     }
@@ -863,7 +863,7 @@ function fcf_ipv4($var, $type)
  */
 function fcf_rand($length, $numeric = 0)
 {
-    //初始化变量
+    // 初始化变量
     $seed = base_convert(md5(microtime() . __DIR__), 16, $numeric ? 10 : 35);
     $seed = $numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
     if ($numeric) {
@@ -889,12 +889,12 @@ function fcf_rand($length, $numeric = 0)
  */
 function fcf_crypt($var, $type, $param = null)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
+            // 编码
             if (!is_array($param)) {
                 $param = null;
             }
@@ -906,7 +906,7 @@ function fcf_crypt($var, $type, $param = null)
             $echo = openssl_encrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
             break;
         case 'decode':
-            //解码
+            // 解码
             if (!is_array($param)) {
                 $param = null;
             }
@@ -929,14 +929,14 @@ function fcf_crypt($var, $type, $param = null)
  */
 function fcf_convert($var, $type)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'hexstr':
-            //16进制转字符串
+            // 16进制转字符串
             if (!$var) {
-                //空字符串
+                // 空字符串
                 return false;
             }
             $strs = [];
@@ -949,15 +949,15 @@ function fcf_convert($var, $type)
             $echo = $strs;
             break;
         case 'strhex':
-            //字符串转16进制
+            // 字符串转16进制
             if (!$var) {
-                //空字符串
+                // 空字符串
                 return false;
             } else if (mb_strlen($var, 'utf-8') != strlen($var)) {
-                //不解析混编数据
+                // 不解析混编数据
                 return false;
             } else if (strlen($var) % 2 != 0) {
-                //不解析单数字符串
+                // 不解析单数字符串
                 return false;
             }
             $strs = [];
@@ -981,17 +981,17 @@ function fcf_convert($var, $type)
  */
 function fcf_md5($var, $type = null)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = intval($type);
     switch ($type) {
         default:
         case 1:
-            //32位
+            // 32位
             $echo = md5($var);
             break;
         case 2:
-            //16位
+            // 16位
             $echo = substr(md5($var), 8, 16);
             break;
     }
@@ -1005,7 +1005,7 @@ function fcf_md5($var, $type = null)
  */
 function fcf_exception($e)
 {
-    //返回异常
+    // 返回异常
     return $e->getMessage() . ' ' . $e->getFile() . ' ' . $e->getLine();
 }
 
@@ -1020,8 +1020,8 @@ function fcf_exception($e)
  */
 function fmf_crypt($var, $type, $param = null)
 {
-    //初始化变量
-    $config = fxy_config('safe.base');
+    // 初始化变量
+    $config = \fxapp\Base::config('safe.base');
     if (!$config['crypt_switch']) return $var;
     $data = null;
     if (!is_array($param)) {
@@ -1052,23 +1052,23 @@ function fmf_crypt($var, $type, $param = null)
  */
 function fcf_token($var, $type)
 {
-    //初始化变量
+    // 初始化变量
     $echo = null;
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
+            // 编码
             if (!$var) {
-                //空字符串
+                // 空字符串
                 return false;
             } else if (is_array($var)) {
-                //数组
+                // 数组
                 $var = implode(',', $var);
             } else if (!is_string($var)) {
-                //非字符串
+                // 非字符串
                 return false;
             }
-            //计算加密长度
+            // 计算加密长度
             $param = ',' . $var . ',';
             $strlen = strlen($param);
             $exp = 5;
@@ -1078,28 +1078,28 @@ function fcf_token($var, $type)
                 ++$exp;
             } while ($strdiff < 0);
             $strmax = $pow;
-            //填充令牌
+            // 填充令牌
             $param = str_pad($param, $strmax, fcf_rand($strdiff / 2), STR_PAD_BOTH);
-            //加密令牌
+            // 加密令牌
             $param = fmf_crypt($param, 'encode');
             $echo = bin2hex($param);
             break;
         case 'decode':
-            //解码
+            // 解码
             if (!$var) {
-                //空字符串
+                // 空字符串
                 return false;
             } else if (!is_string($var)) {
-                //非字符串
+                // 非字符串
                 return false;
             } else if (strlen($var) % 2 != 0) {
-                //不解析单数字符串
+                // 不解析单数字符串
                 return false;
             } else if (!ctype_xdigit($var)) {
-                //非纯16进制字符串
+                // 非纯16进制字符串
                 return false;
             }
-            //解密令牌
+            // 解密令牌
             $param = hex2bin($var);
             $param = fmf_crypt($param, 'decode');
             $param = explode(',', $param);
@@ -1122,7 +1122,7 @@ function fcf_token($var, $type)
  */
 function fcf_rsapri($var, $type, $param = [])
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     if (!is_string($var) || !is_array($param)) return false;
     $predefined = [
@@ -1134,14 +1134,14 @@ function fcf_rsapri($var, $type, $param = [])
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
+            // 编码
             $var = str_split($var, 117);
             foreach ($var as $value) {
                 $trans = null;
-                //解析填充字符
+                // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
-                        //填充-自定义
+                        // 填充-自定义
                         $predefined = [
                             'pad' => "\0",
                         ];
@@ -1154,15 +1154,15 @@ function fcf_rsapri($var, $type, $param = [])
             }
             break;
         case 'decode':
-            //解码
+            // 解码
             $var = str_split($var, 128);
             foreach ($var as $value) {
                 $trans = null;
                 openssl_private_decrypt($value, $trans, $param['secret'], $param['type']);
-                //解析填充字符
+                // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
-                        //填充-自定义
+                        // 填充-自定义
                         $predefined = [
                             'pad' => "\0",
                         ];
@@ -1187,7 +1187,7 @@ function fcf_rsapri($var, $type, $param = [])
  */
 function fcf_rsapub($var, $type, $param = [])
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     if (!is_string($var) || !is_array($param)) return false;
     $predefined = [
@@ -1199,14 +1199,14 @@ function fcf_rsapub($var, $type, $param = [])
     $type = strtolower($type);
     switch ($type) {
         case 'encode':
-            //编码
+            // 编码
             $var = str_split($var, 117);
             foreach ($var as $value) {
                 $trans = null;
-                //解析填充字符
+                // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
-                        //填充-自定义
+                        // 填充-自定义
                         $predefined = [
                             'pad' => "\0",
                         ];
@@ -1219,15 +1219,15 @@ function fcf_rsapub($var, $type, $param = [])
             }
             break;
         case 'decode':
-            //解码
+            // 解码
             $var = str_split($var, 128);
             foreach ($var as $value) {
                 $trans = null;
                 openssl_public_decrypt($value, $trans, $param['secret'], $param['type']);
-                //解析填充字符
+                // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
-                        //填充-自定义
+                        // 填充-自定义
                         $predefined = [
                             'pad' => "\0",
                         ];
@@ -1252,12 +1252,12 @@ function fcf_rsapub($var, $type, $param = [])
  */
 function fcf_rsapem($var, $type)
 {
-    //初始化变量
+    // 初始化变量
     if (!is_string($var)) return false;
     $type = strtolower($type);
     switch ($type) {
         case 'private':
-            //私钥
+            // 私钥
             if (is_file($var)) {
                 $var = file_get_contents($var);
             }
@@ -1269,7 +1269,7 @@ function fcf_rsapem($var, $type)
                 "\n-----END RSA PRIVATE KEY-----";
             break;
         case 'public':
-            //公钥
+            // 公钥
             if (is_file($var)) {
                 $var = file_get_contents($var);
             }

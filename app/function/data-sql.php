@@ -24,12 +24,12 @@ function dqa_where($var, $key, $value, $comparison, $logic, $rank)
     if (!is_array($var) || is_null($key) || is_null($value) || is_null($comparison) || is_null($logic)) {
         return $var;
     }
-    //过滤非法字符
+    // 过滤非法字符
     $safe = dqa_where_safe($value, $comparison);
     if (false === $safe) {
         return $var;
     }
-    //搭建函数组合
+    // 搭建函数组合
     $build = dqa_where_build($key, $safe, $comparison);
     $data = [
         'build' => $build,
@@ -51,7 +51,7 @@ function dqa_where_safe($var, &$comparison)
     if (is_null($var)) {
         return $var;
     }
-    //拆解表达式
+    // 拆解表达式
     switch ($comparison) {
         default:
             if (!is_array($var)) {
@@ -93,11 +93,11 @@ function dqa_where_safe($var, &$comparison)
             }
             break;
     }
-    //过滤表达式
+    // 过滤表达式
     $search = ["\\", "\'", "&", "\"", "<", ">"];
     $replace = ["\\\\", "\\\'", "&amp;", "&quot;", "&lt;", "&gt;"];
     foreach ($var as $key => $value) {
-        //包装表达式
+        // 包装表达式
         switch ($comparison) {
             case 'like':
             case 'not like':
@@ -113,7 +113,7 @@ function dqa_where_safe($var, &$comparison)
         foreach ($search as $key2 => $value2) {
             $var[$key] = str_replace($value2, $replace[$key2], $var[$key]);
         }
-        //包装表达式
+        // 包装表达式
         switch ($comparison) {
             default:
                 $var[$key] = '\'' . $var[$key] . '\'';
@@ -127,7 +127,7 @@ function dqa_where_safe($var, &$comparison)
                 break;
         }
     }
-    //组装表达式
+    // 组装表达式
     switch ($comparison) {
         default:
             $var = implode('', $var);
@@ -158,7 +158,7 @@ function dqa_where_safe($var, &$comparison)
             $var = implode(',', $var);
             break;
     }
-    //解析表达式
+    // 解析表达式
     switch ($comparison) {
         case 'like fuzzy':
             $comparison = 'like';
@@ -179,9 +179,9 @@ function dqa_where_safe($var, &$comparison)
  */
 function dqa_where_build($key, $value, $comparison)
 {
-    //初始化变量
+    // 初始化变量
     $data = '';
-    //组装函数
+    // 组装函数
     switch ($comparison) {
         default:
             $data = "{$key} {$comparison} {$value}";
@@ -217,7 +217,7 @@ function dqa_where_make($var, $type = 1)
     if (!is_array($var)) {
         return $var;
     }
-    //搭建查询组合
+    // 搭建查询组合
     foreach ($var as $key => $value) {
         if (isset($data[$value['rank']])) {
             $data[$value['rank']] .= " {$value['logic']} {$value['build']}";
@@ -234,10 +234,10 @@ function dqa_where_make($var, $type = 1)
     switch ($type) {
         default:
         case 1:
-            //无处理
+            // 无处理
             break;
         case 2:
-            //拼接Where
+            // 拼接Where
             $data = strlen($data) > 0 ? 'where ' . $data : $data;
             break;
     }
@@ -283,7 +283,7 @@ function dqa_update_case($data, $field)
     foreach ($keys as $column) {
         $sql .= sprintf("`%s` = CASE `%s` \n", $column, $field);
         foreach ($data as $line) {
-            //过滤表达式
+            // 过滤表达式
             $search = ["\\", "\'", "\""];
             $replace = ["\\\\", "\\\'", "\\\""];
             foreach ($search as $key2 => $value2) {
@@ -374,31 +374,31 @@ function dqa_datetime($time = null, $type = -1)
     }
     switch ($type) {
         case 1:
-            //日期转时间戳
+            // 日期转时间戳
             $time = strtotime(date('Y-m-d 00:00:00', $time)) . " and " . strtotime(date('Y-m-d 23:59:59', $time));
             break;
         case 2:
-            //日期转时间戳
+            // 日期转时间戳
             $time = strtotime(date('Y-m-d 00:00:00', $time));
             break;
         case 3:
-            //日期转时间戳
+            // 日期转时间戳
             $time = strtotime(date('Y-m-d 23:59:59', $time));
             break;
         case 4:
-            //日期转时间戳
+            // 日期转时间戳
             $time = strtotime(date('Y-m-d H:i:s', $time));
             break;
         case 5:
-            //时间戳转日期
+            // 时间戳转日期
             $time = date('Y-m-d 00:00:00', $time);
             break;
         case 6:
-            //时间戳转日期
+            // 时间戳转日期
             $time = date('Y-m-d 23:59:59', $time);
             break;
         case 7:
-            //时间戳转日期
+            // 时间戳转日期
             $time = date('Y-m-d H:i:s', $time);
             break;
     }
@@ -419,11 +419,11 @@ function dqa_fjson($field, $param, $mode = null)
     switch ($mode) {
         default:
         case 1:
-            //默认
+            // 默认
             $result = "if(json_valid({$field}), trim(both '\"' from {$field}->'{$param}'), {$field})";
             break;
         case 2:
-            //非Json则替换
+            // 非Json则替换
             $result = "if(json_valid({$field}), {$field}, '{}')";
             break;
     }
@@ -447,7 +447,7 @@ function dqa_fsempty($field, $replace = '', $mode = 1)
     switch ($mode) {
         default:
         case 1:
-            //默认
+            // 默认
             if (is_numeric($replace)) {
                 $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
             } else {
@@ -455,7 +455,7 @@ function dqa_fsempty($field, $replace = '', $mode = 1)
             }
             break;
         case 2:
-            //为空则替换
+            // 为空则替换
             $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
             break;
     }
@@ -479,15 +479,15 @@ function dqa_fdempty($field, $replace = '', $type = 1)
     switch ($type) {
         default:
         case 1:
-            //日期时间
+            // 日期时间
             $bool = 'from_unixtime(' . $field . ')';
             break;
         case 2:
-            //日期
+            // 日期
             $bool = 'from_unixtime(' . $field . ',\'%Y-%m-%d\')';
             break;
         case 3:
-            //时间
+            // 时间
             $bool = 'from_unixtime(' . $field . ',\'%H:%i:%S\')';
             break;
     }
@@ -510,25 +510,25 @@ function dqa_fdempty($field, $replace = '', $type = 1)
  */
 function dqc_upcompare($data_new, $data_old)
 {
-    //初始化变量
+    // 初始化变量
     $result = fsi_result();
     if (!isset($data_new)) {
         $result[0] = false;
-        $result[2] = fxy_lang(['lack', 'new', 'data']);
+        $result[2] = \fxapp\Base::lang(['lack', 'new', 'data']);
     } else if (!isset($data_old)) {
         $result[0] = false;
-        $result[2] = fxy_lang(['lack', 'old', 'data']);
+        $result[2] = \fxapp\Base::lang(['lack', 'old', 'data']);
     } else if (is_array($data_new) && is_array($data_old)) {
         foreach ($data_new as $key => $value) {
             if ($value != $data_old[$key]) {
                 $result[0] = false;
-                $result[2] = fxy_lang(['data', '[', fxy_config('app.lang.prefix') . $key, ']', 'not', 'same']);
+                $result[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
                 break;
             }
         }
     } else {
         $result[0] = false;
-        $result[2] = fxy_lang(['data', 'format', 'error']);
+        $result[2] = \fxapp\Base::lang(['data', 'format', 'error']);
     }
     return $result;
 }

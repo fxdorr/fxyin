@@ -9,5 +9,16 @@
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
 
-use fxyin\Config;
-use fxyin\Lang;
+/**
+ * 基础配置
+ * @return array
+ */
+return [
+    // 加载器配置
+    'loader' => [
+        // 基础框架
+        'fxyin' => [
+            'base' => __DIR__ . DIRECTORY_SEPARATOR . 'frame' . DIRECTORY_SEPARATOR
+        ],
+    ],
+];

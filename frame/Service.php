@@ -15,16 +15,16 @@ use fxyin\service\Third as ThirdService;
 
 class Service
 {
-    //原始数据
+    // 原始数据
     protected $data;
 
-    //服务类型
+    // 服务类型
     protected $type;
     
-    //服务供应商
+    // 服务供应商
     protected $supplier;
     
-    //服务模型
+    // 服务模型
     protected $model;
 
     /**

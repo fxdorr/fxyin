@@ -48,7 +48,7 @@ class Cnwea extends Cma
      */
     public function weather()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -58,19 +58,19 @@ class Cnwea extends Cma
         $parm['ctid'] = $tran['ctid'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //接口域
-        $conf['domain'] = fxy_config('third.cnwea.weather.domain');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('third.cnwea.weather.domain');
         $conf['domain'] = $conf['domain'] . $parm['ctid'] . '.html';
         $response = fss_http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
         if (isset($response['weatherinfo'])) {
-            $result[2] = fxy_lang(['request', 'success']);
+            $result[2] = \fxapp\Base::lang(['request', 'success']);
             $result[3] = $response;
             return $result;
         } else {
             $result[0] = false;
             $result[1] = 1002;
-            $result[2] = fxy_lang(['request', 'fail']);
+            $result[2] = \fxapp\Base::lang(['request', 'fail']);
             $result[3] = $response;
             return $result;
         }
@@ -83,7 +83,7 @@ class Cnwea extends Cma
      */
     public function weather2()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -93,19 +93,19 @@ class Cnwea extends Cma
         $parm['ctid'] = $tran['ctid'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //接口域
-        $conf['domain'] = fxy_config('third.cnwea.weather2.domain');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('third.cnwea.weather2.domain');
         $conf['domain'] = $conf['domain'] . $parm['ctid'] . '.html';
         $response = fss_http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
         if (isset($response['weatherinfo'])) {
-            $result[2] = fxy_lang(['request', 'success']);
+            $result[2] = \fxapp\Base::lang(['request', 'success']);
             $result[3] = $response;
             return $result;
         } else {
             $result[0] = false;
             $result[1] = 1002;
-            $result[2] = fxy_lang(['request', 'fail']);
+            $result[2] = \fxapp\Base::lang(['request', 'fail']);
             $result[3] = $response;
             return $result;
         }

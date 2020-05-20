@@ -155,7 +155,7 @@ class Email
             $this->log_write("Error: Cannot resolve MX \"" . $domain . "\"\n");
             return false;
         }
-        //专注与php学习 http://www.daixiaorui.com 欢迎您的访问
+        // 专注与php学习 http://www.daixiaorui.com 欢迎您的访问
         foreach ($MXHOSTS as $host) {
             $this->log_write("Trying to " . $host . ":" . $this->smtp_port . "\n");
             $this->sock = @fsockopen($host, $this->smtp_port, $errno, $errstr, $this->time_out);

@@ -29,7 +29,7 @@ class Push extends Notify
      */
     public function jpush()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -41,57 +41,57 @@ class Push extends Notify
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
         $parm['param'] = $tran['param'];
-        //初始化信息参数
+        // 初始化信息参数
         if (is_array($parm['param'])) {
             $parm['_param'] = $parm['param'];
         } else {
             $parm['_param'] = json_decode($parm['param'], true);
         }
-        //扩展参数
+        // 扩展参数
         $predefined = [
             '_set_extras' => [], '_set_options' => [],
         ];
         $parm['_param'] = fsi_param([$parm['_param'], $predefined], '1.1.2');
-        //推送参数
+        // 推送参数
         $predefined = [
             '_push_mode' => 1, '_push_target' => 1,
         ];
         $parm['_param'] = fsi_param([$parm['_param'], $predefined], '1.1.2');
-        //选项参数
+        // 选项参数
         $predefined = [
             'apns_production' => true,
         ];
         $parm['_param']['_set_options'] = fsi_param([$parm['_param']['_set_options'], $predefined], '1.1.2');
-        //初始化环境变量
-        //应用钥匙
-        $conf['app_key'] = fxy_config('notify.push.jpush.app_key');
-        //应用密钥
-        $conf['app_secret'] = fxy_config('notify.push.jpush.app_secret');
-        //SDK地址
-        $conf['url_sdk'] = fxy_config('notify.push.jpush.url_sdk');
+        // 初始化环境变量
+        // 应用钥匙
+        $conf['app_key'] = \fxapp\Base::config('notify.push.jpush.app_key');
+        // 应用密钥
+        $conf['app_secret'] = \fxapp\Base::config('notify.push.jpush.app_secret');
+        // SDK地址
+        $conf['url_sdk'] = \fxapp\Base::config('notify.push.jpush.url_sdk');
         $pempty = dsc_pempty($conf);
         if (!$pempty[0]) {
-            $pempty[2] = fxy_lang(['lack', 'api', 'config']);
+            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
-        fxy_load($conf['url_sdk']);
+        \fxapp\Base::load($conf['url_sdk']);
         try {
             // 初始化服务
             $client = new Client($conf['app_key'], $conf['app_secret']);
             $model = $client->push()
                 ->setPlatform('all')
                 ->options($parm['_param']['_set_options']);
-            //推送模式
+            // 推送模式
             $parm['_param']['_push_mode'] = fmo_explode(',', $parm['_param']['_push_mode']);
             foreach ($parm['_param']['_push_mode'] as $key => $value) {
                 switch ($value) {
                     case 1:
-                        //默认通知
+                        // 默认通知
                         $model = $model
                             ->setNotificationAlert($parm['content']);
                         break;
                     case 2:
-                        //自定义消息
+                        // 自定义消息
                         $model = $model
                             ->message($parm['content'], [
                                 'title' => $parm['title'],
@@ -100,7 +100,7 @@ class Push extends Notify
                             ]);
                         break;
                     case 3:
-                        //IOS通知
+                        // IOS通知
                         $model = $model
                             ->iosNotification($parm['content'], [
                                 'sound' => 'sound.caf',
@@ -114,7 +114,7 @@ class Push extends Notify
                             ]);
                         break;;
                     case 4:
-                        //Android通知
+                        // Android通知
                         $model = $model
                             ->androidNotification($parm['content'], [
                                 'title' => $parm['title'],
@@ -124,22 +124,22 @@ class Push extends Notify
                         break;
                 }
             }
-            //推送目标
+            // 推送目标
             $parm['_param']['_push_target'] = fmo_explode(',', $parm['_param']['_push_target']);
             foreach ($parm['_param']['_push_target'] as $key => $value) {
                 switch ($value) {
                     case 1:
-                        //全部推送
+                        // 全部推送
                         $model = $model
                             ->addAllAudience();
                         break;
                     case 2:
-                        //标签推送
+                        // 标签推送
                         $predefined = [
                             '_push_tag',
                         ];
                         $_param = fsi_param([$parm['_param'], $predefined], '2.2.2');
-                        //检查推送目标格式
+                        // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
                             if (is_null($value)) {
@@ -161,19 +161,19 @@ class Push extends Notify
                         if (!$pass) {
                             $result[0] = false;
                             $result[1] = 1002;
-                            $result[2] = fxy_lang(['lack', 'tag']);
+                            $result[2] = \fxapp\Base::lang(['lack', 'tag']);
                             return $result;
                         }
                         $model = $model
                             ->addTag($_param['_push_tag']);
                         break;
                     case 3:
-                        //别名推送
+                        // 别名推送
                         $predefined = [
                             '_push_alias',
                         ];
                         $_param = fsi_param([$parm['_param'], $predefined], '2.2.2');
-                        //检查推送目标格式
+                        // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
                             if (is_null($value)) {
@@ -195,19 +195,19 @@ class Push extends Notify
                         if (!$pass) {
                             $result[0] = false;
                             $result[1] = 1002;
-                            $result[2] = fxy_lang(['lack', 'alias']);
+                            $result[2] = \fxapp\Base::lang(['lack', 'alias']);
                             return $result;
                         }
                         $model = $model
                             ->addAlias($_param['_push_alias']);
                         break;
                     case 4:
-                        //ID推送
+                        // ID推送
                         $predefined = [
                             '_push_id',
                         ];
                         $_param = fsi_param([$parm['_param'], $predefined], '2.2.2');
-                        //检查推送目标格式
+                        // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
                             if (is_null($value)) {
@@ -229,7 +229,7 @@ class Push extends Notify
                         if (!$pass) {
                             $result[0] = false;
                             $result[1] = 1002;
-                            $result[2] = fxy_lang(['lack', 'jpush', 'id']);
+                            $result[2] = \fxapp\Base::lang(['lack', 'jpush', 'id']);
                             return $result;
                         }
                         $model = $model
@@ -245,12 +245,12 @@ class Push extends Notify
             return $result;
         }
         if ($record) {
-            $result[2] = fxy_lang(['send', 'success']);
+            $result[2] = \fxapp\Base::lang(['send', 'success']);
             return $result;
         } else {
             $result[0] = false;
             $result[1] = 1002;
-            $result[2] = fxy_lang(['send', 'fail']);
+            $result[2] = \fxapp\Base::lang(['send', 'fail']);
             return $result;
         }
     }

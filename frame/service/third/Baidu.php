@@ -50,7 +50,7 @@ class Lbsyun extends Baidu
      */
     public function location()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $result = fsi_result();
         $predefined = [
@@ -60,19 +60,19 @@ class Lbsyun extends Baidu
         $parm['ip'] = $tran['ip'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //应用钥匙
-        $conf['app_key'] = fxy_config('third.baidu.location.app_key');
-        //坐标
-        $conf['coor'] = fxy_config('third.baidu.location.coor');
-        //接口域
-        $conf['domain'] = fxy_config('third.baidu.location.domain');
+        // 应用钥匙
+        $conf['app_key'] = \fxapp\Base::config('third.baidu.location.app_key');
+        // 坐标
+        $conf['coor'] = \fxapp\Base::config('third.baidu.location.coor');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('third.baidu.location.domain');
         $conf['data']['ak'] = $conf['app_key'];
         $conf['data']['ip'] = $parm['ip'];
         $conf['data']['coor'] = $conf['coor'];
         $response = fss_http($conf['domain'], $conf['data'], [], 'post');
         $response = json_decode($response, true);
         if (!$response['status']) {
-            $result[2] = fxy_lang(['request', 'success']);
+            $result[2] = \fxapp\Base::lang(['request', 'success']);
             $result[3] = $response;
             return $result;
         } else {

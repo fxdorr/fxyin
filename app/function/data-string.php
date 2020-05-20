@@ -19,7 +19,7 @@
  */
 function dsc_fhtml($string, $flags = null)
 {
-    //初始化变量
+    // 初始化变量
     if (is_array($string)) {
         foreach ($string as $key => $val) {
             $string[$key] = dsc_fhtml($val, $flags);
@@ -56,7 +56,7 @@ function dsc_fhtml($string, $flags = null)
  */
 function dsc_rhtml($string, $flags = null)
 {
-    //初始化变量
+    // 初始化变量
     if (is_array($string)) {
         foreach ($string as $key => $val) {
             $string[$key] = dsc_rhtml($val, $flags);
@@ -84,7 +84,7 @@ function dsc_rhtml($string, $flags = null)
  */
 function dso_listtotree($list, $pId = 0, $pName = 'parent_id', $index = 'id', $cName = '_child')
 {
-    //初始化变量
+    // 初始化变量
     $tree = array();
     if (is_array($list)) {
         $refer = array();
@@ -114,7 +114,7 @@ if (!function_exists('is_email')) {
      */
     function is_email($var)
     {
-        //初始化变量
+        // 初始化变量
         if (is_string($var)) {
             if (!empty($var)) {
                 return preg_match('/^[a-z0-9]+([\+_\-\.]?[a-z0-9]+)*@([a-z0-9]+[\-]?[a-z0-9]+\.)+[a-z]{2,6}$/i', $var);
@@ -132,7 +132,7 @@ if (!function_exists('is_mobile')) {
      */
     function is_mobile($var)
     {
-        //初始化变量
+        // 初始化变量
         if (is_string($var)) {
             if (!empty($var)) {
                 return preg_match('/^1[0-9]{2}\d{8}$/', $var);
@@ -150,7 +150,7 @@ if (!function_exists('is_zipcode')) {
      */
     function is_zipcode($var)
     {
-        //初始化变量
+        // 初始化变量
         if (is_string($var)) {
             if (!empty($var)) {
                 return preg_match('/^[1-9][0-9]{5}$/', $var);
@@ -169,18 +169,18 @@ if (!function_exists('is_json')) {
      */
     function is_json($var, $format = null)
     {
-        //初始化变量
+        // 初始化变量
         if (is_string($var)) {
             switch ($format) {
                 default:
                 case 1:
-                    //数组格式
+                    // 数组格式
                     if (null !== json_decode($var) && is_array(json_decode($var, true))) {
                         return true;
                     }
                     break;
                 case 2:
-                    //标准格式
+                    // 标准格式
                     if (null !== json_decode($var)) {
                         return true;
                     }
@@ -199,7 +199,7 @@ if (!function_exists('is_string_large')) {
      */
     function is_string_large($var)
     {
-        //初始化变量
+        // 初始化变量
         if (preg_match('/[A-Z]/', $var)) {
             return true;
         }
@@ -215,7 +215,7 @@ if (!function_exists('is_string_small')) {
      */
     function is_string_small($var)
     {
-        //初始化变量
+        // 初始化变量
         if (preg_match('/[a-z]/', $var)) {
             return true;
         }
@@ -232,7 +232,7 @@ if (!function_exists('is_string_small')) {
  */
 function dso_splice($string, $value, $separator = '')
 {
-    //初始化变量
+    // 初始化变量
     if (is_null($value) || is_null($separator)) {
         return $string;
     }
@@ -253,24 +253,24 @@ function dso_splice($string, $value, $separator = '')
  */
 function dso_fpempty($param)
 {
-    //初始化变量
+    // 初始化变量
     $result = fsi_result();
     if (!isset($param)) {
         $result[0] = false;
         $result[1] = 1000;
-        $result[2] = fxy_lang(['lack', 'parameter']);
+        $result[2] = \fxapp\Base::lang(['lack', 'parameter']);
     } else if (is_array($param)) {
         foreach ($param as $key => $value) {
             if (is_null($value)) {
                 unset($param[$key]);
             }
         }
-        $result[2] = fxy_lang(['request', 'success']);
+        $result[2] = \fxapp\Base::lang(['request', 'success']);
         $result[3] = $param;
     } else {
         $result[0] = false;
         $result[1] = 1001;
-        $result[2] = fxy_lang(['parameter', 'format', 'error']);
+        $result[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
     }
     return $result;
 }
@@ -284,26 +284,26 @@ function dso_fpempty($param)
  */
 function dsc_pempty($param)
 {
-    //初始化变量
+    // 初始化变量
     $result = fsi_result();
     if (!isset($param)) {
         $result[0] = false;
         $result[1] = 1000;
-        $result[2] = fxy_lang(['lack', 'parameter']);
+        $result[2] = \fxapp\Base::lang(['lack', 'parameter']);
     } else if (is_array($param)) {
         foreach ($param as $key => $value) {
             if (is_null($value) || $value === '') {
                 $name = is_numeric($key) ? 'param' : $key;
                 $result[0] = false;
                 $result[1] = 1000;
-                $result[2] = fxy_lang(['lack', $name]);
+                $result[2] = \fxapp\Base::lang(['lack', $name]);
                 break;
             }
         }
     } else {
         $result[0] = false;
         $result[1] = 1001;
-        $result[2] = fxy_lang(['parameter', 'format', 'error']);
+        $result[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
     }
     return $result;
 }
@@ -317,29 +317,29 @@ function dsc_pempty($param)
  */
 function dsc_unpempty($param)
 {
-    //初始化变量
+    // 初始化变量
     $result = fsi_result();
     if (!isset($param)) {
         $result[0] = false;
         $result[1] = 1000;
-        $result[2] = fxy_lang(['lack', 'parameter']);
+        $result[2] = \fxapp\Base::lang(['lack', 'parameter']);
     } else if (is_array($param)) {
         foreach ($param as $key => $value) {
             if (is_null($value) || $value === '') {
                 $result[0] = false;
                 $result[1] = 1000;
-                $result[2] = fxy_lang(['lack', 'param']);
+                $result[2] = \fxapp\Base::lang(['lack', 'param']);
             } else {
                 $result[0] = true;
                 $result[1] = 0;
-                $result[2] = fxy_lang(['check', 'success']);
+                $result[2] = \fxapp\Base::lang(['check', 'success']);
                 break;
             }
         }
     } else {
         $result[0] = false;
         $result[1] = 1001;
-        $result[2] = fxy_lang(['parameter', 'format', 'error']);
+        $result[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
     }
     return $result;
 }
@@ -355,7 +355,7 @@ function dsc_unpempty($param)
  */
 function dsc_strlen($string = null, $slen = 0, $elen = 0)
 {
-    //初始化变量
+    // 初始化变量
     $result = fsi_result();
     $str_len = mb_strlen($string, 'utf-8');
     $elen == 0 && $elen = $str_len;
@@ -364,12 +364,12 @@ function dsc_strlen($string = null, $slen = 0, $elen = 0)
         if ($elen > 0 && !($str_len >= $slen && $str_len <= $elen)) {
             $result[0] = false;
             $result[1] = 1004;
-            $result[2] = fxy_lang(['string', 'length', 'should', 'be', ($slen == $elen ? $elen : $slen . '-' . $elen)]);
+            $result[2] = \fxapp\Base::lang(['string', 'length', 'should', 'be', ($slen == $elen ? $elen : $slen . '-' . $elen)]);
         }
     } else {
         $result[0] = false;
         $result[1] = 1000;
-        $result[2] = fxy_lang(['string', 'not2', 'input']);
+        $result[2] = \fxapp\Base::lang(['string', 'not2', 'input']);
     }
     return $result;
 }
@@ -382,7 +382,7 @@ function dsc_strlen($string = null, $slen = 0, $elen = 0)
  */
 function dso_assemble($param, $mode = null)
 {
-    //初始化变量
+    // 初始化变量
     $data = '';
     $string = '';
     $mode = !empty($param) && is_array($param) ? $mode : null;
@@ -391,35 +391,35 @@ function dso_assemble($param, $mode = null)
     }
     switch ($mode) {
         case 1:
-            //$key='$value',$key='$value'
+            // $key='$value',$key='$value'
             foreach ($param as $key => $value) {
                 $string = dso_splice($string, $key . '=\'' . $value . '\'', ',');
             }
             $data = $string;
             break;
         case 2:
-            //$key,$key
+            // $key,$key
             foreach ($param as $key => $value) {
                 $string = dso_splice($string, $key, ',');
             }
             $data = $string;
             break;
         case 3:
-            //'$value','$value'
+            // '$value','$value'
             foreach ($param as $key => $value) {
                 $string = dso_splice($string, "'" . $value . "'", ',');
             }
             $data = $string;
             break;
         case 4:
-            //$value,$value
+            // $value,$value
             foreach ($param as $key => $value) {
                 $string = dso_splice($string, $value, ',');
             }
             $data = $string;
             break;
         case 5:
-            //$key=$value,$key=$value
+            // $key=$value,$key=$value
             foreach ($param as $key => $value) {
                 $string = dso_splice($string, $key . '=' . $value, ',');
             }
@@ -441,10 +441,10 @@ function dso_assemble($param, $mode = null)
  */
 function fco_authcode($string, $operation = 'decode', $key = '', $expiry = 0)
 {
-    //初始化变量
+    // 初始化变量
     $ckey_length = 4;
     $operation = strtolower($operation);
-    $key = md5($key != '' ? $key : fxy_config('app.authkey'));
+    $key = md5($key != '' ? $key : \fxapp\Base::config('app.authkey'));
     $keya = md5(substr($key, 0, 16));
     $keyb = md5(substr($key, 16, 16));
     $keyc = $ckey_length ? ($operation == 'decode' ? substr($string, 0, $ckey_length) : substr(md5(microtime()), -$ckey_length)) : '';
@@ -498,7 +498,7 @@ function fco_authcode($string, $operation = 'decode', $key = '', $expiry = 0)
  */
 function fco_letters($var, $in_charset = 'utf-8', $out_charset = 'gb2312')
 {
-    //初始化变量
+    // 初始化变量
     $data = [];
     if (!is_string($var)) return false;
     for ($i = 0; $i < mb_strlen($var, 'utf-8'); $i++) {
@@ -521,8 +521,8 @@ function fco_letters($var, $in_charset = 'utf-8', $out_charset = 'gb2312')
 function fco_letter($var, $in_charset = 'utf-8', $out_charset = 'gb2312')
 {
     try {
-        //初始化变量
-        //如果程序是gbk的，此行就要注释掉
+        // 初始化变量
+        // 如果程序是gbk的，此行就要注释掉
         $data = iconv($in_charset, $out_charset, $var);
         if (preg_match("/^[\x7f-\xff]/", $data)) {
             $fchar = ord($data[0]);

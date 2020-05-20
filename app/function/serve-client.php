@@ -16,7 +16,7 @@
  */
 function ftc_ip($type = 0)
 {
-    //初始化变量
+    // 初始化变量
     $type = $type ? 1 : 0;
     static $ip = null;
     if ($ip !== null) return $ip[$type];
@@ -30,7 +30,7 @@ function ftc_ip($type = 0)
     } else if (isset($_SERVER['REMOTE_ADDR'])) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    //IP地址合法验证
+    // IP地址合法验证
     $long = sprintf("%u", fcf_ipv4($ip, 'encode'));
     $ip = $long ? [$ip, $long] : ['0.0.0.0', 0];
     return $ip[$type];
@@ -43,50 +43,50 @@ function ftc_ip($type = 0)
  */
 function ftc_browser($type = -1)
 {
-    //初始化变量
+    // 初始化变量
     $echo = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : null;
-    //开始检测
+    // 开始检测
     if (strpos($echo, strtolower("MicroMessenger"))) {
-        //微信内置浏览器
+        // 微信内置浏览器
         $echo = "MicroMessenger";
     } else if (strpos($echo, strtolower("Alipay"))) {
-        //支付宝内置浏览器
+        // 支付宝内置浏览器
         $echo = "Alipay";
     } else if (strpos($echo, strtolower("MSIE 8.0"))) {
-        //IE8.0
+        // IE8.0
         $echo = "Internet Explorer 8.0";
     } else if (strpos($echo, strtolower("MSIE 7.0"))) {
-        //IE7.0
+        // IE7.0
         $echo = "Internet Explorer 7.0";
     } else if (strpos($echo, strtolower("MSIE 6.0"))) {
-        //IE6.0
+        // IE6.0
         $echo = "Internet Explorer 6.0";
     } else if (strpos($echo, strtolower("Firefox/3"))) {
-        //火狐浏览器
+        // 火狐浏览器
         $echo = "Firefox 3";
     } else if (strpos($echo, strtolower("Firefox/2"))) {
-        //火狐浏览器
+        // 火狐浏览器
         $echo = "Firefox 2";
     } else if (strpos($echo, strtolower("Chrome"))) {
-        //谷歌浏览器
+        // 谷歌浏览器
         $echo = "Google Chrome";
     } else if (strpos($echo, strtolower("Safari"))) {
-        //游猎浏览器
+        // 游猎浏览器
         $echo = "Safari";
     } else if (strpos($echo, strtolower("Opera"))) {
-        //欧朋浏览器
+        // 欧朋浏览器
         $echo = "Opera";
     } else {
-        //其他
+        // 其他
         $echo = "Others";
     }
     switch ($type) {
         case 1:
-            //格式化-小写
+            // 格式化-小写
             $echo = strtolower($echo);
             break;
         case 2:
-            //格式化-大写
+            // 格式化-大写
             $echo = strtoupper($echo);
             break;
     }
@@ -100,9 +100,9 @@ function ftc_browser($type = -1)
  */
 function ftc_system($type = -1)
 {
-    //初始化变量
+    // 初始化变量
     $echo = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : null;
-    //开始检测
+    // 开始检测
     if (preg_match("/win/i", $echo) && preg_match("/95/i", $echo)) {
         $echo = 'Windows 95';
     } else if (preg_match("/win 9x/i", $echo) && preg_match("/4.90/i", $echo)) {
@@ -158,11 +158,11 @@ function ftc_system($type = -1)
     }
     switch ($type) {
         case 1:
-            //格式化-小写
+            // 格式化-小写
             $echo = strtolower($echo);
             break;
         case 2:
-            //格式化-大写
+            // 格式化-大写
             $echo = strtoupper($echo);
             break;
     }
@@ -176,16 +176,16 @@ function ftc_system($type = -1)
  */
 function ftc_scheme($type = -1)
 {
-    //初始化变量
+    // 初始化变量
     $echo = isset($_SERVER['REQUEST_SCHEME']) ? strtolower($_SERVER['REQUEST_SCHEME']) : null;
-    //开始检测
+    // 开始检测
     switch ($type) {
         case 1:
-            //格式化-小写
+            // 格式化-小写
             $echo = strtolower($echo);
             break;
         case 2:
-            //格式化-大写
+            // 格式化-大写
             $echo = strtoupper($echo);
             break;
     }
@@ -199,16 +199,16 @@ function ftc_scheme($type = -1)
  */
 function ftc_method($type = -1)
 {
-    //初始化变量
+    // 初始化变量
     $echo = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : null;
-    //开始检测
+    // 开始检测
     switch ($type) {
         case 1:
-            //格式化-小写
+            // 格式化-小写
             $echo = strtolower($echo);
             break;
         case 2:
-            //格式化-大写
+            // 格式化-大写
             $echo = strtoupper($echo);
             break;
     }
@@ -223,41 +223,41 @@ function ftc_method($type = -1)
  */
 function ftc_param($param = null, $method = 'param')
 {
-    //初始化变量
+    // 初始化变量
     $echo = [];
     $input = file_get_contents('php://input');
     $predefined = [
-        //GET-POST-INPUT
+        // GET-POST-INPUT
         'get' => $_GET, 'post' => $_POST, 'input' => $input,
     ];
     $base = fsi_param([null, $predefined], '1.1.3');
-    //识别方法
+    // 识别方法
     $method = fmo_explode(',', strtolower($method));
     foreach ($method as $value) {
         switch ($value) {
             case 'param':
-                //全部入参
+                // 全部入参
                 $echo = array_merge(...array_values($base));
                 break;
             case 'get':
             case 'post':
             case 'input':
-                //提取入参
+                // 提取入参
                 $echo = array_merge($echo, $base[$value]);
                 break;
             case 'put':
             case 'patch':
             case 'delete':
-                //提取入参
+                // 提取入参
                 $echo = array_merge($echo, $base['input']);
                 break;
         }
     }
     if (is_array($param)) {
-        //获取指定参数数组
+        // 获取指定参数数组
         $echo = fmo_pick($echo, $param);
     } else if (is_string($param)) {
-        //获取指定参数
+        // 获取指定参数
         $echo = $echo[$param] ?? null;
     }
     return $echo;

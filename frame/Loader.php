@@ -18,12 +18,31 @@ class Loader
      */
     public static function autoload($class)
     {
-        if (strpos($class, 'fxyin') !== false) {
-            $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-            $file = $_ENV['fxy']['lib_path'] . $class . '.php';
-            if (is_file($file)) {
-                require $file;
-            }
+        // 初始化变量
+        $loader = $class != 'fxyin\\Config' ? Config::get('loader') : [];
+        $class = explode('\\', $class);
+        $loader = $loader[$class[0]] ?? null;
+        switch ($class[0]) {
+            default:
+                // 匹配
+                break;
+            case 'fxyin':
+                // 风音
+                array_shift($class);
+                $class = implode(DIRECTORY_SEPARATOR, $class);
+                var_dump($class);
+                if (!is_array($loader)) {
+                    $loader = [__DIR__];
+                }
+                var_dump($loader);
+                foreach ($loader as $dir) {
+                    $file = $dir . DIRECTORY_SEPARATOR . $class . '.php';
+                    if (is_file($file)) {
+                        require $file;
+                        break;
+                    }
+                }
+                break;
         }
     }
 
@@ -33,6 +52,7 @@ class Loader
      */
     public static function register($autoload = '')
     {
-        spl_autoload_register($autoload ? : 'fxyin\\Loader::autoload', true, false);
+        // 注册加载器
+        spl_autoload_register($autoload ?: 'fxyin\\Loader::autoload', true, false);
     }
 }

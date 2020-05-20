@@ -32,7 +32,7 @@ class App
     public static function initApp()
     {
         if (empty(self::$init)) {
-            //初始化默认模块
+            // 初始化默认模块
             self::init('core');
             self::$init = true;
         }
@@ -46,7 +46,7 @@ class App
      */
     public static function init($module = '', $app_path = null)
     {
-        //初始化变量
+        // 初始化变量
         if (is_null($app_path)) $app_path = $_ENV['fxy']['app_path'];
 
         static $_module = [];
@@ -64,26 +64,26 @@ class App
      */
     private static function initialize($module = '', $app_path = null)
     {
-        //初始化变量
+        // 初始化变量
         if (is_null($app_path)) $app_path = $_ENV['fxy']['app_path'];
 
-        //定位模块目录
+        // 定位模块目录
         $module = $module ? $module . DIRECTORY_SEPARATOR : '';
 
-        //模块目录
+        // 模块目录
         $path = $app_path . $module;
 
-        //加载函数文件
+        // 加载函数文件
         if (is_file($path . 'common.php')) {
             require $path . 'common.php';
         }
 
-        //加载配置文件
+        // 加载配置文件
         if (is_file($path . 'config.php')) {
             Config::load($path . 'config.php');
         }
 
-        //加载扩展函数文件
+        // 加载扩展函数文件
         if (is_dir($path . 'function')) {
             $dir = $path . 'function';
             $files = scandir($dir);
@@ -95,7 +95,7 @@ class App
             }
         }
 
-        //加载扩展配置文件
+        // 加载扩展配置文件
         if (is_dir($path . 'config')) {
             $dir = $path . 'config';
             $files = scandir($dir);
@@ -107,7 +107,7 @@ class App
             }
         }
 
-        //加载模块语言包
+        // 加载模块语言包
         if (is_dir($path . 'language')) {
             $lang = Lang::detect();
             $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;

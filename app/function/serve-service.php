@@ -21,7 +21,7 @@ use fxyin\Service;
  */
 function fss_http($url, $data = '', $header = [], $method = null)
 {
-    //初始化变量
+    // 初始化变量
     if (is_null($url)) {
         return false;
     }
@@ -29,32 +29,32 @@ function fss_http($url, $data = '', $header = [], $method = null)
         $method = 'GET';
     }
     $method = strtoupper($method);
-    //初始化请求
+    // 初始化请求
     $request = curl_init();
-    //配置请求参数
+    // 配置请求参数
     curl_setopt($request, CURLOPT_URL, $url);
     curl_setopt($request, CURLOPT_CUSTOMREQUEST, $method);
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($request, CURLOPT_HTTPHEADER, $header);
     curl_setopt($request, CURLOPT_FOLLOWLOCATION, true);
-    //HTTPS请求，不验证证书和主机名
+    // HTTPS请求，不验证证书和主机名
     curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
-    //识别请求方法
+    // 识别请求方法
     switch ($method) {
         default:
-            //未知
+            // 未知
         case 'GET':
-            //GET
+            // GET
             curl_setopt($request, CURLOPT_POST, false);
             break;
         case 'POST':
-            //POST
+            // POST
             curl_setopt($request, CURLOPT_POST, true);
             curl_setopt($request, CURLOPT_POSTFIELDS, $data);
             break;
     }
-    //发送请求
+    // 发送请求
     $response = curl_exec($request);
     curl_close($request);
     return $response;
@@ -71,9 +71,9 @@ function fss_http_down($url, $file)
     if (!is_dir(dirname($file))) {
         \fxyin\Dir::create(dirname($file));
     }
-    //请求文件
+    // 请求文件
     $response = fss_http($url, '', [], 'get');
-    //保存文件
+    // 保存文件
     $downloaded_file = fopen($file, 'w');
     fwrite($downloaded_file, $response);
     fclose($downloaded_file);

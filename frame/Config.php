@@ -56,11 +56,11 @@ class Config
      */
     public static function has($name, $range = '')
     {
-        //获取作用域
+        // 获取作用域
         $range = $range ?: self::$range;
-        //解析配置参数名
+        // 解析配置参数名
         $name = explode('.', $name);
-        $config = self::$config[$range];
+        $config = self::$config[$range] ?? [];
         foreach ($name as $elem) {
             if (isset($config[$elem])) {
                 $config = $config[$elem];
@@ -79,15 +79,15 @@ class Config
      */
     public static function get($name = null, $range = '')
     {
-        //获取作用域
+        // 获取作用域
         $range = $range ?: self::$range;
-        //无参数时获取所有
+        // 无参数时获取所有
         if (empty($name) && isset(self::$config[$range])) {
             return self::$config[$range];
         }
-        //解析配置参数名
+        // 解析配置参数名
         $name = explode('.', $name);
-        $config = self::$config[$range];
+        $config = self::$config[$range] ?? [];
         foreach ($name as $elem) {
             if (isset($config[$elem])) {
                 $config = $config[$elem];
@@ -107,20 +107,20 @@ class Config
      */
     public static function set($name, $value = null, $range = '')
     {
-        //获取作用域
+        // 获取作用域
         $range = $range ?: self::$range;
         if (!isset(self::$config[$range])) {
             self::$config[$range] = [];
         }
         if (is_string($name)) {
-            //解析配置参数名
+            // 解析配置参数名
             $name = array_reverse(explode('.', $name));
             foreach ($name as $elem) {
                 $value = [$elem => $value];
             }
             self::$config[$range] = fmo_merge(self::$config[$range], $value);
             return;
-        } elseif (is_array($name)) {
+        } else if (is_array($name)) {
             // 批量设置
             if (!empty($value)) {
                 self::$config[$range][$value] = isset(self::$config[$range][$value]) ? array_merge(self::$config[$range][$value], $name) : self::$config[$range][$value] = $name;

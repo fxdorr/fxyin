@@ -48,7 +48,7 @@ class SinaOpen extends Sina
      */
     public function location()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $conf['param'] = '';
         $result = fsi_result();
@@ -59,10 +59,10 @@ class SinaOpen extends Sina
         $parm['ip'] = $tran['ip'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //返回格式
-        $conf['format'] = fxy_config('third.sina.location.format');
-        //接口域
-        $conf['domain'] = fxy_config('third.sina.location.domain');
+        // 返回格式
+        $conf['format'] = \fxapp\Base::config('third.sina.location.format');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('third.sina.location.domain');
         $conf['data']['format'] = $conf['format'];
         $conf['data']['ip'] = $parm['ip'];
         $conf['param'] = dso_splice($conf['param'], 'format=' . $conf['data']['format'], '&');
@@ -74,13 +74,13 @@ class SinaOpen extends Sina
             $response = json_decode($response[0], true);
         }
         if ($response) {
-            $result[2] = fxy_lang(['request', 'success']);
+            $result[2] = \fxapp\Base::lang(['request', 'success']);
             $result[3] = $response;
             return $result;
         } else {
             $result[0] = false;
             $result[1] = 1002;
-            $result[2] = fxy_lang(['location', 'fail']);
+            $result[2] = \fxapp\Base::lang(['location', 'fail']);
             $result[3] = $response;
             return $result;
         }

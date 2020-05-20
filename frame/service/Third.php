@@ -30,14 +30,14 @@ class Third extends Service
      */
     public function model($supplier = '')
     {
-        //参数设置
+        // 参数设置
         $data = $this->data;
         if ($supplier) {
             $this->setSupplier($supplier);
         } else {
             $supplier = $this->supplier;
         }
-        //检查类是否存在
+        // 检查类是否存在
         $class = false !== strpos($supplier, '\\') ? $supplier : '\\fxyin\\service\\third\\' . ucfirst($supplier);
         if (class_exists($class)) {
             $service = new $class($data, $supplier);
@@ -56,7 +56,7 @@ class Third extends Service
         $result = fsi_result();
         $result[0] = false;
         $result[1] = 1002;
-        $result[2] = fxy_lang(['third', 'service', '[', fxy_config('app.lang.prefix') . $this->getSupplier(), ']', 'not2', 'find2']);
+        $result[2] = \fxapp\Base::lang(['third', 'service', '[', \fxapp\Base::config('app.lang.prefix') . $this->getSupplier(), ']', 'not2', 'find2']);
         return $result;
     }
 }

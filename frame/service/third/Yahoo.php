@@ -48,7 +48,7 @@ class Yahwea extends Yahoo
      */
     public function weather()
     {
-        //初始化变量
+        // 初始化变量
         $tran = $this->data;
         $conf['param'] = '';
         $result = fsi_result();
@@ -59,19 +59,19 @@ class Yahwea extends Yahoo
         $parm['ctname'] = $tran['ctname'];
         $pempty = dsc_pempty($parm);
         if (!$pempty[0]) return $pempty;
-        //环境
-        $conf['env'] = fxy_config('third.yahwea.weather.env');
-        //请求格式
-        $conf['format'] = fxy_config('third.yahwea.weather.format');
-        //查询语句
-        $conf['query'] = fxy_config('third.yahwea.weather.query');
+        // 环境
+        $conf['env'] = \fxapp\Base::config('third.yahwea.weather.env');
+        // 请求格式
+        $conf['format'] = \fxapp\Base::config('third.yahwea.weather.format');
+        // 查询语句
+        $conf['query'] = \fxapp\Base::config('third.yahwea.weather.query');
         $conf['query'] = str_replace('cityname', $parm['ctname'], $conf['query']);
-        //接口域
-        $conf['domain'] = fxy_config('third.yahwea.weather.domain');
+        // 接口域
+        $conf['domain'] = \fxapp\Base::config('third.yahwea.weather.domain');
         $conf['data']['q'] = $conf['query'];
         $conf['data']['format'] = $conf['format'];
         $conf['data']['env'] = $conf['env'];
-        //拼接请求域
+        // 拼接请求域
         foreach ($conf['data'] as $key => $value) {
             $conf['param'] = dso_splice($conf['param'], $key . '=' . $value, '&');
         }
@@ -79,13 +79,13 @@ class Yahwea extends Yahoo
         $response = fss_http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
         if (isset($response['query'])) {
-            $result[2] = fxy_lang(['request', 'success']);
+            $result[2] = \fxapp\Base::lang(['request', 'success']);
             $result[3] = $response;
             return $result;
         } else {
             $result[0] = false;
             $result[1] = 1002;
-            $result[2] = fxy_lang(['request', 'fail']);
+            $result[2] = \fxapp\Base::lang(['request', 'fail']);
             $result[3] = $response;
             return $result;
         }
