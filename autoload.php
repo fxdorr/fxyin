@@ -9,6 +9,6 @@
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
 //加载文件
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'frame' . DIRECTORY_SEPARATOR . 'fxyin' . DIRECTORY_SEPARATOR . 'Loader.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'frame' . DIRECTORY_SEPARATOR . 'Loader.php';
 //注册文件
 \fxyin\Loader::register();
