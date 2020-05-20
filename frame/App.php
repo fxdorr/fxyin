@@ -41,7 +41,7 @@ class App
 
     /**
      * 系统-初始化
-     * @param string    $module 模块
+     * @param string $module 模块
      * @return boolean
      */
     public static function init($module = '', $app_path = null)
@@ -59,7 +59,7 @@ class App
 
     /**
      * 系统-初始化-[应用|模块]
-     * @param string    $module 模块
+     * @param string $module 模块
      * @return mixed
      */
     private static function initialize($module = '', $app_path = null)

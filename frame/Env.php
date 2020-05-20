@@ -59,4 +59,35 @@ class Env
         //框架终端服务器
         'fts' => 'Frame Terminal Server',
     ];
+
+    /**
+     * 环境-初始化
+     * @param string $module 模块
+     * @return boolean
+     */
+    public static function init($module = '', $app_path = null)
+    {
+        //目录结构
+        //--根目录
+        $_ENV['base']['doc_root'] = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+        //网络协议
+        if (isset($_SERVER['HTTP_HOST'])) {
+            //--主机名称
+            $_ENV['base']['web_path'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        } else {
+            //--主机名称
+            $_ENV['base']['web_path'] = '';
+        }
+        //程序路由
+        //--应用目录
+        $_ENV['base']['app_path'] = $_ENV['base']['doc_root'] . 'app' . DIRECTORY_SEPARATOR;
+
+
+
+        //结构配置
+        $_ENV['fxy']['doc_root'] = __DIR__ . DIRECTORY_SEPARATOR;                               //根目录
+        $_ENV['fxy']['app_path'] = $_ENV['fxy']['doc_root'] . 'app' . DIRECTORY_SEPARATOR;      //应用目录
+        $_ENV['fxy']['lib_path'] = $_ENV['fxy']['doc_root'] . 'frame' . DIRECTORY_SEPARATOR;    //包目录
+        $_ENV['fxy']['core_path'] = $_ENV['fxy']['lib_path'] . 'fxyin' . DIRECTORY_SEPARATOR;   //核心程序目录
+    }
 }
