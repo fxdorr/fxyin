@@ -20,13 +20,16 @@ use fxyin\service\third\Tencent as TencentService;
 use fxyin\service\third\Tool as ToolService;
 use fxyin\service\third\Yahoo as YahooService;
 
+/**
+ * 第三方服务
+ * @return mixed
+ */
 class Third extends Service
 {
     /**
      * 创建Third对象
      * @param string $supplier 服务供应商
-     * @return Third|AlibabaService|BaiduService|CmaService|CupService
-     * @return TencentService|SinaService|ToolService|YahooService
+     * @return Third|AlibabaService|BaiduService|CmaService|CupService|TencentService|SinaService|ToolService|YahooService
      */
     public function model($supplier = '')
     {

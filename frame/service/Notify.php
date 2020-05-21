@@ -16,6 +16,10 @@ use fxyin\service\notify\Flashsms as FlashsmsService;
 use fxyin\service\notify\Push as PushService;
 use fxyin\service\notify\Sms as SmsService;
 
+/**
+ * 通知服务
+ * @return mixed
+ */
 class Notify extends Service
 {
     /**

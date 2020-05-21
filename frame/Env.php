@@ -26,8 +26,8 @@ class Env
         'dqa' => 'Data Query Assemble',
         // 数据查询检查
         'dqc' => 'Data Query Check',
-        // 数据查询操作
-        'dqo' => 'Data Query Operate',
+        // // 数据查询操作
+        // 'dqo' => 'Data Query Operate',
         // 数据结构检查
         'dsc' => 'Data Structure Check',
         // 数据结构操作
@@ -52,8 +52,8 @@ class Env
         'fsi' => 'Frame Service Init',
         // 框架服务发送
         'fss' => 'Frame Service Send',
-        // 框架服务第三方
-        'fst' => 'Frame Service Third',
+        // // 框架服务第三方
+        // 'fst' => 'Frame Service Third',
         // 框架终端客户端
         'ftc' => 'Frame Terminal Client',
         // 框架终端服务器
@@ -65,37 +65,60 @@ class Env
 
     /**
      * 环境-初始化
-     * @param string $module 模块
+     * @param string $root 根目录
      * @return boolean
      */
-    public static function init($module = '')
+    public static function init($root)
     {
         // 目录结构
         // --根目录
-        $_ENV['base']['doc_root'] = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+        static::set('base.doc_root', dirname(__DIR__) . DIRECTORY_SEPARATOR);
         // 网络协议
         if (isset($_SERVER['HTTP_HOST'])) {
             // --主机名称
-            $_ENV['base']['web_path'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+            static::set('base.web_path', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
         } else {
             // --主机名称
-            $_ENV['base']['web_path'] = '';
+            static::set('base.web_path', '');
         }
         // 程序路由
         // --应用目录
-        $_ENV['base']['app_path'] = $_ENV['base']['doc_root'] . 'app' . DIRECTORY_SEPARATOR;
+        static::set('base.app_path', static::get('base.doc_root') . 'app' . DIRECTORY_SEPARATOR);
 
 
 
         // 结构配置
-        $_ENV['fxy']['doc_root'] = __DIR__ . DIRECTORY_SEPARATOR;                               // 根目录
-        $_ENV['fxy']['app_path'] = $_ENV['fxy']['doc_root'] . 'app' . DIRECTORY_SEPARATOR;      // 应用目录
-        $_ENV['fxy']['lib_path'] = $_ENV['fxy']['doc_root'] . 'frame' . DIRECTORY_SEPARATOR;    // 包目录
-        $_ENV['fxy']['core_path'] = $_ENV['fxy']['lib_path'] . 'fxyin' . DIRECTORY_SEPARATOR;   // 核心程序目录
+        // 根目录
+        static::set('fxy.doc_root', __DIR__ . DIRECTORY_SEPARATOR);
+        // 应用目录
+        static::set('fxy.app_path', static::get('fxy.doc_root') . 'app' . DIRECTORY_SEPARATOR);
+        // 包目录
+        static::set('fxy.lib_path', static::get('fxy.doc_root') . 'frame' . DIRECTORY_SEPARATOR);
+        var_dump(666);
         var_dump($_ENV);
         var_dump(static::get());
         var_dump(static::set($_ENV));
         var_dump(static::get());
+    }
+
+    /**
+     * 检测数据
+     * @param string $name 名称
+     * @return bool
+     */
+    public static function has($name)
+    {
+        // 解析名称
+        $name = explode('.', $name);
+        $data = self::$data;
+        foreach ($name as $elem) {
+            if (isset($data[$elem])) {
+                $data = $data[$elem];
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

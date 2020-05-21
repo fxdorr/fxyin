@@ -21,24 +21,24 @@ class Email extends Notify
 {
     /**
      * 通用
-     * @param string $tran['account'] 邮箱账号
-     * @param string $tran['title'] 信息标题
-     * @param string $tran['content'] 信息内容
+     * @param string $param['account'] 邮箱账号
+     * @param string $param['title'] 信息标题
+     * @param string $param['content'] 信息内容
      * @return mixed
      */
     public function common()
     {
         // 初始化变量
-        $tran = $this->data;
+        $param = $this->data;
         $result = fsi_result();
         $predefined = [
             'account', 'title', 'content',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.1');
-        $parm['account'] = $tran['account'];
-        $parm['title'] = $tran['title'];
-        $parm['content'] = $tran['content'];
-        $pempty = dsc_pempty($parm);
+        $param = fsi_param([$param, $predefined], '1.2.1');
+        $tray['account'] = $param['account'];
+        $tray['title'] = $param['title'];
+        $tray['content'] = $param['content'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         // 初始化环境变量
         // SMTP服务器
@@ -51,14 +51,14 @@ class Email extends Notify
         $conf['smtpuser'] = \fxapp\Base::config('notify.email.common.mailuser');
         // SMTP服务器的用户密码
         $conf['smtppass'] = \fxapp\Base::config('notify.email.common.mailpass');
-        $pempty = dsc_pempty($conf);
+        $pempty = \fxapp\Data::paramEmpty($conf);
         if (!$pempty[0]) {
             $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
-        $conf['smtpemailto'] = $parm['account'];//发送给谁
-        $conf['mailtitle'] = $parm['title'];//邮件主题
-        $conf['mailcontent'] = $parm['content'];//邮件内容
+        $conf['smtpemailto'] = $tray['account'];//发送给谁
+        $conf['mailtitle'] = $tray['title'];//邮件主题
+        $conf['mailcontent'] = $tray['content'];//邮件内容
         $conf['mailtype'] = 'HTML';//邮件格式（HTML/TXT）,TXT为文本邮件
         // 开始执行
         // ************************ 配置信息 ****************************

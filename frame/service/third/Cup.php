@@ -21,7 +21,7 @@ class Cup extends Third
     /**
      * 服务
      * @param string $name 服务名称
-     * @return mixed
+     * @return void|Unionpay
      */
     public function service($name)
     {
@@ -43,8 +43,8 @@ class Unionpay extends Cup
 {
     /**
      * 支付申请
-     * @param string $tran['sn'] 订单SN
-     * @param string $tran['money'] 支付金额
+     * @param string $entry['sn'] 订单SN
+     * @param string $entry['money'] 支付金额
      * @return mixed
      */
     public function payApply()

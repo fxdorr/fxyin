@@ -20,22 +20,22 @@ class Flashsms extends Notify
 {
     /**
      * 通用
-     * @param string $tran['account'] 手机账号
-     * @param string $tran['content'] 信息内容
+     * @param string $param['account'] 手机账号
+     * @param string $param['content'] 信息内容
      * @return mixed
      */
     public function common()
     {
         // 初始化变量
-        $tran = $this->data;
+        $param = $this->data;
         $result = fsi_result();
         $predefined = [
             'account', 'content',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.1');
-        $parm['account'] = $tran['account'];
-        $parm['content'] = $tran['content'];
-        $pempty = dsc_pempty($parm);
+        $param = fsi_param([$param, $predefined], '1.2.1');
+        $tray['account'] = $param['account'];
+        $tray['content'] = $param['content'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         // 初始化环境变量
         // 用户ID
@@ -51,36 +51,36 @@ class Flashsms extends Notify
         $conf['digest'] = \fxapp\Base::config('notify.flashsms.common.digest');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('notify.flashsms.common.domain');
-        $pempty = dsc_pempty($conf);
+        $pempty = \fxapp\Data::paramEmpty($conf);
         if (!$pempty[0]) {
             $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
         // 待发数据
-        $parm_2 = [
+        $tray['2_1'] = [
             // 消息的源地址，即开发者的接入码。[示例] 1065795555
             'From' => $conf['from'],
             // 消息的目的地址，终端用户的手机号码。[示例] ["8618625150488","8618625150489"]
-            'To' => $parm['account'],
+            'To' => $tray['account'],
             // 短信内容。[示例] hello world!
-            'Body' => $parm['content'],
+            'Body' => $tray['content'],
         ];
-        $parm_3['data'] = fcf_json($parm_2, 'encode');
-        $parm_3['data_count'] = strlen($parm_3['data']);
+        $tray['3_1']['data'] = fcf_json($tray['2_1'], 'encode');
+        $tray['3_1']['data_count'] = strlen($tray['3_1']['data']);
         // 请求头配置
-        $parm_3['app_key'] = $conf['app_key'];
+        $tray['3_1']['app_key'] = $conf['app_key'];
         // 随机数。参见OASIS WS-Security standard。
-        $parm_3['nonce'] = fcf_rand(24);
-        $parm_3['time'] = time() - 28800;
+        $tray['3_1']['nonce'] = fcf_rand(24);
+        $tray['3_1']['time'] = time() - 28800;
         // 创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
-        $parm_3['created'] = date('Y-m-d', $parm_3['time']) . 'T' . date('H:i:s', $parm_3['time']) . 'Z';
-        $parm_3['password'] = $conf['app_secret'];
-    //  $parm_3['passworddigest'] = base64_encode(hash('sha256', $parm_3['nonce'].$parm_3['created'].$parm_3['password']));
-        $conf['digest'] = dso_splice($conf['digest'], 'digest=' . $parm_3['nonce'] . $parm_3['created'] . $parm_3['password'], '?');
-        $parm_3['digest'] = json_decode(fss_http($conf['digest'], '', [], 'post'), true);
+        $tray['3_1']['created'] = date('Y-m-d', $tray['3_1']['time']) . 'T' . date('H:i:s', $tray['3_1']['time']) . 'Z';
+        $tray['3_1']['password'] = $conf['app_secret'];
+    //  $tray['3_1']['passworddigest'] = base64_encode(hash('sha256', $tray['3_1']['nonce'].$tray['3_1']['created'].$tray['3_1']['password']));
+        $conf['digest'] = \fxapp\Text::splice($conf['digest'], 'digest=' . $tray['3_1']['nonce'] . $tray['3_1']['created'] . $tray['3_1']['password'], '?');
+        $tray['3_1']['digest'] = json_decode(\fxapp\Service::http($conf['digest'], '', [], 'post'), true);
         // 密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。
-        $parm_3['passworddigest'] = $parm_3['digest']['info'];
-        $parm_3['header'] = [
+        $tray['3_1']['passworddigest'] = $tray['3_1']['digest']['info'];
+        $tray['3_1']['header'] = [
             // 认证鉴权方式。能力工具箱采用 WSSE  UsernameToken，该参数固定为 “WSSE”。
             // 认证鉴权方，能力工具箱中默认为“SDP”。
             // 能力工具箱采用WSSE 的UsernameToken，该参数应该填为 “UsernameToken”。
@@ -91,13 +91,13 @@ class Flashsms extends Notify
             // 密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。
             // 随机数。参见OASIS WS-Security standard。
             // 创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
-            'X-WSSE:UsernameToken Username="' . $parm_3['app_key'] . '",PasswordDigest="' . $parm_3['passworddigest'] . '",Nonce="' . $parm_3['nonce'] . '",Created="' . $parm_3['created'] . '"',
+            'X-WSSE:UsernameToken Username="' . $tray['3_1']['app_key'] . '",PasswordDigest="' . $tray['3_1']['passworddigest'] . '",Nonce="' . $tray['3_1']['nonce'] . '",Created="' . $tray['3_1']['created'] . '"',
             'Accept:text/json',
             'Content-Type:application/json;charset=UTF-8',
-            'Content-Length: ' . $parm_3['data_count']
+            'Content-Length: ' . $tray['3_1']['data_count']
         ];
         // 发送请求
-        $record = fss_http($conf['domain'], $parm_3['data'], $parm_3['header']);
+        $record = \fxapp\Service::http($conf['domain'], $tray['3_1']['data'], $tray['3_1']['header']);
         // 响应解析
         $record = json_decode($record, true);
         if (empty($record) || isset($record['Code'])) {

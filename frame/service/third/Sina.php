@@ -21,7 +21,7 @@ class Sina extends Third
     /**
      * 服务
      * @param string $name 服务名称
-     * @return mixed
+     * @return void|SinaOpen
      */
     public function service($name)
     {
@@ -43,32 +43,32 @@ class SinaOpen extends Sina
 {
     /**
      * 定位
-     * @param string $tran['ip'] 目标IP
+     * @param string $entry['ip'] 目标IP
      * @return mixed
      */
     public function location()
     {
         // 初始化变量
-        $tran = $this->data;
+        $entry = $this->data;
         $conf['param'] = '';
         $result = fsi_result();
         $predefined = [
             'ip',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.2');
-        $parm['ip'] = $tran['ip'];
-        $pempty = dsc_pempty($parm);
+        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $tray['ip'] = $entry['ip'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         // 返回格式
         $conf['format'] = \fxapp\Base::config('third.sina.location.format');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.sina.location.domain');
         $conf['data']['format'] = $conf['format'];
-        $conf['data']['ip'] = $parm['ip'];
-        $conf['param'] = dso_splice($conf['param'], 'format=' . $conf['data']['format'], '&');
-        $conf['param'] = dso_splice($conf['param'], 'ip=' . $conf['data']['ip'], '&');
-        $conf['domain'] = dso_splice($conf['domain'], $conf['param'], '?');
-        $response = fss_http($conf['domain'], '', [], 'post');
+        $conf['data']['ip'] = $tray['ip'];
+        $conf['param'] = \fxapp\Text::splice($conf['param'], 'format=' . $conf['data']['format'], '&');
+        $conf['param'] = \fxapp\Text::splice($conf['param'], 'ip=' . $conf['data']['ip'], '&');
+        $conf['domain'] = \fxapp\Text::splice($conf['domain'], $conf['param'], '?');
+        $response = \fxapp\Service::http($conf['domain'], '', [], 'post');
         preg_match('/{[\s\S]+}/i', $response, $response);
         if ($response) {
             $response = json_decode($response[0], true);

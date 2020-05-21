@@ -21,7 +21,7 @@ class Yahoo extends Third
     /**
      * 服务
      * @param string $name 服务名称
-     * @return mixed
+     * @return void|Yahwea
      */
     public function service($name)
     {
@@ -43,21 +43,21 @@ class Yahwea extends Yahoo
 {
     /**
      * 天气
-     * @param string $tran['ctname'] 城市名称
+     * @param string $entry['ctname'] 城市名称
      * @return mixed
      */
     public function weather()
     {
         // 初始化变量
-        $tran = $this->data;
+        $entry = $this->data;
         $conf['param'] = '';
         $result = fsi_result();
         $predefined = [
             'ctname',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.2');
-        $parm['ctname'] = $tran['ctname'];
-        $pempty = dsc_pempty($parm);
+        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $tray['ctname'] = $entry['ctname'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         // 环境
         $conf['env'] = \fxapp\Base::config('third.yahwea.weather.env');
@@ -65,7 +65,7 @@ class Yahwea extends Yahoo
         $conf['format'] = \fxapp\Base::config('third.yahwea.weather.format');
         // 查询语句
         $conf['query'] = \fxapp\Base::config('third.yahwea.weather.query');
-        $conf['query'] = str_replace('cityname', $parm['ctname'], $conf['query']);
+        $conf['query'] = str_replace('cityname', $tray['ctname'], $conf['query']);
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.yahwea.weather.domain');
         $conf['data']['q'] = $conf['query'];
@@ -73,10 +73,10 @@ class Yahwea extends Yahoo
         $conf['data']['env'] = $conf['env'];
         // 拼接请求域
         foreach ($conf['data'] as $key => $value) {
-            $conf['param'] = dso_splice($conf['param'], $key . '=' . $value, '&');
+            $conf['param'] = \fxapp\Text::splice($conf['param'], $key . '=' . $value, '&');
         }
-        $conf['domain'] = dso_splice($conf['domain'], $conf['param'], '?');
-        $response = fss_http($conf['domain'], '', [], 'get');
+        $conf['domain'] = \fxapp\Text::splice($conf['domain'], $conf['param'], '?');
+        $response = \fxapp\Service::http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
         if (isset($response['query'])) {
             $result[2] = \fxapp\Base::lang(['request', 'success']);

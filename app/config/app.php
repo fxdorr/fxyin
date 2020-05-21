@@ -23,7 +23,7 @@ return [
         // 数据
         'data' => [
             // 入参
-            'param' => ftc_param(),
+            'param' => \fxapp\Client::param(),
             'get' => $_GET ?? null,
             'post' => $_POST ?? null,
             'input' => file_get_contents('php://input'),
@@ -33,7 +33,7 @@ return [
             'server' => $_SERVER ?? null,
             'cookie' => $_COOKIE ?? null,
             'session' => $_SESSION ?? null,
-            'env' => $_ENV ?? null,
+            'env' => \fxapp\Base::env(),
         ],
     ],
     // 日志配置
@@ -94,25 +94,6 @@ return [
                 // Windows系统
                 'windows nt' => null,
             ],
-        ],
-    ],
-    // 缓存配置
-    'cache' => [
-        // 文件缓存
-        'file' => [
-            // 类型
-            'type' => 'file',
-            // 设置不同的缓存保存目录
-            'path' => '',
-        ],
-        // Redis缓存
-        'redis' => [
-            // 类型
-            'type' => 'redis',
-            // 地址
-            'host' => '127.0.0.1',
-            // 密码
-            'password' => '',
         ],
     ],
 ];

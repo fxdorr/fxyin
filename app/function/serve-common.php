@@ -9,9 +9,6 @@
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
 
-use fxyin\cache\driver\Redis;
-use fxyin\cache\driver\File;
-
 /**
  * 框架-公共-检查-格式
  * @param array $data 数据
@@ -46,7 +43,7 @@ function fcc_format($data, $type = 1)
     // 调试模式
     if ($debug['switch'] && $debug['level']) {
         $echo['debug'] = ['' => null];
-        $debug['level'] = fmo_explode(',', strtolower($debug['level']));
+        $debug['level'] = \fxapp\Text::explode(',', strtolower($debug['level']));
         foreach ($debug['level'] as $value) {
             switch ($value) {
                 default:
@@ -100,7 +97,12 @@ function fco_return($var, $type = '')
         default:
         case 'json':
             // 返回JSON数据格式到客户端，包含状态信息
-            exit(\fxapp\Base::json($var)->send());
+            header('Content-Type:application/json; charset=utf-8');
+            exit($var);
+        case 'xml':
+            // 返回XML格式数据
+            header('Content-Type:text/xml; charset=utf-8');
+            exit($var);
     }
 }
 
@@ -331,124 +333,6 @@ function fsi_param($param, $mode = null)
 }
 
 /**
- * 框架-服务-初始化-UUID
- * @param string $mode 模式
- * @param array $tran 参数
- * @return array
- */
-function fsi_uuid($mode = null, $tran = [])
-{
-    // 初始化变量
-    $uuid = '';
-    $predefined = [
-        'uuid' => '', 'prefix' => '', 'style' => '',
-    ];
-    $tran = fsi_param([$tran, $predefined], '1.1.2');
-    switch ($mode) {
-        default:
-        case 1:
-            // 随机生成标准UUID
-            if (empty($tran['uuid'])) {
-                $chars = strtoupper(md5(uniqid(mt_rand(), true)));
-            } else {
-                $chars = strtoupper($tran['uuid']);
-            }
-            $uuid = substr($chars, 0, 8) . '-';
-            $uuid .= substr($chars, 8, 4) . '-';
-            $uuid .= substr($chars, 12, 4) . '-';
-            $uuid .= substr($chars, 16, 4) . '-';
-            $uuid .= substr($chars, 20, 12);
-            $uuid = $tran['prefix'] . $uuid;
-            break;
-        case 2:
-            // 随机生成大写UUID或将现有UUID大写
-            if (empty($tran['uuid'])) {
-                $chars = strtoupper(md5(uniqid(mt_rand(), true)));
-            } else {
-                $chars = strtoupper($tran['uuid']);
-            }
-            $uuid = $chars;
-            break;
-        case 3:
-            // 随机生成大写UUID或将现有UUIDMD5并大写
-            if (empty($tran['uuid'])) {
-                $chars = strtoupper(md5(uniqid(mt_rand(), true)));
-            } else {
-                $chars = strtoupper(md5($tran['uuid']));
-            }
-            $uuid = $chars;
-            break;
-    }
-    $tran['style'] = fmo_explode(',', $tran['style']);
-    foreach ($tran['style'] as $key => $value) {
-        switch ($value) {
-            case 1:
-                // 32位-大写
-                $uuid = strtoupper($uuid);
-                break;
-            case 2:
-                // 32位-小写
-                $uuid = strtolower($uuid);
-                break;
-            case 3:
-                // 16位-大写
-                $uuid = strtoupper(substr($uuid, 8, 16));
-                break;
-            case 4:
-                // 16位-小写
-                $uuid = strtolower(substr($uuid, 8, 16));
-                break;
-        }
-    }
-    return $uuid;
-}
-
-/**
- * 框架-公共-服务-缓存
- * @param array $type 类型
- * @param array $options 参数
- * @return File|Redis
- */
-function fcs_cache($type, $options = [])
-{
-    // 初始化变量
-    $echo = null;
-    if (!is_string($type)) {
-        return $echo;
-    }
-    $type = strtolower($type);
-    if (empty($options)) {
-        $options = \fxapp\Base::config('app.cache')[$type];
-    }
-    switch ($type) {
-        case 'redis':
-            // redis数据库
-            $echo = new Redis($options);
-            break;
-        case 'file':
-            // 文件系统
-            $echo = new File($options);
-            break;
-    }
-    return $echo;
-}
-
-/**
- * 框架-模块-操作-打散字符串
- * @param string $separator 分割字符串
- * @param string $string 字符串
- * @return mixed
- */
-function fmo_explode($separator, $string)
-{
-    // 初始化变量
-    if (is_null($string) || '' == $string) {
-        return [];
-    }
-    return array_values(array_unique(explode($separator, $string)));
-}
-
-/**
  * 框架-模块-操作-空数组转对象
  * @param array $param 参数
  * @return mixed
@@ -585,36 +469,6 @@ function fmo_cover($args)
 }
 
 /**
- * 框架-模块-操作-打印语言 <p>
- * fmc print lang
- * </p>
- * @param array|string $name 语言变量名
- * @param int $mode 模式
- * @return mixed
- */
-function fmo_plang($name, $mode = null)
-{
-    // 初始化变量
-    $string = \fxapp\Base::lang($name);
-    if (is_null($mode)) {
-        if (is_array($string)) {
-            $mode = 2;
-        }
-    }
-    switch ($mode) {
-        default:
-        case 1:
-            // 模式-字符串
-            echo $string;
-            break;
-        case 2:
-            // 模式-数组
-            print_r($string);
-            break;
-    }
-}
-
-/**
  * 框架-模块-函数-Json格式
  * @param mixed $var 变量
  * @param string $type 类型
@@ -679,18 +533,6 @@ function fcf_json($var, $type, $param = null)
             break;
     }
     return $echo;
-}
-
-/**
- * 框架-公共-函数-调试输出
- * @param mixed $param 参数
- * @param boolean $echo 是否输出
- * @return string
- */
-function fcf_dump($param, $echo = true)
-{
-    // 初始化变量
-    \fxapp\Base::dump($param, $echo, fcf_mtime(fcf_mtime()));
 }
 
 /**
@@ -857,16 +699,16 @@ function fcf_ipv4($var, $type)
 
 /**
  * 框架-公共-函数-随机字符
- * @param numeric $length 长度
- * @param numeric $numeric 类型(0：混合；1：纯数字)
+ * @param int $length 长度
+ * @param int $type 类型(0：混合；1：纯数字)
  * @return string
  */
-function fcf_rand($length, $numeric = 0)
+function fcf_rand($length, $type = 0)
 {
     // 初始化变量
-    $seed = base_convert(md5(microtime() . __DIR__), 16, $numeric ? 10 : 35);
-    $seed = $numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
-    if ($numeric) {
+    $seed = base_convert(md5(microtime() . __DIR__), 16, $type ? 10 : 35);
+    $seed = $type ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
+    if ($type) {
         $hash = '';
     } else {
         $hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
@@ -1137,7 +979,7 @@ function fcf_rsapri($var, $type, $param = [])
             // 编码
             $var = str_split($var, 117);
             foreach ($var as $value) {
-                $trans = null;
+                $entrys = null;
                 // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
@@ -1149,16 +991,16 @@ function fcf_rsapri($var, $type, $param = [])
                         $value = str_pad($value, 128, $param['pad'], STR_PAD_LEFT);
                         break;
                 }
-                openssl_private_encrypt($value, $trans, $param['secret'], $param['type']);
-                $echo[] = $trans;
+                openssl_private_encrypt($value, $entrys, $param['secret'], $param['type']);
+                $echo[] = $entrys;
             }
             break;
         case 'decode':
             // 解码
             $var = str_split($var, 128);
             foreach ($var as $value) {
-                $trans = null;
-                openssl_private_decrypt($value, $trans, $param['secret'], $param['type']);
+                $entrys = null;
+                openssl_private_decrypt($value, $entrys, $param['secret'], $param['type']);
                 // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
@@ -1167,10 +1009,10 @@ function fcf_rsapri($var, $type, $param = [])
                             'pad' => "\0",
                         ];
                         $param = fsi_param([$param, $predefined], '1.1.2');
-                        $trans = ltrim($trans, $param['pad']);
+                        $entrys = ltrim($entrys, $param['pad']);
                         break;
                 }
-                $echo[] = $trans;
+                $echo[] = $entrys;
             }
             break;
     }
@@ -1202,7 +1044,7 @@ function fcf_rsapub($var, $type, $param = [])
             // 编码
             $var = str_split($var, 117);
             foreach ($var as $value) {
-                $trans = null;
+                $entrys = null;
                 // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
@@ -1214,16 +1056,16 @@ function fcf_rsapub($var, $type, $param = [])
                         $value = str_pad($value, 128, $param['pad'], STR_PAD_LEFT);
                         break;
                 }
-                openssl_public_encrypt($value, $trans, $param['secret'], $param['type']);
-                $echo[] = $trans;
+                openssl_public_encrypt($value, $entrys, $param['secret'], $param['type']);
+                $echo[] = $entrys;
             }
             break;
         case 'decode':
             // 解码
             $var = str_split($var, 128);
             foreach ($var as $value) {
-                $trans = null;
-                openssl_public_decrypt($value, $trans, $param['secret'], $param['type']);
+                $entrys = null;
+                openssl_public_decrypt($value, $entrys, $param['secret'], $param['type']);
                 // 解析填充字符
                 switch ($param['type']) {
                     case OPENSSL_NO_PADDING:
@@ -1232,10 +1074,10 @@ function fcf_rsapub($var, $type, $param = [])
                             'pad' => "\0",
                         ];
                         $param = fsi_param([$param, $predefined], '1.1.2');
-                        $trans = ltrim($trans, $param['pad']);
+                        $entrys = ltrim($entrys, $param['pad']);
                         break;
                 }
-                $echo[] = $trans;
+                $echo[] = $entrys;
             }
             break;
     }

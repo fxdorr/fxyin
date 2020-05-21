@@ -20,28 +20,28 @@ class Sms extends Notify
 {
     /**
      * 阿里大于
-     * @param string $tran['account'] 邮箱账号
-     * @param string $tran['_param'] 信息参数
+     * @param string $param['account'] 邮箱账号
+     * @param string $param['_param'] 信息参数
      * @return mixed
      */
     public function alidayu()
     {
         // 初始化变量
-        $tran = $this->data;
+        $param = $this->data;
         $result = fsi_result();
         $predefined = [
             'account', '_param',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.1');
+        $param = fsi_param([$param, $predefined], '1.2.1');
         $predefined = [
             '_sms_type', '_sms_sign', '_sms_param',
             '_sms_template',
         ];
-        $tran['_param'] = fsi_param([$tran['_param'], $predefined], '1.2.1');
-        $parm['account'] = $tran['account'];
-        $pempty = dsc_pempty($parm);
+        $param['_param'] = fsi_param([$param['_param'], $predefined], '1.2.1');
+        $tray['account'] = $param['account'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
-        $parm['_param'] = $tran['_param'];
+        $tray['_param'] = $param['_param'];
         // 初始化环境变量
         // 应用钥匙
         $conf['appkey'] = \fxapp\Base::config('notify.sms.alidayu.app_key');
@@ -49,7 +49,7 @@ class Sms extends Notify
         $conf['secretKey'] = \fxapp\Base::config('notify.sms.alidayu.app_secret');
         // SDK地址
         $conf['url_sdk'] = \fxapp\Base::config('notify.sms.alidayu.url_sdk');
-        $pempty = dsc_pempty($conf);
+        $pempty = \fxapp\Data::paramEmpty($conf);
         if (!$pempty[0]) {
             $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
@@ -61,11 +61,11 @@ class Sms extends Notify
         $c->secretKey = $conf['secretKey'];
         $req = new \AlibabaAliqinFcSmsNumSendRequest;
         // $req->setExtend('123456');
-        $req->setSmsType($parm['_param']['_sms_type']);
-        $req->setSmsFreeSignName($parm['_param']['_sms_sign']);
-        $req->setSmsParam($parm['_param']['_sms_param']);
-        $req->setRecNum($parm['account']);
-        $req->setSmsTemplateCode($parm['_param']['_sms_template']);
+        $req->setSmsType($tray['_param']['_sms_type']);
+        $req->setSmsFreeSignName($tray['_param']['_sms_sign']);
+        $req->setSmsParam($tray['_param']['_sms_param']);
+        $req->setRecNum($tray['account']);
+        $req->setSmsTemplateCode($tray['_param']['_sms_template']);
         $resp = $c->execute($req);
         $record['status'] = $resp->result->success;
         $record['msg'] = $resp->msg;
@@ -88,22 +88,22 @@ class Sms extends Notify
 
     /**
      * Webservice
-     * @param string $tran['account'] 手机账号
-     * @param string $tran['content'] 信息内容
+     * @param string $param['account'] 手机账号
+     * @param string $param['content'] 信息内容
      * @return mixed
      */
     public function webservice()
     {
         // 初始化变量
-        $tran = $this->data;
+        $param = $this->data;
         $result = fsi_result();
         $predefined = [
             'account', 'content',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.1');
-        $parm['account'] = $tran['account'];
-        $parm['content'] = $tran['content'];
-        $pempty = dsc_pempty($parm);
+        $param = fsi_param([$param, $predefined], '1.2.1');
+        $tray['account'] = $param['account'];
+        $tray['content'] = $param['content'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         // 初始化环境变量
         // 企业账号
@@ -112,17 +112,17 @@ class Sms extends Notify
         $conf['src_tele_num'] = \fxapp\Base::config('notify.sms.webservice.src_tele_num');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('notify.sms.webservice.domain');
-        $pempty = dsc_pempty($conf);
+        $pempty = \fxapp\Data::paramEmpty($conf);
         if (!$pempty[0]) {
             $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
         // 设置配置
         $conf['message_id'] = -1;
-        $conf['password'] = (int) substr($parm['account'], 7, 4) * 3 + 6016;
+        $conf['password'] = (int) substr($tray['account'], 7, 4) * 3 + 6016;
         $conf['src_tele_num'] = $conf['src_tele_num'];
-        $conf['dest_tele_num'] = $parm['account'];
-        $conf['message'] = $parm['content'];
+        $conf['dest_tele_num'] = $tray['account'];
+        $conf['message'] = $tray['content'];
         // 开始执行
         $wsdl = $conf['domain'];
         $client = new \SoapClient($wsdl);
@@ -137,8 +137,8 @@ class Sms extends Notify
             . '<msg><![CDATA[' . $conf['message'] . ']]></msg>'
             . '</info>'
             . '</infos>';
-        $parm_2 = ['in0' => $corporation, 'in1' => $message];
-        $record = $client->sendmsg($parm_2);
+        $tray['2_1'] = ['in0' => $corporation, 'in1' => $message];
+        $record = $client->sendmsg($tray['2_1']);
         $doc = new \SimpleXMLElement($record->out);
         $status = $doc->info->state;
         if ($status == 0) {

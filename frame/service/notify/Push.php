@@ -22,46 +22,46 @@ class Push extends Notify
 {
     /**
      * 极光推送
-     * @param string $tran['title'] 信息标题
-     * @param string $tran['content'] 信息内容
-     * @param string $tran['param'] 信息参数
+     * @param string $param['title'] 信息标题
+     * @param string $param['content'] 信息内容
+     * @param string $param['param'] 信息参数
      * @return mixed
      */
     public function jpush()
     {
         // 初始化变量
-        $tran = $this->data;
+        $param = $this->data;
         $result = fsi_result();
         $predefined = [
             'title', 'content', 'param',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.1');
-        $parm['title'] = $tran['title'];
-        $parm['content'] = $tran['content'];
-        $pempty = dsc_pempty($parm);
+        $param = fsi_param([$param, $predefined], '1.2.1');
+        $tray['title'] = $param['title'];
+        $tray['content'] = $param['content'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
-        $parm['param'] = $tran['param'];
+        $tray['param'] = $param['param'];
         // 初始化信息参数
-        if (is_array($parm['param'])) {
-            $parm['_param'] = $parm['param'];
+        if (is_array($tray['param'])) {
+            $tray['_param'] = $tray['param'];
         } else {
-            $parm['_param'] = json_decode($parm['param'], true);
+            $tray['_param'] = json_decode($tray['param'], true);
         }
         // 扩展参数
         $predefined = [
             '_set_extras' => [], '_set_options' => [],
         ];
-        $parm['_param'] = fsi_param([$parm['_param'], $predefined], '1.1.2');
+        $tray['_param'] = fsi_param([$tray['_param'], $predefined], '1.1.2');
         // 推送参数
         $predefined = [
             '_push_mode' => 1, '_push_target' => 1,
         ];
-        $parm['_param'] = fsi_param([$parm['_param'], $predefined], '1.1.2');
+        $tray['_param'] = fsi_param([$tray['_param'], $predefined], '1.1.2');
         // 选项参数
         $predefined = [
             'apns_production' => true,
         ];
-        $parm['_param']['_set_options'] = fsi_param([$parm['_param']['_set_options'], $predefined], '1.1.2');
+        $tray['_param']['_set_options'] = fsi_param([$tray['_param']['_set_options'], $predefined], '1.1.2');
         // 初始化环境变量
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('notify.push.jpush.app_key');
@@ -69,7 +69,7 @@ class Push extends Notify
         $conf['app_secret'] = \fxapp\Base::config('notify.push.jpush.app_secret');
         // SDK地址
         $conf['url_sdk'] = \fxapp\Base::config('notify.push.jpush.url_sdk');
-        $pempty = dsc_pempty($conf);
+        $pempty = \fxapp\Data::paramEmpty($conf);
         if (!$pempty[0]) {
             $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
@@ -80,29 +80,29 @@ class Push extends Notify
             $client = new Client($conf['app_key'], $conf['app_secret']);
             $model = $client->push()
                 ->setPlatform('all')
-                ->options($parm['_param']['_set_options']);
+                ->options($tray['_param']['_set_options']);
             // 推送模式
-            $parm['_param']['_push_mode'] = fmo_explode(',', $parm['_param']['_push_mode']);
-            foreach ($parm['_param']['_push_mode'] as $key => $value) {
+            $tray['_param']['_push_mode'] = \fxapp\Text::explode(',', $tray['_param']['_push_mode']);
+            foreach ($tray['_param']['_push_mode'] as $key => $value) {
                 switch ($value) {
                     case 1:
                         // 默认通知
                         $model = $model
-                            ->setNotificationAlert($parm['content']);
+                            ->setNotificationAlert($tray['content']);
                         break;
                     case 2:
                         // 自定义消息
                         $model = $model
-                            ->message($parm['content'], [
-                                'title' => $parm['title'],
+                            ->message($tray['content'], [
+                                'title' => $tray['title'],
                                 'content_type' => 'text',
-                                'extras' => $parm['_param']['_set_extras'],
+                                'extras' => $tray['_param']['_set_extras'],
                             ]);
                         break;
                     case 3:
                         // IOS通知
                         $model = $model
-                            ->iosNotification($parm['content'], [
+                            ->iosNotification($tray['content'], [
                                 'sound' => 'sound.caf',
                                 'badge' => '+1',
     //                             'sound' => Config::DISABLE_SOUND,
@@ -110,23 +110,23 @@ class Push extends Notify
                                 // 'content-available' => true,
                                 // 'mutable-content' => true,
                                 'category' => 'jiguang',
-                                'extras' => $parm['_param']['_set_extras'],
+                                'extras' => $tray['_param']['_set_extras'],
                             ]);
                         break;;
                     case 4:
                         // Android通知
                         $model = $model
-                            ->androidNotification($parm['content'], [
-                                'title' => $parm['title'],
-                                'extras' => $parm['_param']['_set_extras'],
+                            ->androidNotification($tray['content'], [
+                                'title' => $tray['title'],
+                                'extras' => $tray['_param']['_set_extras'],
                                 // 'build_id' => 2,
                             ]);
                         break;
                 }
             }
             // 推送目标
-            $parm['_param']['_push_target'] = fmo_explode(',', $parm['_param']['_push_target']);
-            foreach ($parm['_param']['_push_target'] as $key => $value) {
+            $tray['_param']['_push_target'] = \fxapp\Text::explode(',', $tray['_param']['_push_target']);
+            foreach ($tray['_param']['_push_target'] as $key => $value) {
                 switch ($value) {
                     case 1:
                         // 全部推送
@@ -138,7 +138,7 @@ class Push extends Notify
                         $predefined = [
                             '_push_tag',
                         ];
-                        $_param = fsi_param([$parm['_param'], $predefined], '2.2.2');
+                        $_param = fsi_param([$tray['_param'], $predefined], '2.2.2');
                         // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
@@ -172,7 +172,7 @@ class Push extends Notify
                         $predefined = [
                             '_push_alias',
                         ];
-                        $_param = fsi_param([$parm['_param'], $predefined], '2.2.2');
+                        $_param = fsi_param([$tray['_param'], $predefined], '2.2.2');
                         // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
@@ -206,7 +206,7 @@ class Push extends Notify
                         $predefined = [
                             '_push_id',
                         ];
-                        $_param = fsi_param([$parm['_param'], $predefined], '2.2.2');
+                        $_param = fsi_param([$tray['_param'], $predefined], '2.2.2');
                         // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {

@@ -19,15 +19,30 @@ class Loader
     public static function autoload($class)
     {
         // 初始化变量
-        $loader = $class != 'fxyin\\Config' ? Config::get('loader') : [];
+        $loader = $class != 'fxyin\\Config' ? Config::get('loader') : null;
+        var_dump($loader);
         $class = explode('\\', $class);
         $loader = $loader[$class[0]] ?? null;
         switch ($class[0]) {
-            default:
-                // 匹配
+            case 'fxapp':
+                // 应用
+                array_shift($class);
+                $class = implode(DIRECTORY_SEPARATOR, $class);
+                var_dump($class);
+                if (!is_array($loader)) {
+                    $loader = [__DIR__];
+                }
+                var_dump($loader);
+                foreach ($loader as $dir) {
+                    $file = $dir . DIRECTORY_SEPARATOR . $class . '.php';
+                    if (is_file($file)) {
+                        require $file;
+                        break;
+                    }
+                }
                 break;
             case 'fxyin':
-                // 风音
+                // 框架
                 array_shift($class);
                 $class = implode(DIRECTORY_SEPARATOR, $class);
                 var_dump($class);

@@ -47,7 +47,7 @@ class App
     public static function init($module = '', $app_path = null)
     {
         // 初始化变量
-        if (is_null($app_path)) $app_path = $_ENV['fxy']['app_path'];
+        if (is_null($app_path)) $app_path = \fxapp\Base::env('fxy.app_path');
 
         static $_module = [];
         if (!isset($_module[$module])) {
@@ -65,7 +65,7 @@ class App
     private static function initialize($module = '', $app_path = null)
     {
         // 初始化变量
-        if (is_null($app_path)) $app_path = $_ENV['fxy']['app_path'];
+        if (is_null($app_path)) $app_path = \fxapp\Base::env('fxy.app_path');
 
         // 定位模块目录
         $module = $module ? $module . DIRECTORY_SEPARATOR : '';

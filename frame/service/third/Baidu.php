@@ -21,7 +21,7 @@ class Baidu extends Third
     /**
      * 服务
      * @param string $name 服务名称
-     * @return mixed
+     * @return void|Lbsyun|BaiduTranslate
      */
     public function service($name)
     {
@@ -45,20 +45,20 @@ class Lbsyun extends Baidu
 {
     /**
      * 定位
-     * @param string $tran['ip'] 目标IP
+     * @param string $entry['ip'] 目标IP
      * @return mixed
      */
     public function location()
     {
         // 初始化变量
-        $tran = $this->data;
+        $entry = $this->data;
         $result = fsi_result();
         $predefined = [
             'ip',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.2');
-        $parm['ip'] = $tran['ip'];
-        $pempty = dsc_pempty($parm);
+        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $tray['ip'] = $entry['ip'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('third.baidu.location.app_key');
@@ -67,9 +67,9 @@ class Lbsyun extends Baidu
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.baidu.location.domain');
         $conf['data']['ak'] = $conf['app_key'];
-        $conf['data']['ip'] = $parm['ip'];
+        $conf['data']['ip'] = $tray['ip'];
         $conf['data']['coor'] = $conf['coor'];
-        $response = fss_http($conf['domain'], $conf['data'], [], 'post');
+        $response = \fxapp\Service::http($conf['domain'], $conf['data'], [], 'post');
         $response = json_decode($response, true);
         if (!$response['status']) {
             $result[2] = \fxapp\Base::lang(['request', 'success']);

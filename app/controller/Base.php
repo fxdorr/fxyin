@@ -126,6 +126,21 @@ class Base
     }
 
     /**
+     * 环境参数-[获取|设置]
+     * @param array|string $name 参数名
+     * @param mixed $value 参数值
+     * @return mixed
+     */
+    public static function env($name = '', $value = null)
+    {
+        if (is_null($value) && is_string($name)) {
+            return 0 === strpos($name, '?') ? \fxyin\Env::has(substr($name, 1)) : \fxyin\Env::get($name);
+        } else {
+            return \fxyin\Env::set($name, $value);
+        }
+    }
+
+    /**
      * 浏览器友好的变量输出
      * @param mixed $vars 要输出的变量
      * @return void

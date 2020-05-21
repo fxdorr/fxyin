@@ -21,7 +21,7 @@ class Tool extends Third
     /**
      * 服务
      * @param string $name 服务名称
-     * @return mixed
+     * @return void|ToolService
      */
     public function service($name)
     {
@@ -43,114 +43,114 @@ class ToolService extends Tool
 {
     /**
      * 二维码生成
-     * @param string $tran['content'] 内容
-     * @param string $tran['file_name'] 文件名称
-     * @param string $tran['file_path'] 文件路径
-     * @param string $tran['file_url'] 文件URL
-     * @param string $tran['level'] 等级
-     * @param string $tran['size'] 大小
-     * @param string $tran['margin'] 边框
-     * @param string $tran['print'] 打印
+     * @param string $entry['content'] 内容
+     * @param string $entry['file_name'] 文件名称
+     * @param string $entry['file_path'] 文件路径
+     * @param string $entry['file_url'] 文件URL
+     * @param string $entry['level'] 等级
+     * @param string $entry['size'] 大小
+     * @param string $entry['margin'] 边框
+     * @param string $entry['print'] 打印
      * @return mixed
      */
     public function qrcodeMake()
     {
         // 初始化变量
-        $tran = $this->data;
+        $entry = $this->data;
         $result = fsi_result();
         $predefined = [
             'content', 'file_name', 'file_path',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.2');
+        $entry = fsi_param([$entry, $predefined], '1.2.2');
         $predefined = [
-            'file_url' => $tran['file_path'] . $tran['file_name'], 'level' => 'L', 'size' => 3,
+            'file_url' => $entry['file_path'] . $entry['file_name'], 'level' => 'L', 'size' => 3,
             'margin' => 4, 'print' => false,
         ];
-        $tran = fsi_param([$tran, $predefined], '1.1.2');
-        $parm['content'] = $tran['content'];
-        $parm['file_name'] = $tran['file_name'];
-        $parm['file_path'] = $tran['file_path'];
-        $pempty = dsc_pempty($parm);
+        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $tray['content'] = $entry['content'];
+        $tray['file_name'] = $entry['file_name'];
+        $tray['file_path'] = $entry['file_path'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
-        $parm['file_url'] = $tran['file_url'];
-        $parm['level'] = $tran['level'];
-        $parm['size'] = $tran['size'];
-        $parm['margin'] = $tran['margin'];
-        $parm['print'] = $tran['print'];
+        $tray['file_url'] = $entry['file_url'];
+        $tray['level'] = $entry['level'];
+        $tray['size'] = $entry['size'];
+        $tray['margin'] = $entry['margin'];
+        $tray['print'] = $entry['print'];
         // SDK地址
         $conf['url_sdk'] = \fxapp\Base::config('third.tool.qrcode.url_sdk');
         // 引入核心库文件
         \fxapp\Base::load($conf['url_sdk']);
         // 调用QRcode类的静态方法png生成二维码图片
-        if (!is_dir(dirname($parm['file_url']))) {
-            \fxyin\Dir::create(dirname($parm['file_url']));
+        if (!is_dir(dirname($tray['file_url']))) {
+            \fxyin\Dir::create(dirname($tray['file_url']));
         }
-        \QRcode::png($parm['content'], $parm['file_url'], $parm['level'], $parm['size'], $parm['margin'], $parm['print']);
+        \QRcode::png($tray['content'], $tray['file_url'], $tray['level'], $tray['size'], $tray['margin'], $tray['print']);
         $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $parm;
+        $result[3] = $tray;
         return $result;
     }
 
     /**
      * Excel导出
-     * @param string $tran['title'] 标题
-     * @param string $tran['file_name'] 文件名称
-     * @param string $tran['data'] 数据
+     * @param string $entry['title'] 标题
+     * @param string $entry['file_name'] 文件名称
+     * @param string $entry['data'] 数据
      * @return mixed
      */
     public function excelExport()
     {
         // 初始化变量
-        $tran = $this->data;
+        $entry = $this->data;
         $result = fsi_result();
         $predefined = [
             'title', 'data',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.2.2');
+        $entry = fsi_param([$entry, $predefined], '1.2.2');
         $predefined = [
             'file_name' => 'report',
         ];
-        $tran = fsi_param([$tran, $predefined], '1.1.2');
-        $parm['title'] = $tran['title'];
-        $parm['data'] = $tran['data'];
-        $pempty = dsc_pempty($parm);
+        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $tray['title'] = $entry['title'];
+        $tray['data'] = $entry['data'];
+        $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
-        $parm['file_name'] = $tran['file_name'];
+        $tray['file_name'] = $entry['file_name'];
         // 服务处理
         header("Content-type:application/octet-stream");
         header("Accept-Ranges:bytes");
         header("Content-type:application/vnd.ms-excel.numberformat:@");
-        header("Content-Disposition:attachment;filename=" . $parm['file_name'] . ".xls");
+        header("Content-Disposition:attachment;filename=" . $tray['file_name'] . ".xls");
         header("Pragma: no-cache");
         header("Expires: 0");
         // 导出xls开始
-        if (!empty($parm['title'])) {
-            foreach ($parm['title'] as $key => $value) {
-                $parm['title'][$key] = iconv("UTF-8", "GB2312", $value);
+        if (!empty($tray['title'])) {
+            foreach ($tray['title'] as $key => $value) {
+                $tray['title'][$key] = iconv("UTF-8", "GB2312", $value);
             }
-            $parm['title'] = implode("\t", $parm['title']);
-            echo $parm['title'] . "\n";
+            $tray['title'] = implode("\t", $tray['title']);
+            echo $tray['title'] . "\n";
         }
-        if (!empty($parm['data'])) {
-            foreach ($parm['data'] as $key => $value) {
+        if (!empty($tray['data'])) {
+            foreach ($tray['data'] as $key => $value) {
                 foreach ($value as $ckey => $cvalue) {
-                    $parm['data'][$key][$ckey] = iconv("UTF-8", "GB2312", $cvalue);
+                    $tray['data'][$key][$ckey] = iconv("UTF-8", "GB2312", $cvalue);
                 }
-                $parm['data'][$key] = implode("\t", $parm['data'][$key]);
+                $tray['data'][$key] = implode("\t", $tray['data'][$key]);
             }
-            echo implode("\n", $parm['data']);
+            echo implode("\n", $tray['data']);
         }
     }
 
     /**
      * Excel导入
-     * @param string $tran['file_path'] 文件路径
+     * @param string $entry['file_path'] 文件路径
      * @return mixed
      */
     public function excelImport()
     {
         // 初始化变量
-        $tran = $this->data;
+        $entry = $this->data;
         $result = fsi_result();
     }
 }
