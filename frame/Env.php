@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxyin;
 
+/**
+ * 环境类
+ */
 class Env
 {
     // 框架版本
@@ -20,26 +23,26 @@ class Env
 
     // 关键字声明
     const KEYWORD = [
-        // 系统
-        'fxy' => 'Fxyin',
-        // 数据查询组装
-        'dqa' => 'Data Query Assemble',
-        // 数据查询检查
-        'dqc' => 'Data Query Check',
+        // // 系统
+        // 'fxy' => 'Fxyin',
+        // // 数据查询组装
+        // 'dqa' => 'Data Query Assemble',
+        // // 数据查询检查
+        // 'dqc' => 'Data Query Check',
         // // 数据查询操作
         // 'dqo' => 'Data Query Operate',
-        // 数据结构检查
-        'dsc' => 'Data Structure Check',
-        // 数据结构操作
-        'dso' => 'Data Structure Operate',
-        // 框架公共检查
-        'fcc' => 'Frame Common Check',
-        // 框架公共操作
-        'fco' => 'Frame Common Operate',
-        // 框架公共服务
-        'fcs' => 'Frame Common Service',
-        // 框架公共函数
-        'fcf' => 'Frame Common Function',
+        // // 数据结构检查
+        // 'dsc' => 'Data Structure Check',
+        // // 数据结构操作
+        // 'dso' => 'Data Structure Operate',
+        // // 框架公共检查
+        // 'fcc' => 'Frame Common Check',
+        // // 框架公共操作
+        // 'fco' => 'Frame Common Operate',
+        // // 框架公共服务
+        // 'fcs' => 'Frame Common Service',
+        // // 框架公共函数
+        // 'fcf' => 'Frame Common Function',
         // 框架模块检查
         'fmc' => 'Frame Module Check',
         // 框架模块函数
@@ -48,20 +51,20 @@ class Env
         'fmo' => 'Frame Module Operate',
         // 框架服务核心
         'fsc' => 'Frame Service Core',
-        // 框架服务初始化
-        'fsi' => 'Frame Service Init',
-        // 框架服务发送
-        'fss' => 'Frame Service Send',
+        // // 框架服务初始化
+        // 'fsi' => 'Frame Service Init',
+        // // 框架服务发送
+        // 'fss' => 'Frame Service Send',
         // // 框架服务第三方
         // 'fst' => 'Frame Service Third',
-        // 框架终端客户端
-        'ftc' => 'Frame Terminal Client',
-        // 框架终端服务器
-        'fts' => 'Frame Terminal Server',
+        // // 框架终端客户端
+        // 'ftc' => 'Frame Terminal Client',
+        // // 框架终端服务器
+        // 'fts' => 'Frame Terminal Server',
     ];
 
     // 数据
-    protected static $data = [];
+    private static $data = [];
 
     /**
      * 环境-初始化
@@ -70,35 +73,12 @@ class Env
      */
     public static function init($root)
     {
-        // 目录结构
-        // --根目录
-        static::set('base.doc_root', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-        // 网络协议
-        if (isset($_SERVER['HTTP_HOST'])) {
-            // --主机名称
-            static::set('base.web_path', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
-        } else {
-            // --主机名称
-            static::set('base.web_path', '');
-        }
-        // 程序路由
-        // --应用目录
-        static::set('base.app_path', static::get('base.doc_root') . 'app' . DIRECTORY_SEPARATOR);
-
-
-
-        // 结构配置
         // 根目录
-        static::set('fxy.doc_root', __DIR__ . DIRECTORY_SEPARATOR);
+        static::set('base.root', $root);
+        // 主机名称
+        static::set('base.web', Config::get('env.base.web'));
         // 应用目录
-        static::set('fxy.app_path', static::get('fxy.doc_root') . 'app' . DIRECTORY_SEPARATOR);
-        // 包目录
-        static::set('fxy.lib_path', static::get('fxy.doc_root') . 'frame' . DIRECTORY_SEPARATOR);
-        var_dump(666);
-        var_dump($_ENV);
-        var_dump(static::get());
-        var_dump(static::set($_ENV));
-        var_dump(static::get());
+        static::set('base.app', static::get('base.root') . Config::get('env.base.app'));
     }
 
     /**
@@ -144,24 +124,24 @@ class Env
 
     /**
      * 设置数据
-     * @param string $name 名称
-     * @param string $value 配置
+     * @param array|string $name 名称
+     * @param string $data 数据
      * @return void
      */
-    public static function set($name, $value = null)
+    public static function set($name, $data = null)
     {
         // 初始化变量
         if (is_string($name)) {
             // 解析名称
             $name = array_reverse(explode('.', $name));
             foreach ($name as $elem) {
-                $value = [$elem => $value];
+                $data = [$elem => $data];
             }
             // 融合数据
-            self::$data = fmo_merge(self::$data, $value);
+            self::$data = \fxapp\Param::merge(self::$data, $data);
         } else if (is_array($name)) {
             // 融合数据
-            self::$data = fmo_merge(self::$data, $name);
+            self::$data = \fxapp\Param::merge(self::$data, $name);
         }
     }
 }

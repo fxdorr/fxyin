@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class File
+class File extends \fxyin\Facade
 {
     /**
      * 处理文件-格式化大小
@@ -148,7 +148,7 @@ class File
                         $predefined = [
                             1, 2, 3,
                         ];
-                        $match = fsi_param([$match, $predefined], '1.2.2');
+                        $match = \fxapp\Param::define([$match, $predefined], '1.2.2');
                         // 播放时间
                         $data['duration'] = $match[1];
                         $arr_duration = explode(':', $match[1]);
@@ -156,7 +156,7 @@ class File
                         $predefined = [
                             0, 1, 2,
                         ];
-                        $arr_duration = fsi_param([$arr_duration, $predefined], '1.2.2');
+                        $arr_duration = \fxapp\Param::define([$arr_duration, $predefined], '1.2.2');
                         // 转换播放时间为秒数
                         $data['seconds'] = $arr_duration[0] * 3600 + $arr_duration[1] * 60 + $arr_duration[2];
                         // 开始时间
@@ -169,7 +169,7 @@ class File
                         $predefined = [
                             1, 2, 3,
                         ];
-                        $match = fsi_param([$match, $predefined], '1.2.2');
+                        $match = \fxapp\Param::define([$match, $predefined], '1.2.2');
                         // 视频编码格式
                         $data['vcodec'] = $match[1];
                         // 视频格式
@@ -181,7 +181,7 @@ class File
                         $predefined = [
                             0, 1,
                         ];
-                        $arr_resolution = fsi_param([$arr_resolution, $predefined], '1.2.2');
+                        $arr_resolution = \fxapp\Param::define([$arr_resolution, $predefined], '1.2.2');
                         $data['width'] = $arr_resolution[0];
                         $data['height'] = $arr_resolution[1];
                     }
@@ -190,7 +190,7 @@ class File
                         $predefined = [
                             1, 2,
                         ];
-                        $match = fsi_param([$match, $predefined], '1.2.2');
+                        $match = \fxapp\Param::define([$match, $predefined], '1.2.2');
                         // 音频编码
                         $data['acodec'] = $match[1];
                         // 音频采样频率
@@ -203,8 +203,8 @@ class File
                     // 文件大小
                     $data['size'] = filesize($var);
                     return $data;
-                } catch (\Throwable $e) {
-                    \fxapp\Base::dump(fcf_mtime(fcf_mtime()), fcf_exception($e));
+                } catch (\Throwable $th) {
+                    \fxapp\Base::dump(\fxapp\Text::timeMilli(\fxapp\Text::timeMilli()), \fxapp\Text::throwable($th));
                 }
                 break;
         }

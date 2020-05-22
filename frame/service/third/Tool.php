@@ -57,16 +57,16 @@ class ToolService extends Tool
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'content', 'file_name', 'file_path',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $predefined = [
             'file_url' => $entry['file_path'] . $entry['file_name'], 'level' => 'L', 'size' => 3,
             'margin' => 4, 'print' => false,
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['content'] = $entry['content'];
         $tray['file_name'] = $entry['file_name'];
         $tray['file_path'] = $entry['file_path'];
@@ -86,9 +86,9 @@ class ToolService extends Tool
             \fxyin\Dir::create(dirname($tray['file_url']));
         }
         \QRcode::png($tray['content'], $tray['file_url'], $tray['level'], $tray['size'], $tray['margin'], $tray['print']);
-        $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $tray;
-        return $result;
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $tray;
+        return $echo;
     }
 
     /**
@@ -102,15 +102,15 @@ class ToolService extends Tool
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'title', 'data',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $predefined = [
             'file_name' => 'report',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['title'] = $entry['title'];
         $tray['data'] = $entry['data'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -151,6 +151,6 @@ class ToolService extends Tool
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
     }
 }

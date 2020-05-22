@@ -14,15 +14,32 @@
  * @return array
  */
 return [
+    // 环境配置
+    'env' => [
+        // 应用配置
+        'app' => [
+            // 基础应用
+            0 => __DIR__ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR,
+        ],
+        // 基础配置
+        'base' => [
+            // 应用目录
+            'app' => '',
+            // 主机名称
+            'web' => '',
+        ],
+    ],
     // 加载器配置
     'loader' => [
-        // 基础框架
+        // 框架配置
         'fxyin' => [
-            'base' => __DIR__ . DIRECTORY_SEPARATOR . 'frame' . DIRECTORY_SEPARATOR
+            // 基础框架
+            0 => __DIR__ . DIRECTORY_SEPARATOR . 'frame' . DIRECTORY_SEPARATOR,
         ],
-        // 基础应用
+        // 应用配置
         'fxapp' => [
-            'base' => __DIR__ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR
+            // 基础应用
+            0 => __DIR__ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR,
         ],
     ],
 ];

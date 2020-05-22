@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class Server
+class Server extends \fxyin\Facade
 {
     /**
      * 获取IP
@@ -97,6 +97,114 @@ class Server
                 $echo = strtoupper($echo);
                 break;
         }
+        return $echo;
+    }
+
+    /**
+     * 处理数据-格式
+     * @param array $data 数据
+     * @param int $type 类型
+     * @return mixed
+     */
+    public static function format($data, $type = 1)
+    {
+        // 初始化变量
+        $echo = [];
+        $debug['switch'] = \fxapp\Base::config('app.debug.switch');
+        $debug['level'] = \fxapp\Base::config('app.debug.level');
+        $debug['data'] = \fxapp\Base::config('app.debug.data');
+        switch ($type) {
+            default:
+            case 1:
+                // 默认
+                $echo = $data;
+                break;
+            case 2:
+                // 通用
+                $base = \fxapp\Base::config('app.echo.format');
+                // 处理数据
+                $data[2] = \fxapp\Base::lang($data[2]);
+                foreach ($base as $key => $value) {
+                    if (array_key_exists($key, $data)) {
+                        $echo[$value] = $data[$key];
+                    }
+                }
+                break;
+        }
+        // 调试模式
+        if ($debug['switch'] && $debug['level']) {
+            $echo['debug'] = ['' => null];
+            $debug['level'] = \fxapp\Text::explode(',', strtolower($debug['level']));
+            foreach ($debug['level'] as $value) {
+                switch ($value) {
+                    default:
+                        // 匹配
+                        if (array_key_exists($value, $debug['data'])) {
+                            $echo['debug'][$value] = $debug['data'][$value];
+                        }
+                        break;
+                    case '1':
+                        // 全部
+                        $echo['debug'] = \fxapp\Param::define([$echo['debug'], $debug['data']], '1.1.1');
+                        break;
+                    case '2':
+                        // 入参
+                        $echo['debug']['param'] = $debug['data']['param'];
+                        $echo['debug']['get'] = $debug['data']['get'];
+                        $echo['debug']['post'] = $debug['data']['post'];
+                        $echo['debug']['input'] = $debug['data']['input'];
+                        break;
+                    case '3':
+                        // 文件
+                        $echo['debug']['files'] = $debug['data']['files'];
+                        break;
+                    case '4':
+                        // 环境
+                        $echo['debug']['server'] = $debug['data']['server'];
+                        $echo['debug']['cookie'] = $debug['data']['cookie'];
+                        $echo['debug']['session'] = $debug['data']['session'];
+                        $echo['debug']['env'] = $debug['data']['env'];
+                        break;
+                }
+            }
+        }
+        // 空对象处理
+        $echo = \fxapp\Param::object($echo);
+        return $echo;
+    }
+
+    /**
+     * 处理数据-返回
+     * @param mixed $data 数据
+     * @param string $type 类型
+     * @return mixed
+     */
+    public static function return($data, $type = '')
+    {
+        // 返回格式
+        $type = !empty($type) ? $type : 'json';
+        $type = strtolower($type);
+        switch ($type) {
+            default:
+            case 'json':
+                // 返回JSON数据格式到客户端，包含状态信息
+                header('Content-Type:application/json; charset=utf-8');
+                exit($data);
+            case 'xml':
+                // 返回XML格式数据
+                header('Content-Type:text/xml; charset=utf-8');
+                exit($data);
+        }
+    }
+
+    /**
+     * 初始化响应
+     * @return array
+     */
+    public static function echo()
+    {
+        // 初始化变量
+        $echo = \fxapp\Base::config('app.echo.template');
         return $echo;
     }
 }

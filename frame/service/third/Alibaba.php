@@ -54,11 +54,11 @@ class Alipay extends Alibaba
         // 初始化变量
         $entry = $this->data;
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'url_redirect',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.web_grant_token.app_id');
         // 应用授权作用域
@@ -70,7 +70,7 @@ class Alipay extends Alibaba
         $predefined = [
             'url_redirect' => \fxapp\Base::config('third.alipay.web_grant_token.url_redirect'),
         ];
-        $conf = fsi_param([$conf, $predefined], '1.1.2');
+        $conf = \fxapp\Param::define([$conf, $predefined], '1.1.2');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.alipay.web_grant_token.domain');
         // 拼接请求域
@@ -79,9 +79,9 @@ class Alipay extends Alibaba
         $conf['param'] = \fxapp\Text::splice($conf['param'], 'scope=' . $conf['scope'], '&');
         $conf['param'] = \fxapp\Text::splice($conf['param'], 'state=' . $conf['state'], '&');
         $conf['domain'] = \fxapp\Text::splice($conf['domain'], $conf['param'], '?');
-        $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $conf;
-        return $result;
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $conf;
+        return $echo;
     }
 
     /**
@@ -93,20 +93,20 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_webAuthToken($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['error_response']['code'])) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['error_response']['sub_msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['error_response']['sub_msg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -119,11 +119,11 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'auth_code',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['auth_code'] = $entry['auth_code'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -150,7 +150,7 @@ class Alipay extends Alibaba
         $request->setCode($tray['auth_code']);
         $request->setGrantType($conf['grant_type']);
         $record = $client->execute($request);
-        $record = fcf_json(fcf_json($record, 'encode'), 'decode');
+        $record = \fxapp\Param::json(\fxapp\Param::json($record, 'encode'), 'decode');
         return $record;
     }
 
@@ -163,20 +163,20 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_webRefreshToken($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['error_response']['code'])) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['error_response']['sub_msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['error_response']['sub_msg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -189,11 +189,11 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'refresh_token',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['refresh_token'] = $entry['refresh_token'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -220,7 +220,7 @@ class Alipay extends Alibaba
         $request->setGrantType($conf['grant_type']);
         $request->setRefreshToken($tray['refresh_token']);
         $record = $client->execute($request);
-        $record = fcf_json(fcf_json($record, 'encode'), 'decode');
+        $record = \fxapp\Param::json(\fxapp\Param::json($record, 'encode'), 'decode');
         return $record;
     }
 
@@ -233,26 +233,26 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_webAuthInfo($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['error_response']['code'])) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['error_response']['sub_msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['error_response']['sub_msg'];
+            $echo[3] = $record;
+            return $echo;
         } else if (isset($record['alipay_user_info_share_response']['code']) && $record['alipay_user_info_share_response']['code'] != '10000') {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['alipay_user_info_share_response']['sub_msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['alipay_user_info_share_response']['sub_msg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -265,11 +265,11 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'access_token',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -292,7 +292,7 @@ class Alipay extends Alibaba
         $client->rsaPrivateKeyFilePath = $conf['url_pri_key'];
         $request = new \AlipayUserInfoShareRequest();
         $record = $client->execute($request, $tray['access_token']);
-        $record = fcf_json(fcf_json($record, 'encode'), 'decode');
+        $record = \fxapp\Param::json(\fxapp\Param::json($record, 'encode'), 'decode');
         return $record;
     }
 
@@ -306,11 +306,11 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'sn', 'money',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -353,7 +353,7 @@ class Alipay extends Alibaba
             'version' => $conf['version'], 'seller_id' => $conf['seller_id'], 'body' => $conf['body'],
             'product_code' => $conf['product_code'], 'url_pri_key' => $conf['url_pri_key'], 'url_sdk' => $conf['url_sdk'],
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['2_1']['app_id'] = $entry['app_id'];
         $tray['2_1']['service'] = $entry['service'];
         $tray['2_1']['partner'] = $entry['partner'];
@@ -375,9 +375,9 @@ class Alipay extends Alibaba
         // 生成签名
         $tray['2_2'] = $this->_paySignApply($tray['2_1']);
         $data['sign'] = $tray['2_2']['param'];
-        $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $data;
-        return $result;
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $data;
+        return $echo;
     }
 
     /**
@@ -452,7 +452,7 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         // 支付宝公钥
         $conf['url_pub_key'] = \fxapp\Base::config('third.alipay.app_pay.url_pub_key');
         // 签名类型
@@ -474,23 +474,23 @@ class Alipay extends Alibaba
             } else if ($entry['trade_status'] == 'TRADE_SUCCESS') {
                 $verify_result = true;
             } else if ($entry['trade_status'] == 'TRADE_FINISHED') {
-                $result[2] = \fxapp\Base::lang(['pay', 'complete']);
-                $result[3] = $entry;
-                return $result;
+                $echo[2] = \fxapp\Base::lang(['pay', 'complete']);
+                $echo[3] = $entry;
+                return $echo;
             }
         }
         // 验证支付结果
         if ($verify_result) {
-            $result[2] = \fxapp\Base::lang(['pay', 'success']);
-            $result[3] = $entry;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['pay', 'success']);
+            $echo[3] = $entry;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['pay', 'fail']);
-            $result[3]['result'] = $verify_result;
-            $result[3]['param'] = $entry;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['pay', 'fail']);
+            $echo[3]['result'] = $verify_result;
+            $echo[3]['param'] = $entry;
+            return $echo;
         }
     }
 
@@ -504,11 +504,11 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'sn', 'money',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -554,7 +554,7 @@ class Alipay extends Alibaba
             'body' => $conf['body'], 'product_code' => $conf['product_code'], 'url_pri_key' => $conf['url_pri_key'],
             'url_sdk' => $conf['url_sdk'],
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['2_1']['app_id'] = $entry['app_id'];
         $tray['2_1']['service'] = $entry['service'];
         $tray['2_1']['partner'] = $entry['partner'];
@@ -577,9 +577,9 @@ class Alipay extends Alibaba
         // 生成签名
         $tray['2_2'] = $this->_wapPaySignApply($tray['2_1']);
         $data['sign'] = $tray['2_2']['param'];
-        $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $data;
-        return $result;
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $data;
+        return $echo;
     }
 
     /**
@@ -623,7 +623,7 @@ class Alipay extends Alibaba
         $param_2['subject'] = $entry['subject'];
         // 销售产品码，商家和支付宝签约的产品码，为固定值QUICK_WAP_PAY
         $param_2['product_code'] = $entry['product_code'];
-        $request->setBizContent(fcf_json($param_2, 'encode'));
+        $request->setBizContent(\fxapp\Param::json($param_2, 'encode'));
         $record = $client->pageExecute($request);
         $entry['param'] = $record;
         return $entry;
@@ -637,7 +637,7 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         // 支付宝公钥
         $conf['url_pub_key'] = \fxapp\Base::config('third.alipay.wap_pay.url_pub_key');
         // 签名类型
@@ -659,23 +659,23 @@ class Alipay extends Alibaba
             } else if ($entry['trade_status'] == 'TRADE_SUCCESS') {
                 $verify_result = true;
             } else if ($entry['trade_status'] == 'TRADE_FINISHED') {
-                $result[2] = \fxapp\Base::lang(['pay', 'complete']);
-                $result[3] = $entry;
-                return $result;
+                $echo[2] = \fxapp\Base::lang(['pay', 'complete']);
+                $echo[3] = $entry;
+                return $echo;
             }
         }
         // 验证支付结果
         if ($verify_result) {
-            $result[2] = \fxapp\Base::lang(['pay', 'success']);
-            $result[3] = $entry;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['pay', 'success']);
+            $echo[3] = $entry;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['pay', 'fail']);
-            $result[3]['result'] = $verify_result;
-            $result[3]['param'] = $entry;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['pay', 'fail']);
+            $echo[3]['result'] = $verify_result;
+            $echo[3]['param'] = $entry;
+            return $echo;
         }
     }
 
@@ -693,12 +693,12 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
@@ -713,21 +713,21 @@ class Alipay extends Alibaba
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['error_response']['code'])) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['error_response']['sub_msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['error_response']['sub_msg'];
+            $echo[3] = $record;
+            return $echo;
         } else if (isset($record['alipay_trade_refund_response']['code']) && $record['alipay_trade_refund_response']['code'] != '10000') {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['alipay_trade_refund_response']['sub_msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['alipay_trade_refund_response']['sub_msg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
         return $record;
     }
@@ -746,12 +746,12 @@ class Alipay extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
@@ -791,9 +791,9 @@ class Alipay extends Alibaba
         $param_2['out_request_no'] = $tray['refund_sn'];
         // 本次退款金额
         $param_2['refund_amount'] = floatval($tray['refund_money']);
-        $request->setBizContent(fcf_json($param_2, 'encode'));
+        $request->setBizContent(\fxapp\Param::json($param_2, 'encode'));
         $record = $client->execute($request);
-        $record = fcf_json(fcf_json($record, 'encode'), 'decode');
+        $record = \fxapp\Param::json(\fxapp\Param::json($record, 'encode'), 'decode');
         return $record;
     }
 
@@ -804,11 +804,11 @@ class Alipay extends Alibaba
     public function refundCallback()
     {
         // 初始化变量
-        $result = fsi_result();
-        $result[0] = false;
-        $result[1] = 1002;
-        $result[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
-        return $result;
+        $echo = \fxapp\Server::echo();
+        $echo[0] = false;
+        $echo[1] = 1002;
+        $echo[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
+        return $echo;
     }
 }
 
@@ -827,11 +827,11 @@ class Taobao extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'ip',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ip'] = $entry['ip'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -841,15 +841,15 @@ class Taobao extends Alibaba
         $response = \fxapp\Service::http($conf['domain'], $conf['data'], [], 'post');
         $response = json_decode($response, true);
         if (!$response['code']) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $response;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $response;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['request', 'fail']);
-            $result[3] = $response;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['request', 'fail']);
+            $echo[3] = $response;
+            return $echo;
         }
     }
 }
@@ -869,11 +869,11 @@ class Aliyun extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'domain',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['domain'] = $entry['domain'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -884,15 +884,15 @@ class Aliyun extends Alibaba
         ];
         $record = $this->ddns($param);
         if (!isset($record['Code'])) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = [$record];
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = [$record];
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $record['Message'];
-            $result[3] = [$record];
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $record['Message'];
+            $echo[3] = [$record];
+            return $echo;
         }
     }
 
@@ -906,11 +906,11 @@ class Aliyun extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'domain', 'rr',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['domain'] = $entry['domain'];
         $tray['rr'] = $entry['rr'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -922,21 +922,21 @@ class Aliyun extends Alibaba
         $list = $data['DomainRecords']['Record'];
         // 获取指定解析
         $RR = null;
-        $list = fmf_json($list, 'decode');
+        $list = \fxapp\Base::json($list, 'decode');
         foreach ($list as $key => $value) {
             if ($tray['rr'] === $value['RR']) {
                 $RR = $value;
             }
         }
         if ($RR !== null) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = [$RR];
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = [$RR];
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['record', 'not', 'exists']);
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['record', 'not', 'exists']);
+            return $echo;
         }
     }
 
@@ -952,12 +952,12 @@ class Aliyun extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'domain', 'rr', 'type',
             'value',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['domain'] = $entry['domain'];
         $tray['rr'] = $entry['rr'];
         $tray['type'] = $entry['type'];
@@ -978,15 +978,15 @@ class Aliyun extends Alibaba
         ];
         $record = $this->ddns($param);
         if (!isset($record['Code'])) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = [$record];
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = [$record];
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $record['Message'];
-            $result[3] = [$record];
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $record['Message'];
+            $echo[3] = [$record];
+            return $echo;
         }
     }
 
@@ -1001,11 +1001,11 @@ class Aliyun extends Alibaba
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'key' => \fxapp\Base::config('third.aliyun.ddns.access_key_id'), 'secret' => \fxapp\Base::config('third.aliyun.ddns.access_key_secret'),
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['key'] = $entry['key'];
         $tray['secret'] = $entry['secret'];
         $timezone = date_default_timezone_get();

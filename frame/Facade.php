@@ -8,9 +8,11 @@
 // +----------------------------------------------------------------------
 // | Link http://www.fxri.net
 // +----------------------------------------------------------------------
-// 加载文件
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'frame' . DIRECTORY_SEPARATOR . 'Loader.php';
-// 注册文件
-\fxyin\Loader::register();
-// 加载基础配置
-\fxyin\Config::load(__DIR__ . DIRECTORY_SEPARATOR . 'config.php');
+namespace fxyin;
+
+/**
+ * 门面类
+ */
+class Facade
+{
+}

@@ -28,16 +28,16 @@ class Sms extends Notify
     {
         // 初始化变量
         $param = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'account', '_param',
         ];
-        $param = fsi_param([$param, $predefined], '1.2.1');
+        $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $predefined = [
             '_sms_type', '_sms_sign', '_sms_param',
             '_sms_template',
         ];
-        $param['_param'] = fsi_param([$param['_param'], $predefined], '1.2.1');
+        $param['_param'] = \fxapp\Param::define([$param['_param'], $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -71,18 +71,18 @@ class Sms extends Notify
         $record['msg'] = $resp->msg;
         $record['sub_msg'] = $resp->sub_msg;
         if ($record['status']) {
-            $result[2] = \fxapp\Base::lang(['send', 'success']);
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['send', 'success']);
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $record['sub_msg'] ?: $record['msg'];
-            if ($result[2] == '触发业务流控') {
-                $result[2] = \fxapp\Base::lang(['send', 'fail', ',', 'sms', 'interval', '1', 'minute']);
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $record['sub_msg'] ?: $record['msg'];
+            if ($echo[2] == '触发业务流控') {
+                $echo[2] = \fxapp\Base::lang(['send', 'fail', ',', 'sms', 'interval', '1', 'minute']);
             } else {
-                $result[2] = \fxapp\Base::lang(['send', 'fail', ',', $result[2]]);
+                $echo[2] = \fxapp\Base::lang(['send', 'fail', ',', $echo[2]]);
             }
-            return $result;
+            return $echo;
         }
     }
 
@@ -96,11 +96,11 @@ class Sms extends Notify
     {
         // 初始化变量
         $param = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'account', 'content',
         ];
-        $param = fsi_param([$param, $predefined], '1.2.1');
+        $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $tray['content'] = $param['content'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -143,8 +143,8 @@ class Sms extends Notify
         $status = $doc->info->state;
         if ($status == 0) {
             // 发送成功
-            $result[2] = \fxapp\Base::lang(['send', 'success']);
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['send', 'success']);
+            return $echo;
         } else {
             $errinfo = '发送失败！';
             switch ($status) {
@@ -171,10 +171,10 @@ class Sms extends Notify
                     break;
             }
             // 返回发送失败的提示
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $errinfo;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $errinfo;
+            return $echo;
         }
     }
 }

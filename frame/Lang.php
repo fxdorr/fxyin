@@ -11,6 +11,9 @@
 
 namespace fxyin;
 
+/**
+ * 语言类
+ */
 class Lang
 {
     // 语言数据

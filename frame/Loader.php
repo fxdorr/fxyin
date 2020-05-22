@@ -10,48 +10,33 @@
 // +----------------------------------------------------------------------
 namespace fxyin;
 
+/**
+ * 加载器类
+ */
 class Loader
 {
     /**
      * 自动加载
+     * @param string $class 类名
      * @return void
      */
     public static function autoload($class)
     {
         // 初始化变量
-        $loader = $class != 'fxyin\\Config' ? Config::get('loader') : null;
-        var_dump($loader);
-        $class = explode('\\', $class);
-        $loader = $loader[$class[0]] ?? null;
-        switch ($class[0]) {
+        $name = explode('\\', $class);
+        $loader = $class != 'fxyin\\Config' ? Config::get('loader.' . $name[0]) : null;
+        switch ($name[0]) {
             case 'fxapp':
                 // 应用
-                array_shift($class);
-                $class = implode(DIRECTORY_SEPARATOR, $class);
-                var_dump($class);
-                if (!is_array($loader)) {
-                    $loader = [__DIR__];
-                }
-                var_dump($loader);
-                foreach ($loader as $dir) {
-                    $file = $dir . DIRECTORY_SEPARATOR . $class . '.php';
-                    if (is_file($file)) {
-                        require $file;
-                        break;
-                    }
-                }
-                break;
             case 'fxyin':
                 // 框架
-                array_shift($class);
-                $class = implode(DIRECTORY_SEPARATOR, $class);
-                var_dump($class);
-                if (!is_array($loader)) {
-                    $loader = [__DIR__];
+                if (empty($loader)) {
+                    $loader = (include dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php')['loader'][$name[0]] ?? [];
                 }
-                var_dump($loader);
+                array_shift($name);
+                $name = implode(DIRECTORY_SEPARATOR, $name);
                 foreach ($loader as $dir) {
-                    $file = $dir . DIRECTORY_SEPARATOR . $class . '.php';
+                    $file = $dir . $name . '.php';
                     if (is_file($file)) {
                         require $file;
                         break;

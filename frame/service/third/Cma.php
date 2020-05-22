@@ -50,11 +50,11 @@ class Cnwea extends Cma
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'ctid',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ctid'] = $entry['ctid'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -64,15 +64,15 @@ class Cnwea extends Cma
         $response = \fxapp\Service::http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
         if (isset($response['weatherinfo'])) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $response;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $response;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['request', 'fail']);
-            $result[3] = $response;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['request', 'fail']);
+            $echo[3] = $response;
+            return $echo;
         }
     }
 
@@ -85,11 +85,11 @@ class Cnwea extends Cma
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'ctid',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ctid'] = $entry['ctid'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -99,15 +99,15 @@ class Cnwea extends Cma
         $response = \fxapp\Service::http($conf['domain'], '', [], 'get');
         $response = json_decode($response, true);
         if (isset($response['weatherinfo'])) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $response;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $response;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['request', 'fail']);
-            $result[3] = $response;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['request', 'fail']);
+            $echo[3] = $response;
+            return $echo;
         }
     }
 }

@@ -28,11 +28,11 @@ class Flashsms extends Notify
     {
         // 初始化变量
         $param = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'account', 'content',
         ];
-        $param = fsi_param([$param, $predefined], '1.2.1');
+        $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $tray['content'] = $param['content'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -65,12 +65,12 @@ class Flashsms extends Notify
             // 短信内容。[示例] hello world!
             'Body' => $tray['content'],
         ];
-        $tray['3_1']['data'] = fcf_json($tray['2_1'], 'encode');
+        $tray['3_1']['data'] = \fxapp\Param::json($tray['2_1'], 'encode');
         $tray['3_1']['data_count'] = strlen($tray['3_1']['data']);
         // 请求头配置
         $tray['3_1']['app_key'] = $conf['app_key'];
         // 随机数。参见OASIS WS-Security standard。
-        $tray['3_1']['nonce'] = fcf_rand(24);
+        $tray['3_1']['nonce'] = \fxapp\Math::rand(24);
         $tray['3_1']['time'] = time() - 28800;
         // 创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
         $tray['3_1']['created'] = date('Y-m-d', $tray['3_1']['time']) . 'T' . date('H:i:s', $tray['3_1']['time']) . 'Z';
@@ -192,14 +192,14 @@ class Flashsms extends Notify
                     break;
             }
             // 返回发送失败的提示
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $errinfo;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $errinfo;
+            return $echo;
         } else {
             // 发送成功
-            $result[2] = \fxapp\Base::lang(['send', 'success']);
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['send', 'success']);
+            return $echo;
         }
     }
 }

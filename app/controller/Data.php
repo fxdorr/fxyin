@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class Data
+class Data extends \fxyin\Facade
 {
     /**
      * SQL-条件
@@ -322,26 +322,26 @@ class Data
     public static function updateContrast($data_new, $data_old)
     {
         // 初始化变量
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         if (!isset($data_new)) {
-            $result[0] = false;
-            $result[2] = \fxapp\Base::lang(['lack', 'new', 'data']);
+            $echo[0] = false;
+            $echo[2] = \fxapp\Base::lang(['lack', 'new', 'data']);
         } else if (!isset($data_old)) {
-            $result[0] = false;
-            $result[2] = \fxapp\Base::lang(['lack', 'old', 'data']);
+            $echo[0] = false;
+            $echo[2] = \fxapp\Base::lang(['lack', 'old', 'data']);
         } else if (is_array($data_new) && is_array($data_old)) {
             foreach ($data_new as $key => $value) {
                 if ($value != $data_old[$key]) {
-                    $result[0] = false;
-                    $result[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
+                    $echo[0] = false;
+                    $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
                     break;
                 }
             }
         } else {
-            $result[0] = false;
-            $result[2] = \fxapp\Base::lang(['data', 'format', 'error']);
+            $echo[0] = false;
+            $echo[2] = \fxapp\Base::lang(['data', 'format', 'error']);
         }
-        return $result;
+        return $echo;
     }
 
     /**
@@ -364,8 +364,8 @@ class Data
                     COS(($late * 3.1415) / 180 ) *
                     COS(($lngs * 3.1415) / 180 - ($lnge * 3.1415) / 180 ) 
                 ) * 6378.137";
-        $result = str_replace(array(" ", "　", "\t", "\n", "\r"), '', $form);
-        return $result;
+        $echo = str_replace(array(" ", "　", "\t", "\n", "\r"), '', $form);
+        return $echo;
     }
 
     /**
@@ -388,8 +388,8 @@ class Data
                     'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
                     'Q','R','S','T','W','X','Y','Z'
                 )";
-        $result = str_replace(array("  ", "　", "\t", "\n", "\r"), '', $form);
-        return $result;
+        $echo = str_replace(array("  ", "　", "\t", "\n", "\r"), '', $form);
+        return $echo;
     }
 
     /**
@@ -405,14 +405,14 @@ class Data
             default:
             case 1:
                 // 默认
-                $result = "if(json_valid({$field}), trim(both '\"' from {$field}->'{$param}'), {$field})";
+                $echo = "if(json_valid({$field}), trim(both '\"' from {$field}->'{$param}'), {$field})";
                 break;
             case 2:
                 // 非Json则替换
-                $result = "if(json_valid({$field}), {$field}, '{}')";
+                $echo = "if(json_valid({$field}), {$field}, '{}')";
                 break;
         }
-        return $result;
+        return $echo;
     }
 
     /**
@@ -432,17 +432,17 @@ class Data
             case 1:
                 // 默认
                 if (is_numeric($replace)) {
-                    $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
+                    $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
                 } else {
-                    $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),\'' . $replace . '\',' . $field . ')';
+                    $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),\'' . $replace . '\',' . $field . ')';
                 }
                 break;
             case 2:
                 // 为空则替换
-                $result = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
+                $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
                 break;
         }
-        return $result;
+        return $echo;
     }
 
     /**
@@ -477,8 +477,8 @@ class Data
         } else {
             $replace = '\'' . $replace . '\'';
         }
-        $result = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $bool . ')';
-        return $result;
+        $echo = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $bool . ')';
+        return $echo;
     }
 
     /**
@@ -575,25 +575,25 @@ class Data
     public static function paramFilter($param)
     {
         // 初始化变量
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            $result[0] = false;
-            $result[1] = 1000;
-            $result[2] = \fxapp\Base::lang(['lack', 'parameter']);
+            $echo[0] = false;
+            $echo[1] = 1000;
+            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
         } else if (is_array($param)) {
             foreach ($param as $key => $value) {
                 if (is_null($value)) {
                     unset($param[$key]);
                 }
             }
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $param;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $param;
         } else {
-            $result[0] = false;
-            $result[1] = 1001;
-            $result[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            $echo[0] = false;
+            $echo[1] = 1001;
+            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
         }
-        return $result;
+        return $echo;
     }
 
     /**
@@ -604,27 +604,27 @@ class Data
     public static function paramEmpty($param)
     {
         // 初始化变量
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            $result[0] = false;
-            $result[1] = 1000;
-            $result[2] = \fxapp\Base::lang(['lack', 'parameter']);
+            $echo[0] = false;
+            $echo[1] = 1000;
+            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
         } else if (is_array($param)) {
             foreach ($param as $key => $value) {
                 if (is_null($value) || $value === '') {
                     $name = is_numeric($key) ? 'param' : $key;
-                    $result[0] = false;
-                    $result[1] = 1000;
-                    $result[2] = \fxapp\Base::lang(['lack', $name]);
+                    $echo[0] = false;
+                    $echo[1] = 1000;
+                    $echo[2] = \fxapp\Base::lang(['lack', $name]);
                     break;
                 }
             }
         } else {
-            $result[0] = false;
-            $result[1] = 1001;
-            $result[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            $echo[0] = false;
+            $echo[1] = 1001;
+            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
         }
-        return $result;
+        return $echo;
     }
 
     /**
@@ -635,29 +635,29 @@ class Data
     public static function paramExist($param)
     {
         // 初始化变量
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            $result[0] = false;
-            $result[1] = 1000;
-            $result[2] = \fxapp\Base::lang(['lack', 'parameter']);
+            $echo[0] = false;
+            $echo[1] = 1000;
+            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
         } else if (is_array($param)) {
             foreach ($param as $key => $value) {
                 if (is_null($value) || $value === '') {
-                    $result[0] = false;
-                    $result[1] = 1000;
-                    $result[2] = \fxapp\Base::lang(['lack', 'param']);
+                    $echo[0] = false;
+                    $echo[1] = 1000;
+                    $echo[2] = \fxapp\Base::lang(['lack', 'param']);
                 } else {
-                    $result[0] = true;
-                    $result[1] = 0;
-                    $result[2] = \fxapp\Base::lang(['check', 'success']);
+                    $echo[0] = true;
+                    $echo[1] = 0;
+                    $echo[2] = \fxapp\Base::lang(['check', 'success']);
                     break;
                 }
             }
         } else {
-            $result[0] = false;
-            $result[1] = 1001;
-            $result[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            $echo[0] = false;
+            $echo[1] = 1001;
+            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
         }
-        return $result;
+        return $echo;
     }
 }

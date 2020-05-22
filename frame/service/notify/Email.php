@@ -30,11 +30,11 @@ class Email extends Notify
     {
         // 初始化变量
         $param = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'account', 'title', 'content',
         ];
-        $param = fsi_param([$param, $predefined], '1.2.1');
+        $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $tray['title'] = $param['title'];
         $tray['content'] = $param['content'];
@@ -56,10 +56,14 @@ class Email extends Notify
             $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $pempty;
         }
-        $conf['smtpemailto'] = $tray['account'];//发送给谁
-        $conf['mailtitle'] = $tray['title'];//邮件主题
-        $conf['mailcontent'] = $tray['content'];//邮件内容
-        $conf['mailtype'] = 'HTML';//邮件格式（HTML/TXT）,TXT为文本邮件
+        // 发送给谁
+        $conf['smtpemailto'] = $tray['account'];
+        // 邮件主题
+        $conf['mailtitle'] = $tray['title'];
+        // 邮件内容
+        $conf['mailcontent'] = $tray['content'];
+        // 邮件格式（HTML/TXT）,TXT为文本邮件
+        $conf['mailtype'] = 'HTML';
         // 开始执行
         // ************************ 配置信息 ****************************
         // 这里面的一个true是表示使用身份验证,否则不使用身份验证.
@@ -68,13 +72,13 @@ class Email extends Notify
         $email->debug = false;
         $state = $email->sendmail($conf['smtpemailto'], $conf['smtpusermail'], $conf['mailtitle'], $conf['mailcontent'], $conf['mailtype']);
         if ($state) {
-            $result[2] = \fxapp\Base::lang(['send', 'success']);
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['send', 'success']);
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['send', 'fail']);
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['send', 'fail']);
+            return $echo;
         }
     }
 }

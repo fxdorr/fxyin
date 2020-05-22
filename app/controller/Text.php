@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class Text
+class Text extends \fxyin\Facade
 {
     /**
      * 生成UUID
@@ -25,7 +25,7 @@ class Text
         $predefined = [
             'uuid' => '', 'prefix' => '', 'style' => '',
         ];
-        $param = fsi_param([$param, $predefined], '1.1.2');
+        $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
         switch ($mode) {
             default:
             case 1:
@@ -61,7 +61,7 @@ class Text
                 $uuid = $chars;
                 break;
         }
-        $param['style'] = \fxapp\Text::explode(',', $param['style']);
+        $param['style'] = static::explode(',', $param['style']);
         foreach ($param['style'] as $value) {
             switch ($value) {
                 case 1:
@@ -101,51 +101,6 @@ class Text
     }
 
     /**
-     * 处理日期时间
-     * @param string $time 时间
-     * @param int $type 类型
-     * @return string
-     */
-    public static function datetime($time = null, $type = -1)
-    {
-        $time = \fxapp\Data::paramEmpty([$time])[0] ? $time : time();
-        if (is_string($time) && !is_numeric($time)) {
-            $time = strtotime($time);
-        }
-        switch ($type) {
-            case 1:
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d 00:00:00', $time)) . " and " . strtotime(date('Y-m-d 23:59:59', $time));
-                break;
-            case 2:
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d 00:00:00', $time));
-                break;
-            case 3:
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d 23:59:59', $time));
-                break;
-            case 4:
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d H:i:s', $time));
-                break;
-            case 5:
-                // 时间戳转日期
-                $time = date('Y-m-d 00:00:00', $time);
-                break;
-            case 6:
-                // 时间戳转日期
-                $time = date('Y-m-d 23:59:59', $time);
-                break;
-            case 7:
-                // 时间戳转日期
-                $time = date('Y-m-d H:i:s', $time);
-                break;
-        }
-        return $time;
-    }
-
-    /**
      * 拼接字符串
      * @param string $string 字符串
      * @param string $value 值
@@ -176,22 +131,22 @@ class Text
     public static function strlen($string = null, $start = 0, $end = 0)
     {
         // 初始化变量
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $length = mb_strlen($string, 'utf-8');
         $end == 0 && $end = $length;
         $start > $end && $start = $end;
         if (is_string($string)) {
             if ($end > 0 && !($length >= $start && $length <= $end)) {
-                $result[0] = false;
-                $result[1] = 1004;
-                $result[2] = \fxapp\Base::lang(['string', 'length', 'should', 'be', ($start == $end ? $end : $start . '-' . $end)]);
+                $echo[0] = false;
+                $echo[1] = 1004;
+                $echo[2] = \fxapp\Base::lang(['string', 'length', 'should', 'be', ($start == $end ? $end : $start . '-' . $end)]);
             }
         } else {
-            $result[0] = false;
-            $result[1] = 1000;
-            $result[2] = \fxapp\Base::lang(['string', 'not2', 'input']);
+            $echo[0] = false;
+            $echo[1] = 1000;
+            $echo[2] = \fxapp\Base::lang(['string', 'not2', 'input']);
         }
-        return $result;
+        return $echo;
     }
 
     /**
@@ -256,8 +211,276 @@ class Text
                 if ($char >= -11055 and $char <= -10247) return "Z";
             }
             return $var;
-        } catch (\Throwable $e) {
+        } catch (\Throwable $th) {
             return $var;
         }
+    }
+
+    /**
+     * 处理时间-转换
+     * @param int|string $time 时间
+     * @param string $type 类型
+     * @return string
+     */
+    public static function timeChange($time, $type = null)
+    {
+        // 初始化变量
+        if (is_string($time) && !is_numeric($time)) {
+            $time = strtotime($time);
+        }
+        if (is_null($time) || false === $time) return;
+        switch ($type) {
+            case '1.1':
+                // 日期转时间戳
+                $time = strtotime(date('Y-m-d H:i:s', $time));
+                break;
+            case '1.2':
+                // 日期转时间戳
+                $time = strtotime(date('Y-m-d 00:00:00', $time));
+                break;
+            case '1.3':
+                // 日期转时间戳
+                $time = strtotime(date('Y-m-d 23:59:59', $time));
+                break;
+            case '2.1':
+                // 时间戳转日期
+                $time = date('Y-m-d H:i:s', $time);
+                break;
+            case '2.2':
+                // 时间戳转日期
+                $time = date('Y-m-d 00:00:00', $time);
+                break;
+            case '2.3':
+                // 时间戳转日期
+                $time = date('Y-m-d 23:59:59', $time);
+                break;
+        }
+        return $time;
+    }
+
+    /**
+     * 处理时间-毫米
+     * @param string $mtime 毫秒时间
+     * @return string
+     */
+    public static function timeMilli($mtime = null)
+    {
+        // 初始化变量
+        $echo = null;
+        if (is_numeric($mtime)) {
+            if (strlen($mtime) != 13) {
+                return false;
+            }
+            $echo = date("Y-m-d H:i:s", substr($mtime, 0, 10));
+            $echo = $echo . '.' . substr($mtime, 10, 3);
+        } else if (is_string($mtime)) {
+            $echo = explode('.', $mtime);
+            $echo = strtotime($echo[0]) . $echo[1];
+            $echo = intval($echo);
+        } else {
+            $now = explode(' ', microtime());
+            $echo = substr($now[1] . substr($now[0], 2), 0, 13);
+            $echo = intval($echo);
+        }
+        return $echo;
+    }
+
+    /**
+     * 处理时间-格式化
+     * @param string $time 时间
+     * @param string $type 格式
+     * @return string
+     */
+    public static function timeFormat($time = null, $type = null)
+    {
+        // 初始化变量
+        $echo = [];
+        if (!is_numeric($time)) {
+            return false;
+        }
+        // 时间列表
+        $time_list = [];
+        // 时间开关
+        $time_switch = [
+            0 => false,
+            1 => true,
+            2 => true,
+            3 => true,
+            4 => true,
+            5 => true,
+            6 => true,
+        ];
+        // 时间名称
+        $time_name = [
+            0 => 'millisecond',
+            1 => 'sec',
+            2 => 'minute',
+            3 => 'hour',
+            4 => 'day',
+            5 => 'month',
+            6 => 'year',
+        ];
+        $time_all = $time;
+        switch ($type) {
+            default:
+            case '1.1':
+                // 秒
+                break;
+            case '1.2':
+                // 毫秒
+                $time_switch[0] = true;
+                break;
+        }
+        // 毫秒
+        if ($time_switch[0]) {
+            $time_list[0] = $time_all % 1000;
+            $time_all = intval($time_all / 1000);
+        }
+        // 秒
+        if ($time_switch[1]) {
+            $time_list[1] = $time_all % 60;
+            $time_all = intval($time_all / 60);
+        }
+        // 分钟
+        if ($time_switch[2]) {
+            $time_list[2] = $time_all % 60;
+            $time_all = intval($time_all / 60);
+        }
+        // 小时
+        if ($time_switch[3]) {
+            $time_list[3] = $time_all % 24;
+            $time_all = intval($time_all / 24);
+        }
+        // 天
+        if ($time_switch[4]) {
+            $time_list[4] = $time_all % 30;
+            $time_all = intval($time_all / 30);
+        }
+        // 月
+        if ($time_switch[5]) {
+            $time_list[5] = $time_all % 12;
+            $time_all = intval($time_all / 12);
+        }
+        // 年
+        if ($time_switch[6]) {
+            $time_list[6] = $time_all;
+        }
+        krsort($time_list);
+        // 去除0
+        foreach ($time_list as $key => $value) {
+            if ($value == 0) {
+                unset($time_list[$key]);
+            }
+        }
+        foreach ($time_list as $key => $value) {
+            $echo[] = $value;
+            $echo[] = $time_name[$key];
+        }
+        $echo = \fxapp\Base::lang($echo);
+        return $echo;
+    }
+
+    /**
+     * 解析Ipv4
+     * @param mixed $var 变量
+     * @param string $type 类型
+     * @return mixed
+     */
+    public static function ipv4($var, $type)
+    {
+        // 初始化变量
+        $echo = null;
+        $type = strtolower($type);
+        switch ($type) {
+            case 'encode':
+                // 编码
+                $var = explode('.', $var);
+                foreach ($var as $key => $value) {
+                    $value = ltrim($value, 0);
+                    if ($value == '') {
+                        $value = '0';
+                    }
+                    $var[$key] = $value;
+                }
+                $var = implode('.', $var);
+                $echo = ip2long($var);
+                if ($echo !== false) {
+                    $echo = bindec(decbin($echo));
+                }
+                break;
+            case 'decode':
+                // 解码
+                $echo = long2ip($var);
+                break;
+        }
+        return $echo;
+    }
+
+    /**
+     * 进制转换
+     * @param mixed $var 变量
+     * @param string $type 类型
+     * @return mixed
+     */
+    public static function convert($var, $type)
+    {
+        // 初始化变量
+        $echo = null;
+        $type = strtolower($type);
+        switch ($type) {
+            case 'hexstr':
+                // 16进制转字符串
+                if (!$var) {
+                    // 空字符串
+                    return false;
+                }
+                $strs = [];
+                $len = strlen($var);
+                for ($i = 0; $i < $len; $i++) {
+                    $str = substr($var, $i, 1);
+                    $strs[] = bin2hex($str);
+                }
+                $strs = implode('', $strs);
+                $echo = $strs;
+                break;
+            case 'strhex':
+                // 字符串转16进制
+                if (!$var) {
+                    // 空字符串
+                    return false;
+                } else if (mb_strlen($var, 'utf-8') != strlen($var)) {
+                    // 不解析混编数据
+                    return false;
+                } else if (strlen($var) % 2 != 0) {
+                    // 不解析单数字符串
+                    return false;
+                }
+                $strs = [];
+                $len = strlen($var);
+                for ($i = 0; $i < $len; $i = $i + 2) {
+                    $str = substr($var, $i, 2);
+                    $strs[] = chr(hexdec($str));
+                }
+                $strs = implode('', $strs);
+                $echo = $strs;
+                break;
+        }
+        return $echo;
+    }
+
+    /**
+     * 提取抛出
+     * @param Throwable $th 抛出对象
+     * @return string
+     */
+    public static function throwable($th)
+    {
+        // 返回抛出
+        $echo = [
+            $th->getMessage(),
+            $th->getFile(),
+            $th->getLine(),
+        ];
+        return implode(' ', $echo);
     }
 }

@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class Service
+class Service extends \fxyin\Facade
 {
     /**
      * HTTP请求

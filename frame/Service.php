@@ -13,6 +13,9 @@ namespace fxyin;
 use fxyin\service\Notify as NotifyService;
 use fxyin\service\Third as ThirdService;
 
+/**
+ * 服务类
+ */
 class Service
 {
     // 原始数据

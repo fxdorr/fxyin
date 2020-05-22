@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class Client
+class Client extends \fxyin\Facade
 {
     /**
      * 获取IP
@@ -34,7 +34,7 @@ class Client
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         // IP地址合法验证
-        $long = sprintf("%u", fcf_ipv4($ip, 'encode'));
+        $long = sprintf("%u", \fxapp\Text::ipv4($ip, 'encode'));
         $ip = $long ? [$ip, $long] : ['0.0.0.0', 0];
         return $ip[$type];
     }
@@ -233,7 +233,7 @@ class Client
             // GET-POST-INPUT
             'get' => $_GET, 'post' => $_POST, 'input' => $input,
         ];
-        $base = fsi_param([null, $predefined], '1.1.3');
+        $base = \fxapp\Param::define([null, $predefined], '1.1.3');
         // 识别方法
         $method = \fxapp\Text::explode(',', strtolower($method));
         foreach ($method as $value) {
@@ -258,7 +258,7 @@ class Client
         }
         if (is_array($param)) {
             // 获取指定参数数组
-            $echo = fmo_pick($echo, $param);
+            $echo = \fxapp\Param::pick($echo, $param);
         } else if (is_string($param)) {
             // 获取指定参数
             $echo = $echo[$param] ?? null;

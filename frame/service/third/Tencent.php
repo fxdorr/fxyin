@@ -53,22 +53,23 @@ class Qq extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_webAuthInfo($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['data']['ret']) && $record['data']['ret']) {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $record['data']['msg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $record['data']['msg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
+
     /**
      * WebInfo
      * @param string $entry['access_token'] 接口调用凭证
@@ -79,11 +80,11 @@ class Qq extends Tencent
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'access_token', 'openid',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
         $tray['openid'] = $entry['openid'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -121,11 +122,11 @@ class WeChat extends Tencent
         // 初始化变量
         $entry = $this->data;
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'url_redirect',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('third.wechat.web_grant_token.app_key');
         // 应用授权作用域
@@ -139,7 +140,7 @@ class WeChat extends Tencent
         $predefined = [
             'url_redirect' => \fxapp\Base::config('third.wechat.web_grant_token.url_redirect'),
         ];
-        $conf = fsi_param([$conf, $predefined], '1.1.2');
+        $conf = \fxapp\Param::define([$conf, $predefined], '1.1.2');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.wechat.web_grant_token.domain');
         // 拼接请求域
@@ -149,9 +150,9 @@ class WeChat extends Tencent
         $conf['param'] = \fxapp\Text::splice($conf['param'], 'scope=' . $conf['scope'], '&');
         $conf['param'] = \fxapp\Text::splice($conf['param'], 'state=' . $conf['state'], '&');
         $conf['domain'] = \fxapp\Text::splice($conf['domain'], $conf['param'] . '#wechat_redirect', '?');
-        $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $conf;
-        return $result;
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $conf;
+        return $echo;
     }
 
     /**
@@ -163,21 +164,21 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'code',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['code'] = $entry['code'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
         $tokens = $this->_webAuthToken($entry);
         if (isset($tokens['errcode'])) {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $tokens['errmsg'];
-            $result[3] = $tokens;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $tokens['errmsg'];
+            $echo[3] = $tokens;
+            return $echo;
         }
         $entrys = $this->_webAuthInfo($tokens);
         $tray['accessToken'] = $tokens['access_token'];
@@ -185,9 +186,9 @@ class WeChat extends Tencent
         $tray['unionId'] = $tokens['unionid'];
         $tray['nickname'] = $entrys['nickname'];
         $data['account'] = $tray['unionId'];
-        $result[2] = \fxapp\Base::lang(['request', 'success']);
-        $result[3] = $data;
-        return $result;
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $data;
+        return $echo;
     }
 
     /**
@@ -199,20 +200,20 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_webAuthToken($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['errcode'])) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['errmsg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['errmsg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -225,11 +226,11 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'code',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['code'] = $entry['code'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -265,14 +266,14 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_webAuthInfo($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -286,11 +287,11 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'access_token', 'openid',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
         $tray['openid'] = $entry['openid'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -320,20 +321,20 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_jssdkAuthToken($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['errcode'])) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['errmsg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['errmsg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -345,7 +346,7 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('third.wechat.jssdk_grant_access_token.app_key');
         // 应用密钥
@@ -376,20 +377,20 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $record = $this->_jssdkAuthTicket($entry);
         if (isset($record[0]) && is_bool($record[0])) {
             return $record;
         } else if (isset($record['errcode']) && $record['errcode'] != 0) {
-            $result[0] = false;
-            $result[1] = 1004;
-            $result[2] = $record['errmsg'];
-            $result[3] = $record;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1004;
+            $echo[2] = $record['errmsg'];
+            $echo[3] = $record;
+            return $echo;
         } else {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $record;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $record;
+            return $echo;
         }
     }
 
@@ -401,11 +402,11 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $conf['param'] = '';
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'access_token',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -437,12 +438,12 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'sn', 'money', 'dateline',
             'openid',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $tray['dateline'] = $entry['dateline'];
@@ -469,12 +470,12 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'sn', 'money', 'dateline',
             'openid',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $tray['dateline'] = $entry['dateline'];
@@ -493,7 +494,7 @@ class WeChat extends Tencent
         $predefined = [
             'body' => $conf['body'], 'attach' => $conf['attach'], 'url_notify' => $conf['url_notify'],
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['2_1']['body'] = $entry['body'];
         $tray['2_1']['attach'] = $entry['attach'];
         $tray['2_1']['sn'] = $tray['sn'];
@@ -553,15 +554,15 @@ class WeChat extends Tencent
             $tray['3_2']['package'] = $tray['3_1']['package'];
             $tray['3_2']['sign_type'] = $tray['3_1']['signType'];
             $tray['3_2']['sign'] = $getsign;
-            $result[2] = \fxapp\Base::lang(['pay', 'success']);
-            $result[3] = $tray['3_2'];
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['pay', 'success']);
+            $echo[3] = $tray['3_2'];
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $order['return_msg'];
-            $result[3] = $order;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $order['return_msg'];
+            $echo[3] = $order;
+            return $echo;
         }
     }
 
@@ -576,11 +577,11 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'sn', 'money', 'dateline',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $tray['dateline'] = $entry['dateline'];
@@ -598,7 +599,7 @@ class WeChat extends Tencent
         $predefined = [
             'body' => $conf['body'], 'attach' => $conf['attach'], 'url_notify' => $conf['url_notify'],
         ];
-        $entry = fsi_param([$entry, $predefined], '1.1.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['2_1']['body'] = $entry['body'];
         $tray['2_1']['attach'] = $entry['attach'];
         $tray['2_1']['sn'] = $tray['sn'];
@@ -659,15 +660,15 @@ class WeChat extends Tencent
             $tray['3_2']['time_stamp'] = $tray['3_1']['timestamp'];
             $tray['3_2']['package'] = $tray['3_1']['package'];
             $tray['3_2']['trade_type'] = $order['trade_type'];
-            $result[2] = \fxapp\Base::lang(['pay', 'success']);
-            $result[3] = $tray['3_2'];
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['pay', 'success']);
+            $echo[3] = $tray['3_2'];
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $order['return_msg'];
-            $result[3] = $order;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $order['return_msg'];
+            $echo[3] = $order;
+            return $echo;
         }
     }
 
@@ -678,7 +679,7 @@ class WeChat extends Tencent
     public function payCallback()
     {
         // 初始化变量
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         // 商户号
         $conf['mch_id'] = \fxapp\Base::config('third.wechat.app_pay.mch_id');
         // 服务处理
@@ -688,10 +689,10 @@ class WeChat extends Tencent
             $xml = file_get_contents('php://input');
         }
         if (empty($xml)) {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['not2', 'find', 'parameter']);
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['not2', 'find', 'parameter']);
+            return $echo;
         }
         $res = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         $order = get_object_vars($res);
@@ -717,15 +718,15 @@ class WeChat extends Tencent
         // 设置超时时间为15s
         $order = \WxPayApi::orderQuery($input, 15);
         if (array_key_exists("return_code", $order) && array_key_exists("result_code", $order) && $order["return_code"] == "SUCCESS" && $order["result_code"] == "SUCCESS") {
-            $result[2] = \fxapp\Base::lang(['pay', 'success']);
-            $result[3] = $order;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['pay', 'success']);
+            $echo[3] = $order;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $order['return_msg'];
-            $result[3] = $order;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $order['return_msg'];
+            $echo[3] = $order;
+            return $echo;
         }
     }
 
@@ -743,12 +744,12 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
@@ -777,12 +778,12 @@ class WeChat extends Tencent
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'pay_sn', 'deal_sn', 'refund_sn',
             'deal_money', 'refund_money', 'refund_remark',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
@@ -826,21 +827,21 @@ class WeChat extends Tencent
         // 交互订单
         $order = \WxPayApi::refund($input, 15);
         if ($order && $order['return_code'] == 'SUCCESS' && $order['result_code'] == 'SUCCESS') {
-            $result[2] = \fxapp\Base::lang(['pay', 'success']);
-            $result[3] = $order;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['pay', 'success']);
+            $echo[3] = $order;
+            return $echo;
         } else if (isset($order['err_code_des'])) {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $order['err_code_des'];
-            $result[3] = $order;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $order['err_code_des'];
+            $echo[3] = $order;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $order['return_msg'];
-            $result[3] = $order;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $order['return_msg'];
+            $echo[3] = $order;
+            return $echo;
         }
     }
 
@@ -851,10 +852,10 @@ class WeChat extends Tencent
     public function refundCallback()
     {
         // 初始化变量
-        $result = fsi_result();
-        $result[0] = false;
-        $result[1] = 1002;
-        $result[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
-        return $result;
+        $echo = \fxapp\Server::echo();
+        $echo[0] = false;
+        $echo[1] = 1002;
+        $echo[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
+        return $echo;
     }
 }

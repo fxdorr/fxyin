@@ -50,11 +50,11 @@ class Unionpay extends Cup
     public function payApply()
     {
         // 初始化变量
-        $result = fsi_result();
-        $result[0] = false;
-        $result[1] = 1002;
-        $result[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
-        return $result;
+        $echo = \fxapp\Server::echo();
+        $echo[0] = false;
+        $echo[1] = 1002;
+        $echo[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
+        return $echo;
     }
 
     /**
@@ -64,10 +64,10 @@ class Unionpay extends Cup
     public function payCallback()
     {
         // 初始化变量
-        $result = fsi_result();
-        $result[0] = false;
-        $result[1] = 1002;
-        $result[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
-        return $result;
+        $echo = \fxapp\Server::echo();
+        $echo[0] = false;
+        $echo[1] = 1002;
+        $echo[2] = \fxapp\Base::lang(['pay', 'not2', 'open3']);
+        return $echo;
     }
 }

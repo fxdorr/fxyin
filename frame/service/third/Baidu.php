@@ -52,11 +52,11 @@ class Lbsyun extends Baidu
     {
         // 初始化变量
         $entry = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'ip',
         ];
-        $entry = fsi_param([$entry, $predefined], '1.2.2');
+        $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ip'] = $entry['ip'];
         $pempty = \fxapp\Data::paramEmpty($tray);
         if (!$pempty[0]) return $pempty;
@@ -72,15 +72,15 @@ class Lbsyun extends Baidu
         $response = \fxapp\Service::http($conf['domain'], $conf['data'], [], 'post');
         $response = json_decode($response, true);
         if (!$response['status']) {
-            $result[2] = \fxapp\Base::lang(['request', 'success']);
-            $result[3] = $response;
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['request', 'success']);
+            $echo[3] = $response;
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $response['message'];
-            $result[3] = $response;
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $response['message'];
+            $echo[3] = $response;
+            return $echo;
         }
     }
 }
@@ -123,6 +123,7 @@ class BaiduTranslate extends Baidu
         'yue' => '粤语',
         'zh' => '中文'
     );
+
     /**
      * 获取支持的语种
      * @return array 返回支持的语种
@@ -131,6 +132,7 @@ class BaiduTranslate extends Baidu
     {
         return self::$Lang;
     }
+
     /**
      * 执行文本翻译
      * @param string $text 要翻译的文本
@@ -157,14 +159,14 @@ class BaiduTranslate extends Baidu
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        $result = curl_exec($ch);
+        $echo = curl_exec($ch);
         curl_close($ch);
 
-        $result = json_decode($result, true);
+        $echo = json_decode($echo, true);
 
-        if (!isset($result['trans_result']['data']['0']['dst'])) {
+        if (!isset($echo['trans_result']['data']['0']['dst'])) {
             return false;
         }
-        return $result['trans_result']['data']['0']['dst'];
+        return $echo['trans_result']['data']['0']['dst'];
     }
 }

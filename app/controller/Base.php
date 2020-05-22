@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
-class Base
+class Base extends \fxyin\Facade
 {
     /**
      * 加载-[文件]
@@ -112,31 +112,31 @@ class Base
     /**
      * 配置参数-[获取|设置]
      * @param array|string $name 参数名
-     * @param mixed $value 参数值
+     * @param mixed $data 数据
      * @param string $range 作用域
      * @return mixed
      */
-    public static function config($name = '', $value = null, $range = '')
+    public static function config($name = '', $data = null, $range = '')
     {
-        if (is_null($value) && is_string($name)) {
+        if (is_null($data) && is_string($name)) {
             return 0 === strpos($name, '?') ? \fxyin\Config::has(substr($name, 1), $range) : \fxyin\Config::get($name, $range);
         } else {
-            return \fxyin\Config::set($name, $value, $range);
+            return \fxyin\Config::set($name, $data, $range);
         }
     }
 
     /**
      * 环境参数-[获取|设置]
      * @param array|string $name 参数名
-     * @param mixed $value 参数值
+     * @param mixed $data 数据
      * @return mixed
      */
-    public static function env($name = '', $value = null)
+    public static function env($name = '', $data = null)
     {
-        if (is_null($value) && is_string($name)) {
+        if (is_null($data) && is_string($name)) {
             return 0 === strpos($name, '?') ? \fxyin\Env::has(substr($name, 1)) : \fxyin\Env::get($name);
         } else {
-            return \fxyin\Env::set($name, $value);
+            return \fxyin\Env::set($name, $data);
         }
     }
 
@@ -163,5 +163,74 @@ class Base
         }
         // 输出数据
         echo $output;
+    }
+
+    /**
+     * 解析Json
+     * @param mixed $var 变量
+     * @param string $type 类型
+     * @return mixed
+     */
+    public static function json($var, $type)
+    {
+        // 初始化变量
+        $echo = null;
+        $type = strtolower($type);
+        switch ($type) {
+            case 'encode':
+                // 编码
+                // 检查参数
+                if (!is_json($var) && !is_array($var)) {
+                    $var = $var;
+                } else if (is_array($var)) {
+                    $var = \fxapp\Param::json($var, 'encode');
+                }
+                $echo = $var;
+                break;
+            case 'decode':
+                // 解码
+                // 检查参数
+                if (!is_json($var) && !is_array($var)) {
+                    $var = [];
+                } else if (is_json($var)) {
+                    $var = \fxapp\Param::json($var, 'decode');
+                }
+                $echo = $var;
+                break;
+        }
+        return $echo;
+    }
+
+    /**
+     * 加密解密
+     * @param mixed $var 变量
+     * @param string $type 类型
+     * @param string $param 参数
+     * @return mixed
+     */
+    public static function crypt($var, $type, $param = null)
+    {
+        // 初始化变量
+        $config = \fxapp\Base::config('safe.base');
+        if (!$config['crypt_switch']) return $var;
+        $data = null;
+        if (!is_array($param)) {
+            $param = null;
+        }
+        $predefined = [
+            'method' => $config['crypt_method'], 'password' => $config['crypt_key'], 'options' => $config['crypt_options'],
+            'iv' => $config['crypt_iv'],
+        ];
+        $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+        $type = strtolower($type);
+        switch ($type) {
+            case 'encode':
+                $data = \fxapp\Safe::crypt($var, 'encode', $param);
+                break;
+            case 'decode':
+                $data = \fxapp\Safe::crypt($var, 'decode', $param);
+                break;
+        }
+        return $data;
     }
 }

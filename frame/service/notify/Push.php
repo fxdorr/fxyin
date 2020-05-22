@@ -31,11 +31,11 @@ class Push extends Notify
     {
         // 初始化变量
         $param = $this->data;
-        $result = fsi_result();
+        $echo = \fxapp\Server::echo();
         $predefined = [
             'title', 'content', 'param',
         ];
-        $param = fsi_param([$param, $predefined], '1.2.1');
+        $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['title'] = $param['title'];
         $tray['content'] = $param['content'];
         $pempty = \fxapp\Data::paramEmpty($tray);
@@ -51,17 +51,17 @@ class Push extends Notify
         $predefined = [
             '_set_extras' => [], '_set_options' => [],
         ];
-        $tray['_param'] = fsi_param([$tray['_param'], $predefined], '1.1.2');
+        $tray['_param'] = \fxapp\Param::define([$tray['_param'], $predefined], '1.1.2');
         // 推送参数
         $predefined = [
             '_push_mode' => 1, '_push_target' => 1,
         ];
-        $tray['_param'] = fsi_param([$tray['_param'], $predefined], '1.1.2');
+        $tray['_param'] = \fxapp\Param::define([$tray['_param'], $predefined], '1.1.2');
         // 选项参数
         $predefined = [
             'apns_production' => true,
         ];
-        $tray['_param']['_set_options'] = fsi_param([$tray['_param']['_set_options'], $predefined], '1.1.2');
+        $tray['_param']['_set_options'] = \fxapp\Param::define([$tray['_param']['_set_options'], $predefined], '1.1.2');
         // 初始化环境变量
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('notify.push.jpush.app_key');
@@ -138,7 +138,7 @@ class Push extends Notify
                         $predefined = [
                             '_push_tag',
                         ];
-                        $_param = fsi_param([$tray['_param'], $predefined], '2.2.2');
+                        $_param = \fxapp\Param::define([$tray['_param'], $predefined], '2.2.2');
                         // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
@@ -159,10 +159,10 @@ class Push extends Notify
                             $_param[$key] = $value;
                         }
                         if (!$pass) {
-                            $result[0] = false;
-                            $result[1] = 1002;
-                            $result[2] = \fxapp\Base::lang(['lack', 'tag']);
-                            return $result;
+                            $echo[0] = false;
+                            $echo[1] = 1002;
+                            $echo[2] = \fxapp\Base::lang(['lack', 'tag']);
+                            return $echo;
                         }
                         $model = $model
                             ->addTag($_param['_push_tag']);
@@ -172,7 +172,7 @@ class Push extends Notify
                         $predefined = [
                             '_push_alias',
                         ];
-                        $_param = fsi_param([$tray['_param'], $predefined], '2.2.2');
+                        $_param = \fxapp\Param::define([$tray['_param'], $predefined], '2.2.2');
                         // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
@@ -193,10 +193,10 @@ class Push extends Notify
                             $_param[$key] = $value;
                         }
                         if (!$pass) {
-                            $result[0] = false;
-                            $result[1] = 1002;
-                            $result[2] = \fxapp\Base::lang(['lack', 'alias']);
-                            return $result;
+                            $echo[0] = false;
+                            $echo[1] = 1002;
+                            $echo[2] = \fxapp\Base::lang(['lack', 'alias']);
+                            return $echo;
                         }
                         $model = $model
                             ->addAlias($_param['_push_alias']);
@@ -206,7 +206,7 @@ class Push extends Notify
                         $predefined = [
                             '_push_id',
                         ];
-                        $_param = fsi_param([$tray['_param'], $predefined], '2.2.2');
+                        $_param = \fxapp\Param::define([$tray['_param'], $predefined], '2.2.2');
                         // 检查推送目标格式
                         $pass = false;
                         foreach ($_param as $key => $value) {
@@ -227,10 +227,10 @@ class Push extends Notify
                             $_param[$key] = $value;
                         }
                         if (!$pass) {
-                            $result[0] = false;
-                            $result[1] = 1002;
-                            $result[2] = \fxapp\Base::lang(['lack', 'jpush', 'id']);
-                            return $result;
+                            $echo[0] = false;
+                            $echo[1] = 1002;
+                            $echo[2] = \fxapp\Base::lang(['lack', 'jpush', 'id']);
+                            return $echo;
                         }
                         $model = $model
                             ->addRegistrationId($_param['_push_id']);
@@ -238,20 +238,20 @@ class Push extends Notify
                 }
             }
             $record = $model->send();
-        } catch (\Throwable $e) {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = $e->getMessage();
-            return $result;
+        } catch (\Throwable $th) {
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = $e->getMessage();
+            return $echo;
         }
         if ($record) {
-            $result[2] = \fxapp\Base::lang(['send', 'success']);
-            return $result;
+            $echo[2] = \fxapp\Base::lang(['send', 'success']);
+            return $echo;
         } else {
-            $result[0] = false;
-            $result[1] = 1002;
-            $result[2] = \fxapp\Base::lang(['send', 'fail']);
-            return $result;
+            $echo[0] = false;
+            $echo[1] = 1002;
+            $echo[2] = \fxapp\Base::lang(['send', 'fail']);
+            return $echo;
         }
     }
 }
