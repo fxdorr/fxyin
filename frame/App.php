@@ -46,6 +46,9 @@ class App
             $app = [$app[$name]];
         }
         foreach ($app as $path) {
+            $path = realpath($path);
+            if (false === $path) return;
+            $path .= DIRECTORY_SEPARATOR;
             // 加载函数文件
             if (is_file($path . 'common.php')) {
                 require $path . 'common.php';

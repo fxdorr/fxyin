@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 参数类
+ */
 class Param extends \fxyin\Facade
 {
     /**
@@ -68,7 +71,7 @@ class Param extends \fxyin\Facade
                 }
                 foreach ($param[1] as $key => $value) {
                     if (is_json($echo[$key])) {
-                        $echo[$key] = \fxapp\Base::json($echo[$key], 'decode');
+                        $echo[$key] = Base::json($echo[$key], 'decode');
                     } else if (is_string($echo[$key])) {
                         parse_str($echo[$key], $echo[$key]);
                     } else if (!is_array($echo[$key])) {
@@ -114,7 +117,7 @@ class Param extends \fxyin\Facade
                     if (!isset($echo[$value])) {
                         $echo[$value] = [];
                     } else if (is_json($echo[$value])) {
-                        $echo[$value] = \fxapp\Base::json($echo[$value], 'decode');
+                        $echo[$value] = Base::json($echo[$value], 'decode');
                     } else if (is_string($echo[$value])) {
                         parse_str($echo[$value], $echo[$value]);
                     } else if (!is_array($echo[$value])) {

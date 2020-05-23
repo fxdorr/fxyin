@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 服务类
+ */
 class Service extends \fxyin\Facade
 {
     /**
@@ -73,12 +76,12 @@ class Service extends \fxyin\Facade
             \fxyin\Dir::create(dirname($file));
         }
         // 请求文件
-        $response = \fxapp\Service::http($url, '', [], 'get');
+        $response = Service::http($url, '', [], 'get');
         // 保存文件
         $downloaded_file = fopen($file, 'w');
         fwrite($downloaded_file, $response);
         fclose($downloaded_file);
-        if (\fxapp\Data::paramEmpty([$response])[0]) {
+        if (Data::paramEmpty([$response])[0]) {
             return $file;
         } else {
             return false;

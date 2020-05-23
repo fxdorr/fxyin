@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 基础类
+ */
 class Base extends \fxyin\Facade
 {
     /**
@@ -183,7 +186,7 @@ class Base extends \fxyin\Facade
                 if (!is_json($var) && !is_array($var)) {
                     $var = $var;
                 } else if (is_array($var)) {
-                    $var = \fxapp\Param::json($var, 'encode');
+                    $var = Param::json($var, 'encode');
                 }
                 $echo = $var;
                 break;
@@ -193,7 +196,7 @@ class Base extends \fxyin\Facade
                 if (!is_json($var) && !is_array($var)) {
                     $var = [];
                 } else if (is_json($var)) {
-                    $var = \fxapp\Param::json($var, 'decode');
+                    $var = Param::json($var, 'decode');
                 }
                 $echo = $var;
                 break;
@@ -211,7 +214,7 @@ class Base extends \fxyin\Facade
     public static function crypt($var, $type, $param = null)
     {
         // 初始化变量
-        $config = \fxapp\Base::config('safe.base');
+        $config = Base::config('safe.base');
         if (!$config['crypt_switch']) return $var;
         $data = null;
         if (!is_array($param)) {
@@ -221,14 +224,14 @@ class Base extends \fxyin\Facade
             'method' => $config['crypt_method'], 'password' => $config['crypt_key'], 'options' => $config['crypt_options'],
             'iv' => $config['crypt_iv'],
         ];
-        $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+        $param = Param::define([$param, $predefined], '1.1.2');
         $type = strtolower($type);
         switch ($type) {
             case 'encode':
-                $data = \fxapp\Safe::crypt($var, 'encode', $param);
+                $data = Safe::crypt($var, 'encode', $param);
                 break;
             case 'decode':
-                $data = \fxapp\Safe::crypt($var, 'decode', $param);
+                $data = Safe::crypt($var, 'decode', $param);
                 break;
         }
         return $data;

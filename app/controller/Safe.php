@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 安全类
+ */
 class Safe extends \fxyin\Facade
 {
     /**
@@ -34,7 +37,7 @@ class Safe extends \fxyin\Facade
                     'method' => 'des-ecb', 'password' => '00000000', 'options' => null,
                     'iv' => null,
                 ];
-                $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+                $param = Param::define([$param, $predefined], '1.1.2');
                 $echo = openssl_encrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
                 break;
             case 'decode':
@@ -46,7 +49,7 @@ class Safe extends \fxyin\Facade
                     'method' => 'des-ecb', 'password' => '00000000', 'options' => null,
                     'iv' => null,
                 ];
-                $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+                $param = Param::define([$param, $predefined], '1.1.2');
                 $echo = openssl_decrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
                 break;
         }
@@ -113,9 +116,9 @@ class Safe extends \fxyin\Facade
                 } while ($strdiff < 0);
                 $strmax = $pow;
                 // 填充令牌
-                $param = str_pad($param, $strmax, \fxapp\Math::rand($strdiff / 2), STR_PAD_BOTH);
+                $param = str_pad($param, $strmax, Math::rand($strdiff / 2), STR_PAD_BOTH);
                 // 加密令牌
-                $param = \fxapp\Base::crypt($param, 'encode');
+                $param = Base::crypt($param, 'encode');
                 $echo = bin2hex($param);
                 break;
             case 'decode':
@@ -135,7 +138,7 @@ class Safe extends \fxyin\Facade
                 }
                 // 解密令牌
                 $param = hex2bin($var);
-                $param = \fxapp\Base::crypt($param, 'decode');
+                $param = Base::crypt($param, 'decode');
                 $param = explode(',', $param);
                 array_shift($param);
                 array_pop($param);
@@ -162,7 +165,7 @@ class Safe extends \fxyin\Facade
         $predefined = [
             'type', 'secret',
         ];
-        $param = \fxapp\Param::define([$param, $predefined], '1.2.2');
+        $param = Param::define([$param, $predefined], '1.2.2');
         $param['secret'] = static::rsapem($param['secret'], 'private');
         $param['secret'] = openssl_pkey_get_private($param['secret']);
         $type = strtolower($type);
@@ -179,7 +182,7 @@ class Safe extends \fxyin\Facade
                             $predefined = [
                                 'pad' => "\0",
                             ];
-                            $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+                            $param = Param::define([$param, $predefined], '1.1.2');
                             $value = str_pad($value, 128, $param['pad'], STR_PAD_LEFT);
                             break;
                     }
@@ -200,7 +203,7 @@ class Safe extends \fxyin\Facade
                             $predefined = [
                                 'pad' => "\0",
                             ];
-                            $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+                            $param = Param::define([$param, $predefined], '1.1.2');
                             $entrys = ltrim($entrys, $param['pad']);
                             break;
                     }
@@ -227,7 +230,7 @@ class Safe extends \fxyin\Facade
         $predefined = [
             'type', 'secret',
         ];
-        $param = \fxapp\Param::define([$param, $predefined], '1.2.2');
+        $param = Param::define([$param, $predefined], '1.2.2');
         $param['secret'] = static::rsapem($param['secret'], 'public');
         $param['secret'] = openssl_pkey_get_public($param['secret']);
         $type = strtolower($type);
@@ -244,7 +247,7 @@ class Safe extends \fxyin\Facade
                             $predefined = [
                                 'pad' => "\0",
                             ];
-                            $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+                            $param = Param::define([$param, $predefined], '1.1.2');
                             $value = str_pad($value, 128, $param['pad'], STR_PAD_LEFT);
                             break;
                     }
@@ -265,7 +268,7 @@ class Safe extends \fxyin\Facade
                             $predefined = [
                                 'pad' => "\0",
                             ];
-                            $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+                            $param = Param::define([$param, $predefined], '1.1.2');
                             $entrys = ltrim($entrys, $param['pad']);
                             break;
                     }

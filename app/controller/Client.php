@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 客户端类
+ */
 class Client extends \fxyin\Facade
 {
     /**
@@ -34,7 +37,7 @@ class Client extends \fxyin\Facade
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         // IP地址合法验证
-        $long = sprintf("%u", \fxapp\Text::ipv4($ip, 'encode'));
+        $long = sprintf("%u", Text::ipv4($ip, 'encode'));
         $ip = $long ? [$ip, $long] : ['0.0.0.0', 0];
         return $ip[$type];
     }
@@ -173,52 +176,6 @@ class Client extends \fxyin\Facade
     }
 
     /**
-     * 获取请求方案
-     * @param int $type 类型
-     * @return mixed
-     */
-    public static function scheme($type = -1)
-    {
-        // 初始化变量
-        $echo = isset($_SERVER['REQUEST_SCHEME']) ? strtolower($_SERVER['REQUEST_SCHEME']) : null;
-        // 开始检测
-        switch ($type) {
-            case 1:
-                // 格式化-小写
-                $echo = strtolower($echo);
-                break;
-            case 2:
-                // 格式化-大写
-                $echo = strtoupper($echo);
-                break;
-        }
-        return $echo;
-    }
-
-    /**
-     * 获取请求方法
-     * @param int $type 类型
-     * @return mixed
-     */
-    public static function method($type = -1)
-    {
-        // 初始化变量
-        $echo = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : null;
-        // 开始检测
-        switch ($type) {
-            case 1:
-                // 格式化-小写
-                $echo = strtolower($echo);
-                break;
-            case 2:
-                // 格式化-大写
-                $echo = strtoupper($echo);
-                break;
-        }
-        return $echo;
-    }
-
-    /**
      * 获取请求参数
      * @param mixed $param 参数
      * @param string $method 方法
@@ -233,9 +190,9 @@ class Client extends \fxyin\Facade
             // GET-POST-INPUT
             'get' => $_GET, 'post' => $_POST, 'input' => $input,
         ];
-        $base = \fxapp\Param::define([null, $predefined], '1.1.3');
+        $base = Param::define([null, $predefined], '1.1.3');
         // 识别方法
-        $method = \fxapp\Text::explode(',', strtolower($method));
+        $method = Text::explode(',', strtolower($method));
         foreach ($method as $value) {
             switch ($value) {
                 case 'param':
@@ -258,7 +215,7 @@ class Client extends \fxyin\Facade
         }
         if (is_array($param)) {
             // 获取指定参数数组
-            $echo = \fxapp\Param::pick($echo, $param);
+            $echo = Param::pick($echo, $param);
         } else if (is_string($param)) {
             // 获取指定参数
             $echo = $echo[$param] ?? null;

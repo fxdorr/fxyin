@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 服务器类
+ */
 class Server extends \fxyin\Facade
 {
     /**
@@ -18,7 +21,7 @@ class Server extends \fxyin\Facade
      */
     public static function ip()
     {
-        $ip = \fxapp\Service::http("http://httpbin.org/ip", '', [], 'get');
+        $ip = Service::http("http://httpbin.org/ip", '', [], 'get');
         if (!is_json($ip)) return;
         $ip = json_decode($ip, true);
         $ip['origin'] = explode(',', $ip['origin'])[0];
@@ -110,9 +113,9 @@ class Server extends \fxyin\Facade
     {
         // 初始化变量
         $echo = [];
-        $debug['switch'] = \fxapp\Base::config('app.debug.switch');
-        $debug['level'] = \fxapp\Base::config('app.debug.level');
-        $debug['data'] = \fxapp\Base::config('app.debug.data');
+        $debug['switch'] = Base::config('app.debug.switch');
+        $debug['level'] = Base::config('app.debug.level');
+        $debug['data'] = Base::config('app.debug.data');
         switch ($type) {
             default:
             case 1:
@@ -121,9 +124,9 @@ class Server extends \fxyin\Facade
                 break;
             case 2:
                 // 通用
-                $base = \fxapp\Base::config('app.echo.format');
+                $base = Base::config('app.echo.format');
                 // 处理数据
-                $data[2] = \fxapp\Base::lang($data[2]);
+                $data[2] = Base::lang($data[2]);
                 foreach ($base as $key => $value) {
                     if (array_key_exists($key, $data)) {
                         $echo[$value] = $data[$key];
@@ -134,7 +137,7 @@ class Server extends \fxyin\Facade
         // 调试模式
         if ($debug['switch'] && $debug['level']) {
             $echo['debug'] = ['' => null];
-            $debug['level'] = \fxapp\Text::explode(',', strtolower($debug['level']));
+            $debug['level'] = Text::explode(',', $debug['level']);
             foreach ($debug['level'] as $value) {
                 switch ($value) {
                     default:
@@ -145,7 +148,7 @@ class Server extends \fxyin\Facade
                         break;
                     case '1':
                         // 全部
-                        $echo['debug'] = \fxapp\Param::define([$echo['debug'], $debug['data']], '1.1.1');
+                        $echo['debug'] = Param::define([$echo['debug'], $debug['data']], '1.1.1');
                         break;
                     case '2':
                         // 入参
@@ -169,7 +172,7 @@ class Server extends \fxyin\Facade
             }
         }
         // 空对象处理
-        $echo = \fxapp\Param::object($echo);
+        $echo = Param::object($echo);
         return $echo;
     }
 
@@ -189,11 +192,7 @@ class Server extends \fxyin\Facade
             case 'json':
                 // 返回JSON数据格式到客户端，包含状态信息
                 header('Content-Type:application/json; charset=utf-8');
-                exit($data);
-            case 'xml':
-                // 返回XML格式数据
-                header('Content-Type:text/xml; charset=utf-8');
-                exit($data);
+                exit(Base::json($data, 'encode'));
         }
     }
 
@@ -204,7 +203,7 @@ class Server extends \fxyin\Facade
     public static function echo()
     {
         // 初始化变量
-        $echo = \fxapp\Base::config('app.echo.template');
+        $echo = Base::config('app.echo.template');
         return $echo;
     }
 }

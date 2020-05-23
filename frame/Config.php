@@ -27,7 +27,7 @@ class Config
     public static function load($file, $name = null)
     {
         if (is_file($file)) {
-            $data = include $file;
+            $data = require $file;
             if (is_string($name)) {
                 // 解析名称
                 $name = array_reverse(explode('.', $name));
@@ -52,7 +52,7 @@ class Config
         $name = explode('.', $name);
         $data = self::$data;
         foreach ($name as $elem) {
-            if (isset($data[$elem])) {
+            if (array_key_exists($elem, $data)) {
                 $data = $data[$elem];
             } else {
                 return false;
@@ -76,7 +76,10 @@ class Config
         $name = explode('.', $name);
         $data = self::$data;
         foreach ($name as $elem) {
-            if (!isset($data[$elem])) break;
+            if (!array_key_exists($elem, $data)) {
+                $data = null;
+                break;
+            }
             $data = $data[$elem];
         }
         return $data;

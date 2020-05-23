@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 文本类
+ */
 class Text extends \fxyin\Facade
 {
     /**
@@ -25,7 +28,7 @@ class Text extends \fxyin\Facade
         $predefined = [
             'uuid' => '', 'prefix' => '', 'style' => '',
         ];
-        $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+        $param = Param::define([$param, $predefined], '1.1.2');
         switch ($mode) {
             default:
             case 1:
@@ -131,7 +134,7 @@ class Text extends \fxyin\Facade
     public static function strlen($string = null, $start = 0, $end = 0)
     {
         // 初始化变量
-        $echo = \fxapp\Server::echo();
+        $echo = Server::echo();
         $length = mb_strlen($string, 'utf-8');
         $end == 0 && $end = $length;
         $start > $end && $start = $end;
@@ -139,12 +142,12 @@ class Text extends \fxyin\Facade
             if ($end > 0 && !($length >= $start && $length <= $end)) {
                 $echo[0] = false;
                 $echo[1] = 1004;
-                $echo[2] = \fxapp\Base::lang(['string', 'length', 'should', 'be', ($start == $end ? $end : $start . '-' . $end)]);
+                $echo[2] = Base::lang(['string', 'length', 'should', 'be', ($start == $end ? $end : $start . '-' . $end)]);
             }
         } else {
             $echo[0] = false;
             $echo[1] = 1000;
-            $echo[2] = \fxapp\Base::lang(['string', 'not2', 'input']);
+            $echo[2] = Base::lang(['string', 'not2', 'input']);
         }
         return $echo;
     }
@@ -376,7 +379,7 @@ class Text extends \fxyin\Facade
             $echo[] = $value;
             $echo[] = $time_name[$key];
         }
-        $echo = \fxapp\Base::lang($echo);
+        $echo = Base::lang($echo);
         return $echo;
     }
 
@@ -470,7 +473,7 @@ class Text extends \fxyin\Facade
 
     /**
      * 提取抛出
-     * @param Throwable $th 抛出对象
+     * @param \Throwable $th 抛出对象
      * @return string
      */
     public static function throwable($th)

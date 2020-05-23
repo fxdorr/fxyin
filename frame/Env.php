@@ -73,12 +73,35 @@ class Env
      */
     public static function init($root)
     {
+        // 初始化配置
+        static::set(Config::get('env'));
         // 根目录
         static::set('base.root', $root);
-        // 主机名称
-        static::set('base.web', Config::get('env.base.web'));
         // 应用目录
         static::set('base.app', static::get('base.root') . Config::get('env.base.app'));
+    }
+
+    /**
+     * 加载数据
+     * @param string $file 文件
+     * @param string $name 名称
+     * @return bool
+     */
+    public static function load($file, $name = null)
+    {
+        if (is_file($file)) {
+            $data = require $file;
+            if (is_string($name)) {
+                // 解析名称
+                $name = array_reverse(explode('.', $name));
+                foreach ($name as $elem) {
+                    $data = [$elem => $data];
+                }
+            }
+            self::set($data);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -92,7 +115,7 @@ class Env
         $name = explode('.', $name);
         $data = self::$data;
         foreach ($name as $elem) {
-            if (isset($data[$elem])) {
+            if (array_key_exists($elem, $data)) {
                 $data = $data[$elem];
             } else {
                 return false;
@@ -116,7 +139,10 @@ class Env
         $name = explode('.', $name);
         $data = self::$data;
         foreach ($name as $elem) {
-            if (!isset($data[$elem])) break;
+            if (!array_key_exists($elem, $data)) {
+                $data = null;
+                break;
+            }
             $data = $data[$elem];
         }
         return $data;

@@ -10,6 +10,9 @@
 // +----------------------------------------------------------------------
 namespace fxapp;
 
+/**
+ * 文件类
+ */
 class File extends \fxyin\Facade
 {
     /**
@@ -100,8 +103,8 @@ class File extends \fxyin\Facade
     public static function initMediaEnv()
     {
         // 配置参数
-        $config = \fxapp\Base::config('app.media');
-        $system = \fxapp\Server::system(1);
+        $config = Base::config('app.media');
+        $system = Server::system(1);
         foreach ($config as $key => $value) {
             switch ($system) {
                 default:
@@ -119,7 +122,7 @@ class File extends \fxyin\Facade
                     break;
             }
         }
-        \fxapp\Base::config('app.media', $config);
+        Base::config('app.media', $config);
     }
 
     /**
@@ -135,7 +138,7 @@ class File extends \fxyin\Facade
                 // 媒体-视频
                 try {
                     // 配置参数
-                    $config = \fxapp\Base::config('app.media.video');
+                    $config = Base::config('app.media.video');
                     if (is_null($config['bin'])) return;
                     $command = sprintf($config['bin'], $var);
                     ob_start();
@@ -148,7 +151,7 @@ class File extends \fxyin\Facade
                         $predefined = [
                             1, 2, 3,
                         ];
-                        $match = \fxapp\Param::define([$match, $predefined], '1.2.2');
+                        $match = Param::define([$match, $predefined], '1.2.2');
                         // 播放时间
                         $data['duration'] = $match[1];
                         $arr_duration = explode(':', $match[1]);
@@ -156,7 +159,7 @@ class File extends \fxyin\Facade
                         $predefined = [
                             0, 1, 2,
                         ];
-                        $arr_duration = \fxapp\Param::define([$arr_duration, $predefined], '1.2.2');
+                        $arr_duration = Param::define([$arr_duration, $predefined], '1.2.2');
                         // 转换播放时间为秒数
                         $data['seconds'] = $arr_duration[0] * 3600 + $arr_duration[1] * 60 + $arr_duration[2];
                         // 开始时间
@@ -169,7 +172,7 @@ class File extends \fxyin\Facade
                         $predefined = [
                             1, 2, 3,
                         ];
-                        $match = \fxapp\Param::define([$match, $predefined], '1.2.2');
+                        $match = Param::define([$match, $predefined], '1.2.2');
                         // 视频编码格式
                         $data['vcodec'] = $match[1];
                         // 视频格式
@@ -181,7 +184,7 @@ class File extends \fxyin\Facade
                         $predefined = [
                             0, 1,
                         ];
-                        $arr_resolution = \fxapp\Param::define([$arr_resolution, $predefined], '1.2.2');
+                        $arr_resolution = Param::define([$arr_resolution, $predefined], '1.2.2');
                         $data['width'] = $arr_resolution[0];
                         $data['height'] = $arr_resolution[1];
                     }
@@ -190,7 +193,7 @@ class File extends \fxyin\Facade
                         $predefined = [
                             1, 2,
                         ];
-                        $match = \fxapp\Param::define([$match, $predefined], '1.2.2');
+                        $match = Param::define([$match, $predefined], '1.2.2');
                         // 音频编码
                         $data['acodec'] = $match[1];
                         // 音频采样频率
@@ -204,7 +207,7 @@ class File extends \fxyin\Facade
                     $data['size'] = filesize($var);
                     return $data;
                 } catch (\Throwable $th) {
-                    \fxapp\Base::dump(\fxapp\Text::timeMilli(\fxapp\Text::timeMilli()), \fxapp\Text::throwable($th));
+                    Base::dump(Text::timeMilli(Text::timeMilli()), Text::throwable($th));
                 }
                 break;
         }

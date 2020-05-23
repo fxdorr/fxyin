@@ -18,31 +18,29 @@ class Loader
     /**
      * 自动加载
      * @param string $class 类名
-     * @return void
+     * @return mixed
      */
     public static function autoload($class)
     {
         // 初始化变量
         $name = explode('\\', $class);
-        $loader = $class != 'fxyin\\Config' ? Config::get('loader.' . $name[0]) : null;
-        switch ($name[0]) {
-            case 'fxapp':
-                // 应用
-            case 'fxyin':
-                // 框架
-                if (empty($loader)) {
-                    $loader = (include dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php')['loader'][$name[0]] ?? [];
-                }
-                array_shift($name);
-                $name = implode(DIRECTORY_SEPARATOR, $name);
-                foreach ($loader as $dir) {
-                    $file = $dir . $name . '.php';
-                    if (is_file($file)) {
-                        require $file;
-                        break;
-                    }
-                }
-                break;
+        // 获取加载器配置
+        $loader = $class != 'fxyin\\Config' ? Config::get('loader') : null;
+        if (empty($loader)) {
+            $loader = (require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php')['loader'] ?? [];
+        }
+        $loader = $loader[$name[0]] ?? null;
+        if (!is_array($loader)) return;
+        // 执行加载器
+        array_shift($name);
+        $name = implode(DIRECTORY_SEPARATOR, $name);
+        foreach ($loader as $path) {
+            $path = realpath($path);
+            if (false === $path) return;
+            $file = $path . DIRECTORY_SEPARATOR . $name . '.php';
+            if (is_file($file)) {
+                return require $file;
+            }
         }
     }
 

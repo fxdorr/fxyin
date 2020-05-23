@@ -79,7 +79,7 @@ class Lang
         $lang = [];
         foreach ($file as $_file) {
             if (is_file($_file)) {
-                $_lang = include $_file;
+                $_lang = require $_file;
                 if (is_array($_lang)) {
                     $lang = array_change_key_case($_lang) + $lang;
                 }
