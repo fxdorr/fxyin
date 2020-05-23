@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
 /**
@@ -27,6 +27,7 @@ return [
             'get' => $_GET ?? null,
             'post' => $_POST ?? null,
             'input' => file_get_contents('php://input'),
+            'cli' => null,
             // 文件
             'files' => $_FILES ?? null,
             // 环境

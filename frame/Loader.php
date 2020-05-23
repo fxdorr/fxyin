@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin;
 
@@ -25,19 +25,19 @@ class Loader
         // 初始化变量
         $name = explode('\\', $class);
         // 获取加载器配置
-        $loader = $class != 'fxyin\\Config' ? Config::get('loader') : null;
-        if (empty($loader)) {
-            $loader = (require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php')['loader'] ?? [];
+        $config = $class != 'fxyin\\Config' ? Config::get('loader') : null;
+        if (empty($config)) {
+            $config = (require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php')['loader'] ?? [];
         }
-        $loader = $loader[$name[0]] ?? null;
-        if (!is_array($loader)) return;
+        $config = $config[$name[0]] ?? null;
+        if (!is_array($config)) return;
         // 执行加载器
         array_shift($name);
         $name = implode(DIRECTORY_SEPARATOR, $name);
-        foreach ($loader as $path) {
-            $path = realpath($path);
-            if (false === $path) return;
-            $file = $path . DIRECTORY_SEPARATOR . $name . '.php';
+        foreach ($config as $elem) {
+            $elem = realpath($elem);
+            if (false === $elem) return;
+            $file = $elem . DIRECTORY_SEPARATOR . $name . '.php';
             if (is_file($file)) {
                 return require $file;
             }

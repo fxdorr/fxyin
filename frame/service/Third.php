@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin\service;
 
@@ -51,7 +51,9 @@ class Third extends Service
     }
 
     /**
-     * 默认提示
+     * 重载方法
+     * @param string $name 名称
+     * @param string $data 数据
      * @return mixed
      */
     public function __call($name, $data)

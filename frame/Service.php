@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin;
 
@@ -18,16 +18,28 @@ use fxyin\service\Third as ThirdService;
  */
 class Service
 {
-    // 原始数据
+    /**
+     * 原始数据
+     * @var array
+     */
     protected $data;
 
-    // 服务类型
+    /**
+     * 服务类型
+     * @var string
+     */
     protected $type;
-    
-    // 服务供应商
+
+    /**
+     * 服务供应商
+     * @var string
+     */
     protected $supplier;
-    
-    // 服务模型
+
+    /**
+     * 服务模型
+     * @var mixed
+     */
     protected $model;
 
     /**

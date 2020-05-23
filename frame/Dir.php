@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin;
 
@@ -415,7 +415,10 @@ class Dir
         return new \ArrayObject($this->_values);
     }
 
-    // 返回目录的数组信息
+    /**
+     * 返回目录的数组信息
+     * @return mixed
+     */
     public function toArray()
     {
         return $this->_values;

@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
 /**
@@ -31,6 +31,11 @@ return [
             'scheme' => strtolower($_SERVER['REQUEST_SCHEME'] ?? null),
             // 请求方法
             'method' => strtolower($_SERVER['REQUEST_METHOD'] ?? null),
+        ],
+        // 门面配置
+        'facade' => [
+            // 基础门面
+            0 => '\\fxapp\\facade\\',
         ],
     ],
     // 加载器配置

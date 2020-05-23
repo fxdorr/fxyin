@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin\service\notify;
 
@@ -105,8 +105,8 @@ class Push extends Notify
                             ->iosNotification($tray['content'], [
                                 'sound' => 'sound.caf',
                                 'badge' => '+1',
-    //                             'sound' => Config::DISABLE_SOUND,
-    //                             'badge' => Config::DISABLE_BADGE,
+                                // 'sound' => Config::DISABLE_SOUND,
+                                // 'badge' => Config::DISABLE_BADGE,
                                 // 'content-available' => true,
                                 // 'mutable-content' => true,
                                 'category' => 'jiguang',

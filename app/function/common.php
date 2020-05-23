@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
 /**
@@ -35,7 +35,7 @@ function is_mobile($var)
     // 初始化变量
     if (is_string($var)) {
         if (!empty($var)) {
-            return preg_match('/^1[0-9]{2}\d{8}$/', $var);
+            return preg_match('/^1\d{10}$/', $var);
         }
     }
     return false;

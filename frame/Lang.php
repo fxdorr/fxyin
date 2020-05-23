@@ -16,20 +16,46 @@ namespace fxyin;
  */
 class Lang
 {
-    // 语言数据
+    /**
+     * 语言数据
+     * @var array
+     */
     private static $lang = [];
-    // 语言作用域
+
+    /**
+     * 语言作用域
+     * @var string
+     */
     private static $range = 'zh-cn';
-    // 语言自动侦测的变量
+
+    /**
+     * 语言自动侦测的变量
+     * @var string
+     */
     protected static $langDetectVar = 'lang';
-    // 语言Cookie变量
+
+    /**
+     * 语言Cookie变量
+     * @var string
+     */
     protected static $langCookieVar = 'fxyin_var';
-    // 语言Cookie的过期时间
+
+    /**
+     * 语言Cookie的过期时间
+     * @var int
+     */
     protected static $langCookieExpire = 3600;
-    // 允许语言列表
+
+    /**
+     * 允许语言列表
+     * @var array
+     */
     protected static $allowLangList = [];
 
-    // 设定当前的语言
+    /**
+     * 设定当前的语言
+     * @return mixed
+     */
     public static function range($range = '')
     {
         if ('' == $range) {
@@ -54,9 +80,9 @@ class Lang
             self::$lang[$range] = [];
         }
         if (is_array($name)) {
-            return self::$lang[$range] = array_change_key_case($name) + self::$lang[$range];
+            return self::$lang[$range] = \fxapp\Param::merge(self::$lang[$range], $name);
         } else {
-            return self::$lang[$range][strtolower($name)] = $value;
+            return self::$lang[$range][$name] = $value;
         }
     }
 
@@ -81,7 +107,7 @@ class Lang
             if (is_file($_file)) {
                 $_lang = require $_file;
                 if (is_array($_lang)) {
-                    $lang = array_change_key_case($_lang) + $lang;
+                    $lang = \fxapp\Param::merge($lang, $_lang);
                 }
             }
         }
@@ -101,7 +127,7 @@ class Lang
     public static function has($name, $range = '')
     {
         $range = $range ?: self::$range;
-        return isset(self::$lang[$range][strtolower($name)]);
+        return isset(self::$lang[$range][$name]);
     }
 
     /**
@@ -118,7 +144,7 @@ class Lang
         if (is_null($name)) {
             return self::$lang[$range];
         }
-        $key   = strtolower($name);
+        $key   = $name;
         $value = isset(self::$lang[$range][$key]) ? self::$lang[$range][$key] : $name;
 
         // 变量解析

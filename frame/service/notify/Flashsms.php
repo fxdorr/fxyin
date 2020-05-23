@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin\service\notify;
 
@@ -75,7 +75,7 @@ class Flashsms extends Notify
         // 创建时间（UTC 时间）。[格式] yyyy-MM-dd'T'HH:mm:ss'Z'
         $tray['3_1']['created'] = date('Y-m-d', $tray['3_1']['time']) . 'T' . date('H:i:s', $tray['3_1']['time']) . 'Z';
         $tray['3_1']['password'] = $conf['app_secret'];
-    //  $tray['3_1']['passworddigest'] = base64_encode(hash('sha256', $tray['3_1']['nonce'].$tray['3_1']['created'].$tray['3_1']['password']));
+        // $tray['3_1']['passworddigest'] = base64_encode(hash('sha256', $tray['3_1']['nonce'].$tray['3_1']['created'].$tray['3_1']['password']));
         $conf['digest'] = \fxapp\Text::splice($conf['digest'], 'digest=' . $tray['3_1']['nonce'] . $tray['3_1']['created'] . $tray['3_1']['password'], '?');
         $tray['3_1']['digest'] = json_decode(\fxapp\Service::http($conf['digest'], '', [], 'post'), true);
         // 密码摘要。摘要算法如下：PasswordDigest = Base64 (SHA256 (nonce + created + App Secret))。

@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 // | Copyright Copyright © 2016-2099 方弦研究所. All rights reserved.
 // +----------------------------------------------------------------------
-// | Link http://www.fxri.net
+// | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 namespace fxyin\service\driver\notify\email\common;
 
@@ -32,7 +32,8 @@ class Email
         $this->relay_host = $relay_host;
         $this->time_out = 30; //is used in fsockopen() 
         #
-        $this->auth = $auth;//auth
+        // 鉴权
+        $this->auth = $auth;
         $this->user = $user;
         $this->pass = $pass;
         #
@@ -40,7 +41,7 @@ class Email
         $this->log_file = "";
         $this->sock = false;
     }
-    
+
     /* Main Function */
     public function sendmail($to, $from, $subject = "", $body = "", $mailtype, $cc = "", $bcc = "", $additional_headers = "")
     {
@@ -88,7 +89,7 @@ class Email
         }
         return $sent;
     }
-    
+
     /* Private Functions */
     public function smtp_send($helo, $from, $to, $header, $body = "")
     {
