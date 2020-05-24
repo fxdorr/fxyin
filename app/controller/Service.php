@@ -14,6 +14,10 @@ namespace fxapp;
  * 服务类
  * @see \fxapp\facade\Service
  * @package fxapp\facade
+ * @method mixed http(string $url, array $data = '', array $header = [], string $method = null) HTTP请求
+ * @method mixed httpDown(string $url, string $file) HTTP请求-下载
+ * @method \fxyin\service\Notify notify(array $param = '', string $supplier = '') 配置服务-通知
+ * @method \fxyin\service\Third third(array $param = '', string $supplier = '') 配置服务-第三方
  */
 class Service extends \fxyin\Facade
 {

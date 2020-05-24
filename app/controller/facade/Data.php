@@ -278,9 +278,9 @@ class Data
 
     /**
      * SQL-更新条件-将二维数组转换成CASE WHEN THEN的批量更新条件
-     * @param $data array 二维数组
-     * @param $field string 列名
-     * @return string sql语句
+     * @param array $data 二维数组
+     * @param string $field 列名
+     * @return string
      */
     public function updateCase($data, $field)
     {
@@ -304,8 +304,8 @@ class Data
 
     /**
      * SQL-查询解析where条件
-     * @param $param
-     * @return array|string
+     * @param array $param 参数
+     * @return string
      */
     public function updateParam($param)
     {

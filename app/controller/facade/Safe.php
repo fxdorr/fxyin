@@ -283,7 +283,6 @@ class Safe
      * 解析数据-RSA密钥
      * @param mixed $var 变量
      * @param string $type 类型
-     * @param array $param 参数
      * @return mixed
      */
     public function rsapem($var, $type)

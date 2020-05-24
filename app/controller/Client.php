@@ -14,6 +14,10 @@ namespace fxapp;
  * 客户端类
  * @see \fxapp\facade\Client
  * @package fxapp\facade
+ * @method mixed ip(int $type = 0) 获取IP
+ * @method mixed browser(int $type = -1) 获取浏览器
+ * @method mixed system(int $type = -1) 获取系统
+ * @method mixed param(mixed $param = null, string $method = 'param') 获取请求参数
  */
 class Client extends \fxyin\Facade
 {

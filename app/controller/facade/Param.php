@@ -17,8 +17,6 @@ class Param
 {
     /**
      * 初始化配置
-     * @param mixed $var 变量
-     * @param string $type 类型
      * @return mixed
      */
     public function init()
