@@ -35,6 +35,7 @@ class Config
                 // 解析名称
                 $name = array_reverse(explode('.', $name));
                 foreach ($name as $elem) {
+                    $elem = str_replace('/_', '.', $elem);
                     $data = [$elem => $data];
                 }
             }
@@ -55,6 +56,7 @@ class Config
         $name = explode('.', $name);
         $data = self::$data;
         foreach ($name as $elem) {
+            $elem = str_replace('/_', '.', $elem);
             if (array_key_exists($elem, $data)) {
                 $data = $data[$elem];
             } else {
@@ -79,7 +81,8 @@ class Config
         $name = explode('.', $name);
         $data = self::$data;
         foreach ($name as $elem) {
-            if (!array_key_exists($elem, $data)) {
+            $elem = str_replace('/_', '.', $elem);
+            if (!isset($data[$elem])) {
                 $data = null;
                 break;
             }
@@ -101,6 +104,7 @@ class Config
             // 解析名称
             $name = array_reverse(explode('.', $name));
             foreach ($name as $elem) {
+                $elem = str_replace('/_', '.', $elem);
                 $data = [$elem => $data];
             }
             // 融合数据

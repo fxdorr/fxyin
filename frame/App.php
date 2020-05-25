@@ -50,14 +50,6 @@ class App
             if (false === $path) return;
             $path .= DIRECTORY_SEPARATOR;
             // 加载函数文件
-            if (is_file($path . 'common.php')) {
-                require $path . 'common.php';
-            }
-            // 加载配置文件
-            if (is_file($path . 'config.php')) {
-                Config::load($path . 'config.php');
-            }
-            // 加载扩展函数文件
             if (is_dir($path . 'function')) {
                 $dir = $path . 'function';
                 $files = scandir($dir);
@@ -68,7 +60,7 @@ class App
                     }
                 }
             }
-            // 加载扩展配置文件
+            // 加载配置文件
             if (is_dir($path . 'config')) {
                 $dir = $path . 'config';
                 $files = scandir($dir);
@@ -79,7 +71,7 @@ class App
                     }
                 }
             }
-            // 加载应用语言包
+            // 加载语言包
             if (is_dir($path . 'language')) {
                 $lang = Lang::detect();
                 $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
@@ -95,6 +87,17 @@ class App
                             $filename = $dir . DIRECTORY_SEPARATOR . $file;
                             Lang::load($filename, $lang);
                         }
+                    }
+                }
+            }
+            // 加载百货文件
+            if (is_dir($path . 'store')) {
+                $dir = $path . 'store';
+                $files = scandir($dir);
+                foreach ($files as $file) {
+                    if (strpos($file, '.php')) {
+                        $filename = $dir . DIRECTORY_SEPARATOR . $file;
+                        require $filename;
                     }
                 }
             }
