@@ -45,8 +45,8 @@ class Base
     public function lang($name, $vars = [], $lang = '')
     {
         $langs = $this->langList($name, $vars, $lang);
-        $string = $this->langParse($langs);
-        return ucfirst($string);
+        $echo = $this->langParse($langs);
+        return ucfirst($echo);
     }
 
     /**
@@ -99,47 +99,46 @@ class Base
                 default:
                 case 'en-us':
                     // 英语（美国）
-                    $string = implode(' ', $name);
+                    $name = implode(' ', $name);
                     break;
                 case 'zh-cn':
                     // 中文（简体）
-                    $string = implode('', $name);
+                    $name = implode('', $name);
                     break;
             }
-        } else {
-            $string = $name;
         }
-        return $string;
+        return $name;
     }
 
     /**
      * 配置参数-[获取|设置]
-     * @param array|string $name 参数名
-     * @param mixed $data 数据
-     * @param string $range 作用域
+     * @param array $vars 参数
      * @return mixed
      */
-    public function config($name = '', $data = null, $range = '')
+    public function config(...$vars)
     {
-        if (is_null($data) && is_string($name)) {
-            return 0 === strpos($name, '?') ? \fxyin\Config::has(substr($name, 1), $range) : \fxyin\Config::get($name, $range);
+        $vars[0] = $vars[0] ?? null;
+        if (!is_array($vars[0]) && !array_key_exists(1, $vars)) {
+            return 0 === strpos($vars[0], '?') ? \fxyin\Config::has(substr($vars[0], 1)) : \fxyin\Config::get($vars[0]);
         } else {
-            return \fxyin\Config::set($name, $data, $range);
+            $vars[1] = $vars[1] ?? null;
+            return \fxyin\Config::set($vars[0], $vars[1]);
         }
     }
 
     /**
      * 环境参数-[获取|设置]
-     * @param array|string $name 参数名
-     * @param mixed $data 数据
+     * @param array $vars 参数
      * @return mixed
      */
-    public function env($name = '', $data = null)
+    public function env(...$vars)
     {
-        if (is_null($data) && is_string($name)) {
-            return 0 === strpos($name, '?') ? \fxyin\Env::has(substr($name, 1)) : \fxyin\Env::get($name);
+        $vars[0] = $vars[0] ?? null;
+        if (!is_array($vars[0]) && !array_key_exists(1, $vars)) {
+            return 0 === strpos($vars[0], '?') ? \fxyin\Env::has(substr($vars[0], 1)) : \fxyin\Env::get($vars[0]);
         } else {
-            return \fxyin\Env::set($name, $data);
+            $vars[1] = $vars[1] ?? null;
+            return \fxyin\Env::set($vars[0], $vars[1]);
         }
     }
 
