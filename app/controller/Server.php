@@ -16,7 +16,7 @@ namespace fxapp;
  * @package fxapp\facade
  * @method mixed ip() 获取IP
  * @method mixed system(int $type = -1) 获取系统
- * @method mixed format(array $data, int $type = 1) 处理数据-格式
+ * @method array format(array $data, int $type = 1) 处理数据-格式
  * @method mixed return(mixed $data, string $type = '') 处理数据-返回
  * @method array echo() 初始化响应
  */

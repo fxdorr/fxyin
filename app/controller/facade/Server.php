@@ -107,7 +107,7 @@ class Server
      * 处理数据-格式
      * @param array $data 数据
      * @param int $type 类型
-     * @return mixed
+     * @return array
      */
     public function format($data, $type = 1)
     {
