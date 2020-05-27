@@ -85,3 +85,56 @@ function is_json($var, $format = null)
     }
     return false;
 }
+
+/**
+ * 语言
+ * @param array|string $name 语言变量名
+ * @param array $vars 动态变量值
+ * @param string $lang 语言
+ * @return string
+ */
+function fxy_lang($name, $vars = [], $lang = '')
+{
+    return \fxapp\Base::lang($name, $vars, $lang);
+}
+
+/**
+ * 配置参数-[获取|设置]
+ * @param array $vars 参数
+ * @return mixed
+ */
+function fxy_config(...$vars)
+{
+    return \fxapp\Base::config(...$vars);
+}
+
+/**
+ * 环境参数-[获取|设置]
+ * @param array $vars 参数
+ * @return mixed
+ */
+function fxy_env(...$vars)
+{
+    return \fxapp\Base::env(...$vars);
+}
+
+/**
+ * 浏览器友好的变量输出
+ * @param array $vars 要输出的变量
+ * @return void
+ */
+function fxy_dump(...$vars)
+{
+    \fxapp\Base::dump(...$vars);
+}
+
+/**
+ * 解析Json
+ * @param mixed $var 变量
+ * @param string $type 类型
+ * @return mixed
+ */
+function fxy_json($var, $type)
+{
+    return \fxapp\Base::json($var, $type);
+}
