@@ -235,4 +235,30 @@ class Base
         }
         return $data;
     }
+
+    /**
+     * 抛出异常
+     * @param string $message 消息
+     * @return void
+     */
+    public function throwable($message)
+    {
+        try {
+            throw new \Exception($message);
+        } catch (\Throwable $th) {
+            // 执行异常处理
+            if (true !== \fxapp\Base::config('app.debug.switch')) {
+                exit('系统异常');
+            } else if (\fxapp\Base::env('base.method') == 'get') {
+                exit(\fxapp\Text::throwable($th));
+            } else if (PHP_SAPI !== 'cli') {
+                $echo = \fxapp\Server::echo();
+                $echo[0] = false;
+                $echo[2] = \fxapp\Text::throwable($th);
+                \fxapp\Server::return(\fxapp\Server::format($echo, 2));
+            } else {
+                throw $th;
+            }
+        }
+    }
 }
