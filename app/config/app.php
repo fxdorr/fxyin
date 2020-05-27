@@ -34,7 +34,7 @@ return [
             'server' => $_SERVER ?? null,
             'cookie' => $_COOKIE ?? null,
             'session' => $_SESSION ?? null,
-            'env' => \fxapp\Base::env(),
+            'env' => null,
         ],
     ],
     // 日志配置

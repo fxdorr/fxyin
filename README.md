@@ -13,8 +13,6 @@
 $root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 // 加载风音框架
 require $root . 'extend' . DIRECTORY_SEPARATOR . 'fxri' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR . 'autoload.php';
-// 初始化环境
-\fxyin\Env::init($root);
 // 初始化应用
 \fxyin\App::init();
 ~~~

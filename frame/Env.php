@@ -28,18 +28,13 @@ class Env
     private static $data = [];
 
     /**
-     * 环境-初始化
-     * @param string $root 根目录
+     * 初始化环境
      * @return boolean
      */
-    public static function init($root)
+    public static function init()
     {
         // 初始化配置
         static::set(Config::get('env'));
-        // 根目录
-        static::set('base.root', $root);
-        // 应用目录
-        static::set('base.app', $root . Config::get('env.base.app'));
     }
 
     /**
