@@ -14,7 +14,7 @@ namespace fxapp;
  * 数学类
  * @see \fxapp\facade\Math
  * @package fxapp\facade
- * @method string rand(int $length, int $type = 0) 随机字符
+ * @method static string rand(int $length, int $type = 0) 随机字符
  */
 class Math extends \fxyin\Facade
 {

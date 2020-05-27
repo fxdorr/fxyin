@@ -14,11 +14,11 @@ namespace fxapp;
  * 文件类
  * @see \fxapp\facade\File
  * @package fxapp\facade
- * @method mixed init() 初始化配置
- * @method string formatSize(int $size) 处理文件-格式化大小
- * @method mixed getList(mixed $var, string $ext = null, string $limit = -1) 查询文件-获取列表
- * @method mixed deleteDirectory(mixed $var) 处理文件-删除目录
- * @method mixed getMediaInfo(mixed $var, string $type) 查询文件-获取媒体信息
+ * @method static mixed init() 初始化配置
+ * @method static string formatSize(int $size) 处理文件-格式化大小
+ * @method static mixed getList(mixed $var, string $ext = null, string $limit = -1) 查询文件-获取列表
+ * @method static mixed deleteDirectory(mixed $var) 处理文件-删除目录
+ * @method static mixed getMediaInfo(mixed $var, string $type) 查询文件-获取媒体信息
  */
 class File extends \fxyin\Facade
 {
