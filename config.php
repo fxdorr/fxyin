@@ -33,6 +33,8 @@ return [
             'scheme' => strtolower($_SERVER['REQUEST_SCHEME'] ?? null),
             // 请求方法
             'method' => strtolower($_SERVER['REQUEST_METHOD'] ?? null),
+            // 名称
+            'name' => '',
         ],
         // 门面配置
         'facade' => [

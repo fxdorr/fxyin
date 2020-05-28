@@ -103,4 +103,33 @@ class App
             }
         }
     }
+
+    /**
+     * 运行
+     * @return void
+     */
+    public static function run()
+    {
+        // 初始化变量
+        $class = $_SERVER['REQUEST_URI'] ?? null;
+        // 解析路由
+        $class = str_replace('/', '\\', $class);
+        $class = substr($class, 1);
+        $class = explode('\\', $class);
+        $method = array_pop($class);
+        $class = explode('\\', strtolower(implode('\\', $class)));
+        $class[] = ucfirst(array_pop($class));
+        // 解析控制器
+        $app = \fxapp\Base::config('env.base.name') ?: 'app';
+        $class = '\\' . $app . '\\' . implode('\\', $class);
+        if (!class_exists($class)) {
+            \fxapp\Base::throwable('控制器不存在');
+        };
+        $class = new $class();
+        // 解析方法
+        if (!is_callable([$class, $method])) {
+            \fxapp\Base::throwable('方法不存在');
+        }
+        return call_user_func_array([$class, $method], []);
+    }
 }
