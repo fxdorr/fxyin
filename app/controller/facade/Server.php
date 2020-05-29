@@ -120,7 +120,7 @@ class Server
             default:
             case 1:
                 // 默认
-                $echo = $data;
+                $echo = \fxapp\Base::json($data, 'decode');
                 break;
             case 2:
                 // 通用

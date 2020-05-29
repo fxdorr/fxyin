@@ -18,7 +18,7 @@ class Service
     /**
      * HTTP请求
      * @param string $url 网址
-     * @param array $data 数据
+     * @param string $data 数据
      * @param array $header 请求头
      * @param string $method 请求方式
      * @return mixed
@@ -47,15 +47,17 @@ class Service
         // 识别请求方法
         switch ($method) {
             default:
-                // 未知
+            case 'POST':
+            case 'PUT':
+            case 'PATCH':
+            case 'DELETE':
+                // 默认
+                curl_setopt($request, CURLOPT_POST, true);
+                curl_setopt($request, CURLOPT_POSTFIELDS, $data);
+                break;
             case 'GET':
                 // GET
                 curl_setopt($request, CURLOPT_POST, false);
-                break;
-            case 'POST':
-                // POST
-                curl_setopt($request, CURLOPT_POST, true);
-                curl_setopt($request, CURLOPT_POSTFIELDS, $data);
                 break;
         }
         // 发送请求
