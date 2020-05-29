@@ -169,53 +169,49 @@ class Base
 
     /**
      * 解析Json
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @return mixed
      */
-    public function json($var, $type)
+    public function json($data, $type)
     {
         // 初始化变量
-        $echo = null;
         $type = strtolower($type);
         switch ($type) {
             case 'encode':
                 // 编码
-                // 检查参数
-                if (!is_json($var) && !is_array($var)) {
-                    $var = $var;
-                } else if (is_array($var)) {
-                    $var = \fxapp\Param::json($var, 'encode');
+                if (!is_json($data)) {
+                    $data = \fxapp\Param::json($data, 'encode');
                 }
-                $echo = $var;
                 break;
             case 'decode':
                 // 解码
-                // 检查参数
-                if (!is_json($var) && !is_array($var)) {
-                    $var = [];
-                } else if (is_json($var)) {
-                    $var = \fxapp\Param::json($var, 'decode');
+                if (is_json($data)) {
+                    $data = \fxapp\Param::json($data, 'decode');
+                } else if (is_object($data)) {
+                    $data = (array) $data;
+                } else if (is_string($data)) {
+                    parse_str($data, $data);
+                } else if (!is_array($data)) {
+                    $data = !is_null($data) ? [$data] : [];
                 }
-                $echo = $var;
                 break;
         }
-        return $echo;
+        return $data;
     }
 
     /**
      * 加密解密
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @param string $param 参数
      * @return mixed
      */
-    public function crypt($var, $type, $param = null)
+    public function crypt($data, $type, $param = null)
     {
         // 初始化变量
         $config = $this->config('safe.base');
-        if (!$config['crypt_switch']) return $var;
-        $data = null;
+        if (!$config['crypt_switch']) return $data;
         if (!is_array($param)) {
             $param = null;
         }
@@ -226,11 +222,17 @@ class Base
         $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
         $type = strtolower($type);
         switch ($type) {
+            default:
+                // 默认
+                $data = null;
+                break;
             case 'encode':
-                $data = \fxapp\Safe::crypt($var, 'encode', $param);
+                // 编码
+                $data = \fxapp\Safe::crypt($data, 'encode', $param);
                 break;
             case 'decode':
-                $data = \fxapp\Safe::crypt($var, 'decode', $param);
+                // 解码
+                $data = \fxapp\Safe::crypt($data, 'decode', $param);
                 break;
         }
         return $data;

@@ -922,7 +922,7 @@ class Aliyun extends Alibaba
         $list = $data['DomainRecords']['Record'];
         // 获取指定解析
         $RR = null;
-        $list = \fxapp\Base::json($list, 'decode');
+        $list = \fxapp\Param::json($list, 'decode');
         foreach ($list as $key => $value) {
             if ($tray['rr'] === $value['RR']) {
                 $RR = $value;

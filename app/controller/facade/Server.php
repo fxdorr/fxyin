@@ -120,7 +120,12 @@ class Server
             default:
             case 1:
                 // 默认
-                $echo = \fxapp\Base::json($data, 'decode');
+                if (is_json($data)) {
+                    $data = \fxapp\Param::json($data, 'decode');
+                } else if (is_object($data)) {
+                    $data = (array) $data;
+                }
+                $echo = $data;
                 break;
             case 2:
                 // 通用
@@ -134,6 +139,7 @@ class Server
                 }
                 break;
         }
+        if (!is_array($echo)) return $echo;
         // 调试模式
         if ($debug['switch'] && $debug['level']) {
             $echo['debug'] = ['' => null];

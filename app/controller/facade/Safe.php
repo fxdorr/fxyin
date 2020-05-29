@@ -17,17 +17,20 @@ class Safe
 {
     /**
      * 解析数据-加密
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @param string $param 参数
      * @return mixed
      */
-    public function crypt($var, $type, $param = null)
+    public function crypt($data, $type, $param = null)
     {
         // 初始化变量
-        $echo = null;
         $type = strtolower($type);
         switch ($type) {
+            default:
+                // 默认
+                $data = null;
+                break;
             case 'encode':
                 // 编码
                 if (!is_array($param)) {
@@ -38,7 +41,7 @@ class Safe
                     'iv' => null,
                 ];
                 $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
-                $echo = openssl_encrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
+                $data = openssl_encrypt($data, $param['method'], $param['password'], $param['options'], $param['iv']);
                 break;
             case 'decode':
                 // 解码
@@ -50,64 +53,66 @@ class Safe
                     'iv' => null,
                 ];
                 $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
-                $echo = openssl_decrypt($var, $param['method'], $param['password'], $param['options'], $param['iv']);
+                $data = openssl_decrypt($data, $param['method'], $param['password'], $param['options'], $param['iv']);
                 break;
         }
-        return $echo;
+        return $data;
     }
 
     /**
      * 生成MD5
-     * @param mixed $var 变量
+     * @param string $data 数据
      * @param int $type 类型
-     * @return mixed
+     * @return string
      */
-    public function md5($var, $type = null)
+    public function md5($data, $type = null)
     {
         // 初始化变量
-        $echo = null;
         $type = intval($type);
         switch ($type) {
             default:
             case 1:
                 // 32位
-                $echo = md5($var);
+                $data = md5($data);
                 break;
             case 2:
                 // 16位
-                $echo = substr(md5($var), 8, 16);
+                $data = substr(md5($data), 8, 16);
                 break;
         }
-        return $echo;
+        return $data;
     }
 
     /**
      * 解析数据-令牌
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @return mixed
      */
-    public function token($var, $type)
+    public function token($data, $type)
     {
         // 初始化变量
-        $echo = null;
         $type = strtolower($type);
         switch ($type) {
+            default:
+                // 默认
+                $data = null;
+                break;
             case 'encode':
                 // 编码
-                if (!$var) {
+                if (!$data) {
                     // 空字符串
                     return false;
-                } else if (is_array($var)) {
+                } else if (is_array($data)) {
                     // 数组
-                    $var = implode(',', $var);
-                } else if (!is_string($var)) {
+                    $data = implode(',', $data);
+                } else if (!is_string($data)) {
                     // 非字符串
                     return false;
                 }
                 // 计算加密长度
-                $param = ',' . $var . ',';
-                $strlen = strlen($param);
+                $data = ',' . $data . ',';
+                $strlen = strlen($data);
                 $exp = 5;
                 do {
                     $pow = pow(2, $exp);
@@ -116,51 +121,50 @@ class Safe
                 } while ($strdiff < 0);
                 $strmax = $pow;
                 // 填充令牌
-                $param = str_pad($param, $strmax, \fxapp\Math::rand($strdiff / 2), STR_PAD_BOTH);
+                $data = str_pad($data, $strmax, \fxapp\Math::rand($strdiff / 2), STR_PAD_BOTH);
                 // 加密令牌
-                $param = \fxapp\Base::crypt($param, 'encode');
-                $echo = bin2hex($param);
+                $data = \fxapp\Base::crypt($data, 'encode');
+                $data = bin2hex($data);
                 break;
             case 'decode':
                 // 解码
-                if (!$var) {
+                if (!$data) {
                     // 空字符串
                     return false;
-                } else if (!is_string($var)) {
+                } else if (!is_string($data)) {
                     // 非字符串
                     return false;
-                } else if (strlen($var) % 2 != 0) {
+                } else if (strlen($data) % 2 != 0) {
                     // 不解析单数字符串
                     return false;
-                } else if (!ctype_xdigit($var)) {
+                } else if (!ctype_xdigit($data)) {
                     // 非纯16进制字符串
                     return false;
                 }
                 // 解密令牌
-                $param = hex2bin($var);
-                $param = \fxapp\Base::crypt($param, 'decode');
-                $param = explode(',', $param);
-                array_shift($param);
-                array_pop($param);
-                $param = implode(',', $param);
-                $echo = $param;
+                $data = hex2bin($data);
+                $data = \fxapp\Base::crypt($data, 'decode');
+                $data = explode(',', $data);
+                array_shift($data);
+                array_pop($data);
+                $data = implode(',', $data);
                 break;
         }
-        return $echo;
+        return $data;
     }
 
     /**
      * 解析数据-RSA私钥
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @param array $param 参数
      * @return mixed
      */
-    public function rsapri($var, $type, $param = [])
+    public function rsapri($data, $type, $param = [])
     {
         // 初始化变量
         $echo = [];
-        if (!is_string($var) || !is_array($param)) return false;
+        if (!is_string($data) || !is_array($param)) return false;
         $predefined = [
             'type', 'secret',
         ];
@@ -171,8 +175,8 @@ class Safe
         switch ($type) {
             case 'encode':
                 // 编码
-                $var = str_split($var, 117);
-                foreach ($var as $value) {
+                $data = str_split($data, 117);
+                foreach ($data as $value) {
                     $entrys = null;
                     // 解析填充字符
                     switch ($param['type']) {
@@ -191,8 +195,8 @@ class Safe
                 break;
             case 'decode':
                 // 解码
-                $var = str_split($var, 128);
-                foreach ($var as $value) {
+                $data = str_split($data, 128);
+                foreach ($data as $value) {
                     $entrys = null;
                     openssl_private_decrypt($value, $entrys, $param['secret'], $param['type']);
                     // 解析填充字符
@@ -216,16 +220,16 @@ class Safe
 
     /**
      * 解析数据-RSA公钥
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @param array $param 参数
      * @return mixed
      */
-    public function rsapub($var, $type, $param = [])
+    public function rsapub($data, $type, $param = [])
     {
         // 初始化变量
         $echo = [];
-        if (!is_string($var) || !is_array($param)) return false;
+        if (!is_string($data) || !is_array($param)) return false;
         $predefined = [
             'type', 'secret',
         ];
@@ -236,8 +240,8 @@ class Safe
         switch ($type) {
             case 'encode':
                 // 编码
-                $var = str_split($var, 117);
-                foreach ($var as $value) {
+                $data = str_split($data, 117);
+                foreach ($data as $value) {
                     $entrys = null;
                     // 解析填充字符
                     switch ($param['type']) {
@@ -256,8 +260,8 @@ class Safe
                 break;
             case 'decode':
                 // 解码
-                $var = str_split($var, 128);
-                foreach ($var as $value) {
+                $data = str_split($data, 128);
+                foreach ($data as $value) {
                     $entrys = null;
                     openssl_public_decrypt($value, $entrys, $param['secret'], $param['type']);
                     // 解析填充字符
@@ -281,41 +285,45 @@ class Safe
 
     /**
      * 解析数据-RSA密钥
-     * @param mixed $var 变量
+     * @param string $data 数据
      * @param string $type 类型
-     * @return mixed
+     * @return string
      */
-    public function rsapem($var, $type)
+    public function rsapem($data, $type)
     {
         // 初始化变量
-        if (!is_string($var)) return false;
+        if (!is_string($data)) return false;
         $type = strtolower($type);
         switch ($type) {
+            default:
+                // 默认
+                $data = null;
+                break;
             case 'private':
                 // 私钥
-                if (is_file($var)) {
-                    $var = file_get_contents($var);
+                if (is_file($data)) {
+                    $data = file_get_contents($data);
                 }
-                $var = str_replace("\n", '', $var);
-                $var = str_replace("-----BEGIN RSA PRIVATE KEY-----", '', $var);
-                $var = str_replace("-----END RSA PRIVATE KEY-----", '', $var);
-                $var = "-----BEGIN RSA PRIVATE KEY-----\n" .
-                    wordwrap($var, 64, "\n", true) .
+                $data = str_replace("\n", '', $data);
+                $data = str_replace("-----BEGIN RSA PRIVATE KEY-----", '', $data);
+                $data = str_replace("-----END RSA PRIVATE KEY-----", '', $data);
+                $data = "-----BEGIN RSA PRIVATE KEY-----\n" .
+                    wordwrap($data, 64, "\n", true) .
                     "\n-----END RSA PRIVATE KEY-----";
                 break;
             case 'public':
                 // 公钥
-                if (is_file($var)) {
-                    $var = file_get_contents($var);
+                if (is_file($data)) {
+                    $data = file_get_contents($data);
                 }
-                $var = str_replace("\n", '', $var);
-                $var = str_replace("-----BEGIN PUBLIC KEY-----", '', $var);
-                $var = str_replace("-----END PUBLIC KEY-----", '', $var);
-                $var = "-----BEGIN PUBLIC KEY-----\n" .
-                    wordwrap($var, 64, "\n", true) .
+                $data = str_replace("\n", '', $data);
+                $data = str_replace("-----BEGIN PUBLIC KEY-----", '', $data);
+                $data = str_replace("-----END PUBLIC KEY-----", '', $data);
+                $data = "-----BEGIN PUBLIC KEY-----\n" .
+                    wordwrap($data, 64, "\n", true) .
                     "\n-----END PUBLIC KEY-----";
                 break;
         }
-        return $var;
+        return $data;
     }
 }
