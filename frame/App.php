@@ -24,81 +24,80 @@ class App
     {
         // 初始化变量
         static $data = [];
-        // 加载应用
-        if (!isset($data[$name])) {
-            self::load($name);
-            $data[$name] = true;
+        $config = Config::get('env.app');
+        if (!is_array($config)) return false;
+        if (isset($config[$name])) {
+            $config = [$name => $config[$name]];
         }
-        return $data[$name];
+        // 加载应用
+        foreach ($config as $key => $value) {
+            if (array_key_exists($key, $data)) continue;
+            self::load($value);
+            $data[$key] = $value;
+        }
+        return true;
     }
 
     /**
      * 系统-加载
-     * @param string $name 名称
+     * @param string $path 路径
      * @return mixed
      */
-    private static function load($name = null)
+    private static function load($path = null)
     {
         // 初始化变量
-        $app = Config::get('env.app');
-        if (!is_array($app)) return;
-        if (isset($app[$name])) {
-            $app = [$app[$name]];
+        $path = realpath($path);
+        if (false === is_dir($path)) return;
+        $path .= DIRECTORY_SEPARATOR;
+        // 加载函数文件
+        if (is_dir($path . 'function')) {
+            $dir = $path . 'function';
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if (strpos($file, '.php')) {
+                    $filename = $dir . DIRECTORY_SEPARATOR . $file;
+                    require $filename;
+                }
+            }
         }
-        foreach ($app as $path) {
-            $path = realpath($path);
-            if (false === $path) return;
-            $path .= DIRECTORY_SEPARATOR;
-            // 加载函数文件
-            if (is_dir($path . 'function')) {
-                $dir = $path . 'function';
+        // 加载配置文件
+        if (is_dir($path . 'config')) {
+            $dir = $path . 'config';
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if (strpos($file, '.php')) {
+                    $filename = $dir . DIRECTORY_SEPARATOR . $file;
+                    Config::load($filename, pathinfo($file, PATHINFO_FILENAME));
+                }
+            }
+        }
+        // 加载语言包
+        if (is_dir($path . 'language')) {
+            $lang = Lang::detect();
+            $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
+            if (!is_dir($dir)) {
+                $lang = 'zh-cn';
+            }
+            Lang::range($lang);
+            $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
+            if (is_dir($dir)) {
                 $files = scandir($dir);
                 foreach ($files as $file) {
                     if (strpos($file, '.php')) {
                         $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                        require $filename;
+                        Lang::load($filename, $lang);
                     }
                 }
             }
-            // 加载配置文件
-            if (is_dir($path . 'config')) {
-                $dir = $path . 'config';
-                $files = scandir($dir);
-                foreach ($files as $file) {
-                    if (strpos($file, '.php')) {
-                        $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                        Config::load($filename, pathinfo($file, PATHINFO_FILENAME));
-                    }
-                }
-            }
-            // 加载语言包
-            if (is_dir($path . 'language')) {
-                $lang = Lang::detect();
-                $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
-                if (!is_dir($dir)) {
-                    $lang = 'zh-cn';
-                }
-                Lang::range($lang);
-                $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
-                if (is_dir($dir)) {
-                    $files = scandir($dir);
-                    foreach ($files as $file) {
-                        if (strpos($file, '.php')) {
-                            $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                            Lang::load($filename, $lang);
-                        }
-                    }
-                }
-            }
-            // 加载百货文件
-            if (is_dir($path . 'store')) {
-                $dir = $path . 'store';
-                $files = scandir($dir);
-                foreach ($files as $file) {
-                    if (strpos($file, '.php')) {
-                        $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                        require $filename;
-                    }
+        }
+        // 加载百货文件
+        if (is_dir($path . 'store')) {
+            $dir = $path . 'store';
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                if (strpos($file, '.php')) {
+                    $filename = $dir . DIRECTORY_SEPARATOR . $file;
+                    require $filename;
                 }
             }
         }

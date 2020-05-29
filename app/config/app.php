@@ -14,28 +14,28 @@
  * @return array
  */
 return [
+    // 参数配置
+    'param' => [
+        // 入参
+        'param' => \fxapp\Client::param(),
+        'get' => $_GET ?? null,
+        'post' => $_POST ?? null,
+        'input' => file_get_contents('php://input'),
+        'cli' => null,
+        // 文件
+        'files' => $_FILES ?? null,
+        // 环境
+        'server' => $_SERVER ?? null,
+        'cookie' => $_COOKIE ?? null,
+        'session' => $_SESSION ?? null,
+        'env' => null,
+    ],
     // 调试配置
     'debug' => [
         // 开关
         'switch' => true,
         // 等级
         'level' => null,
-        // 数据
-        'data' => [
-            // 入参
-            'param' => \fxapp\Client::param(),
-            'get' => $_GET ?? null,
-            'post' => $_POST ?? null,
-            'input' => file_get_contents('php://input'),
-            'cli' => null,
-            // 文件
-            'files' => $_FILES ?? null,
-            // 环境
-            'server' => $_SERVER ?? null,
-            'cookie' => $_COOKIE ?? null,
-            'session' => $_SESSION ?? null,
-            'env' => null,
-        ],
     ],
     // 日志配置
     'log' => [

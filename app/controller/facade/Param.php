@@ -24,15 +24,21 @@ class Param
         // 初始化CLI变量
         $param = $_SERVER['argv'] ?? [];
         $data = [];
-        foreach ($param as $elem) {
-            if (strpos($elem, '-') === 0) {
-                $elem = preg_replace('/^-/', '', $elem);
-                $elem = explode('=', $elem, 2);
-                $elem[1] = $elem[1] ?? null;
-                $data[$elem[0]] = $elem[1];
+        foreach ($param as $name) {
+            if (strpos($name, '-') !== 0) continue;
+            $name = preg_replace('/^-/', '', $name);
+            $name = explode('=', $name, 2);
+            $name[1] = $name[1] ?? null;
+            // 解析名称
+            $name[0] = array_reverse(explode('.', $name[0]));
+            foreach ($name[0] as $elem) {
+                $elem = str_replace('/_', '.', $elem);
+                $name[1] = [$elem => $name[1]];
             }
+            // 融合数据
+            $data = \fxapp\Param::merge($data, $name[1]);
         }
-        \fxapp\Base::config('debug.data.cli', $data);
+        \fxapp\Base::config('app.param.cli', $data);
     }
 
     /**

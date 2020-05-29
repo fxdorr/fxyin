@@ -190,7 +190,7 @@ class Client
             // GET-POST-INPUT
             'get' => $_GET, 'post' => $_POST, 'input' => $input,
             // CLI
-            'cli' => \fxapp\Base::config('debug.data.cli'),
+            'cli' => \fxapp\Base::config('app.param.cli'),
         ];
         $base = \fxapp\Param::define([null, $predefined], '1.1.3');
         // 识别方法

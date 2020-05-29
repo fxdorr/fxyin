@@ -115,7 +115,7 @@ class Server
         $echo = [];
         $debug['switch'] = \fxapp\Base::config('app.debug.switch');
         $debug['level'] = \fxapp\Base::config('app.debug.level');
-        $debug['data'] = \fxapp\Base::config('app.debug.data');
+        $debug['param'] = \fxapp\Base::config('app.param');
         switch ($type) {
             default:
             case 1:
@@ -142,32 +142,32 @@ class Server
                 switch ($value) {
                     default:
                         // 匹配
-                        if (array_key_exists($value, $debug['data'])) {
-                            $echo['debug'][$value] = $debug['data'][$value];
+                        if (array_key_exists($value, $debug['param'])) {
+                            $echo['debug'][$value] = $debug['param'][$value];
                         }
                         break;
                     case '1':
                         // 全部
-                        $echo['debug'] = \fxapp\Param::define([$echo['debug'], $debug['data']], '1.1.1');
+                        $echo['debug'] = \fxapp\Param::define([$echo['debug'], $debug['param']], '1.1.1');
                         break;
                     case '2':
                         // 入参
-                        $echo['debug']['param'] = $debug['data']['param'];
-                        $echo['debug']['get'] = $debug['data']['get'];
-                        $echo['debug']['post'] = $debug['data']['post'];
-                        $echo['debug']['input'] = $debug['data']['input'];
-                        $echo['debug']['cli'] = $debug['data']['cli'];
+                        $echo['debug']['param'] = $debug['param']['param'];
+                        $echo['debug']['get'] = $debug['param']['get'];
+                        $echo['debug']['post'] = $debug['param']['post'];
+                        $echo['debug']['input'] = $debug['param']['input'];
+                        $echo['debug']['cli'] = $debug['param']['cli'];
                         break;
                     case '3':
                         // 文件
-                        $echo['debug']['files'] = $debug['data']['files'];
+                        $echo['debug']['files'] = $debug['param']['files'];
                         break;
                     case '4':
                         // 环境
-                        $echo['debug']['server'] = $debug['data']['server'];
-                        $echo['debug']['cookie'] = $debug['data']['cookie'];
-                        $echo['debug']['session'] = $debug['data']['session'];
-                        $echo['debug']['env'] = $debug['data']['env'];
+                        $echo['debug']['server'] = $debug['param']['server'];
+                        $echo['debug']['cookie'] = $debug['param']['cookie'];
+                        $echo['debug']['session'] = $debug['param']['session'];
+                        $echo['debug']['env'] = $debug['param']['env'];
                         break;
                 }
             }
