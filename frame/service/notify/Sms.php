@@ -39,8 +39,8 @@ class Sms extends Notify
         ];
         $param['_param'] = \fxapp\Param::define([$param['_param'], $predefined], '1.2.1');
         $tray['account'] = $param['account'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['_param'] = $param['_param'];
         // 初始化环境变量
         // 应用钥匙
@@ -49,10 +49,10 @@ class Sms extends Notify
         $conf['secretKey'] = \fxapp\Base::config('notify.sms.alidayu.app_secret');
         // SDK地址
         $conf['url_sdk'] = \fxapp\Base::config('notify.sms.alidayu.url_sdk');
-        $pempty = \fxapp\Data::paramEmpty($conf);
-        if (!$pempty[0]) {
-            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
-            return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        if (!$tray['check'][0]) {
+            $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
+            return $tray['check'];
         }
         \fxapp\Base::load($conf['url_sdk']);
         // 开始执行
@@ -103,8 +103,8 @@ class Sms extends Notify
         $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $tray['content'] = $param['content'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 初始化环境变量
         // 企业账号
         $conf['corporation'] = \fxapp\Base::config('notify.sms.webservice.corporation');
@@ -112,10 +112,10 @@ class Sms extends Notify
         $conf['src_tele_num'] = \fxapp\Base::config('notify.sms.webservice.src_tele_num');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('notify.sms.webservice.domain');
-        $pempty = \fxapp\Data::paramEmpty($conf);
-        if (!$pempty[0]) {
-            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
-            return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        if (!$tray['check'][0]) {
+            $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
+            return $tray['check'];
         }
         // 设置配置
         $conf['message_id'] = -1;

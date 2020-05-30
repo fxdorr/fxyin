@@ -35,8 +35,8 @@ class Flashsms extends Notify
         $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $tray['content'] = $param['content'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 初始化环境变量
         // 用户ID
         $conf['uid'] = \fxapp\Base::config('notify.flashsms.common.uid');
@@ -51,10 +51,10 @@ class Flashsms extends Notify
         $conf['digest'] = \fxapp\Base::config('notify.flashsms.common.digest');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('notify.flashsms.common.domain');
-        $pempty = \fxapp\Data::paramEmpty($conf);
-        if (!$pempty[0]) {
-            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
-            return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        if (!$tray['check'][0]) {
+            $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
+            return $tray['check'];
         }
         // 待发数据
         $tray['2_1'] = [

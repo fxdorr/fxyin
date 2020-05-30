@@ -70,8 +70,8 @@ class ToolService extends Tool
         $tray['content'] = $entry['content'];
         $tray['file_name'] = $entry['file_name'];
         $tray['file_path'] = $entry['file_path'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['file_url'] = $entry['file_url'];
         $tray['level'] = $entry['level'];
         $tray['size'] = $entry['size'];
@@ -113,8 +113,8 @@ class ToolService extends Tool
         $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['title'] = $entry['title'];
         $tray['data'] = $entry['data'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['file_name'] = $entry['file_name'];
         // 服务处理
         header("Content-type:application/octet-stream");

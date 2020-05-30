@@ -87,8 +87,8 @@ class Qq extends Tencent
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
         $tray['openid'] = $entry['openid'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('third.qq.web_auth_info.app_key');
         // 接口域
@@ -170,8 +170,8 @@ class WeChat extends Tencent
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['code'] = $entry['code'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tokens = $this->_webAuthToken($entry);
         if (isset($tokens['errcode'])) {
             $echo[0] = false;
@@ -232,8 +232,8 @@ class WeChat extends Tencent
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['code'] = $entry['code'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('third.wechat.web_auth_token.app_key');
         // 应用密钥
@@ -294,8 +294,8 @@ class WeChat extends Tencent
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
         $tray['openid'] = $entry['openid'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 语言
         $conf['lang'] = \fxapp\Base::config('third.wechat.web_auth_info.lang');
         // 接口域
@@ -408,8 +408,8 @@ class WeChat extends Tencent
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 授权类型
         $conf['type'] = \fxapp\Base::config('third.wechat.jssdk_grant_jsapi_ticket.type');
         // 接口域
@@ -447,8 +447,8 @@ class WeChat extends Tencent
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $tray['dateline'] = $entry['dateline'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['openid'] = $entry['openid'];
         if ($tray['openid']) {
             $record = $this->_webPayApply($entry);
@@ -480,8 +480,8 @@ class WeChat extends Tencent
         $tray['money'] = $entry['money'];
         $tray['dateline'] = $entry['dateline'];
         $tray['openid'] = $entry['openid'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 附加数据
         $conf['attach'] = \fxapp\Base::config('third.wechat.app_pay.attach');
         // 商品描述
@@ -585,8 +585,8 @@ class WeChat extends Tencent
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
         $tray['dateline'] = $entry['dateline'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 附加数据
         $conf['attach'] = \fxapp\Base::config('third.wechat.app_pay.attach');
         // 商品描述
@@ -753,12 +753,12 @@ class WeChat extends Tencent
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['pay_sn'] = $entry['pay_sn'];
         $tray['deal_sn'] = $entry['deal_sn'];
-        $pempty = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['refund_remark'] = $entry['refund_remark'];
         $record = $this->_refundApply($entry);
         return $record;
@@ -787,12 +787,12 @@ class WeChat extends Tencent
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['pay_sn'] = $entry['pay_sn'];
         $tray['deal_sn'] = $entry['deal_sn'];
-        $pempty = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['refund_remark'] = $entry['refund_remark'];
         // 商户号
         $conf['mch_id'] = \fxapp\Base::config('third.wechat.app_pay.mch_id');

@@ -125,8 +125,8 @@ class Alipay extends Alibaba
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['auth_code'] = $entry['auth_code'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.web_auth_token.app_id');
         // 签名类型
@@ -195,8 +195,8 @@ class Alipay extends Alibaba
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['refresh_token'] = $entry['refresh_token'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.web_refresh_token.app_id');
         // 签名类型
@@ -271,8 +271,8 @@ class Alipay extends Alibaba
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['access_token'] = $entry['access_token'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.web_auth_info.app_id');
         // 签名类型
@@ -313,8 +313,8 @@ class Alipay extends Alibaba
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.app_pay.app_id');
         // 商品描述
@@ -511,8 +511,8 @@ class Alipay extends Alibaba
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['sn'] = $entry['sn'];
         $tray['money'] = $entry['money'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.wap_pay.app_id');
         // 商品描述
@@ -702,12 +702,12 @@ class Alipay extends Alibaba
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['pay_sn'] = $entry['pay_sn'];
         $tray['deal_sn'] = $entry['deal_sn'];
-        $pempty = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['refund_remark'] = $entry['refund_remark'];
         $record = $this->_refundApply($entry);
         if (isset($record[0]) && is_bool($record[0])) {
@@ -755,12 +755,12 @@ class Alipay extends Alibaba
         $tray['refund_sn'] = $entry['refund_sn'];
         $tray['deal_money'] = $entry['deal_money'];
         $tray['refund_money'] = $entry['refund_money'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['pay_sn'] = $entry['pay_sn'];
         $tray['deal_sn'] = $entry['deal_sn'];
-        $pempty = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramExist([$tray['pay_sn'], $tray['deal_sn']]);
+        if (!$tray['check'][0]) return $tray['check'];
         $tray['refund_remark'] = $entry['refund_remark'];
         // 应用ID
         $conf['app_id'] = \fxapp\Base::config('third.alipay.web_auth_info.app_id');
@@ -833,8 +833,8 @@ class Taobao extends Alibaba
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ip'] = $entry['ip'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.taobao.location.domain');
         $conf['data']['ip'] = $tray['ip'];
@@ -875,8 +875,8 @@ class Aliyun extends Alibaba
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['domain'] = $entry['domain'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 配置参数
         $param = [
             'Action' => 'DescribeDomainRecords',
@@ -913,8 +913,8 @@ class Aliyun extends Alibaba
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['domain'] = $entry['domain'];
         $tray['rr'] = $entry['rr'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 配置参数
         $record = $this->describeDomainRecords();
         if (!$record[0]) return $record;
@@ -962,8 +962,8 @@ class Aliyun extends Alibaba
         $tray['rr'] = $entry['rr'];
         $tray['type'] = $entry['type'];
         $tray['value'] = $entry['value'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 查询域名解析ID
         $record = $this->getRecordId();
         if (!$record[0]) return $record;

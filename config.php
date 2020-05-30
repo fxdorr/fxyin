@@ -30,9 +30,9 @@ return [
             // 主机名称
             'web' => '',
             // 请求方案
-            'scheme' => strtolower($_SERVER['REQUEST_SCHEME'] ?? null),
+            'scheme' => $_SERVER['REQUEST_SCHEME'] ?? null,
             // 请求方法
-            'method' => strtolower($_SERVER['REQUEST_METHOD'] ?? null),
+            'method' => $_SERVER['REQUEST_METHOD'] ?? null,
             // 名称
             'name' => '',
         ],

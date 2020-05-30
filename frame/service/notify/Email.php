@@ -38,8 +38,8 @@ class Email extends Notify
         $tray['account'] = $param['account'];
         $tray['title'] = $param['title'];
         $tray['content'] = $param['content'];
-        $pempty = \fxapp\Data::paramEmpty($tray);
-        if (!$pempty[0]) return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        if (!$tray['check'][0]) return $tray['check'];
         // 初始化环境变量
         // SMTP服务器
         $conf['smtpserver'] = \fxapp\Base::config('notify.email.common.smtpserver');
@@ -51,10 +51,10 @@ class Email extends Notify
         $conf['smtpuser'] = \fxapp\Base::config('notify.email.common.mailuser');
         // SMTP服务器的用户密码
         $conf['smtppass'] = \fxapp\Base::config('notify.email.common.mailpass');
-        $pempty = \fxapp\Data::paramEmpty($conf);
-        if (!$pempty[0]) {
-            $pempty[2] = \fxapp\Base::lang(['lack', 'api', 'config']);
-            return $pempty;
+        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        if (!$tray['check'][0]) {
+            $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
+            return $tray['check'];
         }
         // 发送给谁
         $conf['smtpemailto'] = $tray['account'];
