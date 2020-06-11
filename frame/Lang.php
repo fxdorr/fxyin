@@ -178,21 +178,20 @@ class Lang
     {
         // 自动侦测设置获取语言选择
         $langSet = '';
-        $_COOKIE[self::$langCookieVar] = $_COOKIE[self::$langCookieVar] ?? null;
         if (isset($_GET[self::$langDetectVar])) {
             // url中设置了语言变量
             $langSet = strtolower($_GET[self::$langDetectVar]);
             if (PHP_SAPI !== 'cli') {
-                setcookie(self::$langCookieVar, $langSet, self::$langCookieExpire);
+                Cookie::set(self::$langCookieVar, $langSet, self::$langCookieExpire);
             }
-        } else if ($_COOKIE[self::$langCookieVar]) {
+        } else if (Cookie::get(self::$langCookieVar)) {
             // 获取上次用户的选择
-            $langSet = strtolower($_COOKIE[self::$langCookieVar]);
+            $langSet = strtolower(Cookie::get(self::$langCookieVar));
         } else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // 自动侦测浏览器语言
             preg_match('/^([a-z\d\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);
             $langSet = strtolower($matches[1]);
-            setcookie(self::$langCookieVar, $langSet, self::$langCookieExpire);
+            Cookie::set(self::$langCookieVar, $langSet, self::$langCookieExpire);
         }
         if (empty(self::$allowLangList) || in_array($langSet, self::$allowLangList)) {
             // 合法的语言

@@ -106,7 +106,7 @@ class Text
     /**
      * 拼接字符串
      * @param string $string 字符串
-     * @param string $value 值
+     * @param string $value 键值
      * @param string $separator 分隔符
      * @return string
      */

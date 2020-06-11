@@ -82,6 +82,16 @@ function fxy_config(...$vars)
 }
 
 /**
+ * 配置Cookie-[获取|设置]
+ * @param array $vars 参数
+ * @return mixed
+ */
+function fxy_cookie(...$vars)
+{
+    return \fxapp\Base::cookie(...$vars);
+}
+
+/**
  * 环境参数-[获取|设置]
  * @param array $vars 参数
  * @return mixed

@@ -16,30 +16,6 @@ namespace fxapp\facade;
 class File
 {
     /**
-     * 初始化配置
-     * @return mixed
-     */
-    public function init()
-    {
-        // 初始化媒体环境
-        $config = \fxapp\Base::config('app.media');
-        $system = \fxapp\Server::system(1);
-        foreach ($config as $key => $value) {
-            switch ($system) {
-                case 'linux':
-                    // Linux系统
-                case 'windows nt':
-                    // Windows系统
-                    if (isset($value['path'][$system])) {
-                        $config[$key]['bin'] = $value['path'][$system];
-                    }
-                    break;
-            }
-        }
-        \fxapp\Base::config('app.media', $config);
-    }
-
-    /**
      * 处理文件-格式化大小
      * @param int $size 文件大小
      * @return string
@@ -132,8 +108,8 @@ class File
                 try {
                     // 配置参数
                     $config = \fxapp\Base::config('app.media.video');
-                    if (is_null($config['bin'])) return;
-                    $command = sprintf($config['bin'], $var);
+                    if (is_null($config)) return;
+                    $command = sprintf($config, $var);
                     ob_start();
                     passthru($command);
                     $info = ob_get_contents();

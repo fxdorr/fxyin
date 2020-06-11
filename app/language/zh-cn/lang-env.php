@@ -13,14 +13,14 @@
 return [
     //============================================================
     // 名词-n.-noun
-    'chinese'                       =>  '中文',
-    'english'                       =>  '英语',
+    'chinese' => '中文',
+    'english' => '英语',
 
     // 名词词组
-    'chinese(simplified)'           =>  '中文（简体）',
-    'chinese(traditional)'          =>  '中文（繁体）',
-    'english(usa)'                  =>  '英语（美国）',
-    'english(england)'              =>  '英语（英国）',
+    'chinese(simplified)' => '中文（简体）',
+    'chinese(traditional)' => '中文（繁体）',
+    'english(usa)' => '英语（美国）',
+    'english(england)' => '英语（英国）',
 
     // 名词数组
     'lang_list' => [

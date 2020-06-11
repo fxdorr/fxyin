@@ -20,7 +20,7 @@ return [
     // verb-v.-verb
 
     // verb phrase-verb phrase
-    'welcome to'                    =>  'welcome to',
-    'welcome visit'                 =>  'welcome visit',
-    'welcome to use'                =>  'welcome to use',
+    'welcome to' => 'welcome to',
+    'welcome visit' => 'welcome visit',
+    'welcome to use' => 'welcome to use',
 ];

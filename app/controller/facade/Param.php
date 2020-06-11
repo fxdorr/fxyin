@@ -36,7 +36,7 @@ class Param
                 $name[1] = [$elem => $name[1]];
             }
             // 融合数据
-            $data = \fxapp\Param::merge($data, $name[1]);
+            $data = $this->merge($data, $name[1]);
         }
         \fxapp\Base::config('app.param.cli', $data);
     }

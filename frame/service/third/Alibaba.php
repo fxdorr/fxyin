@@ -1035,7 +1035,7 @@ class Aliyun extends Alibaba
 
     /**
      * 签名
-     * @param string $param 参数
+     * @param array $param 参数
      * @param string $accessKeySecret 访问密钥
      * @param string $method 方法
      * @return mixed
@@ -1060,7 +1060,7 @@ class Aliyun extends Alibaba
 
     /**
      * 百分号编码
-     * @param string $value 值
+     * @param string $value 键值
      * @return mixed
      */
     private function percentEncode($value = null)

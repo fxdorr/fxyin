@@ -34,8 +34,7 @@ class Math
         }
         $max = strlen($seed) - 1;
         for ($i = 0; $i < $length; $i++) {
-            $hash .= $seed{
-                mt_rand(0, $max)};
+            $hash .= $seed[mt_rand(0, $max)];
         }
         return $hash;
     }

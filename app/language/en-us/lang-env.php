@@ -13,14 +13,14 @@
 return [
     //============================================================
     // noun-n.-noun
-    'chinese'                       =>  'Chinese',
-    'english'                       =>  'English',
+    'chinese' => 'Chinese',
+    'english' => 'English',
 
     // noun phrase
-    'chinese(simplified)'           =>  'Chinese(Simplified)',
-    'chinese(traditional)'          =>  'Chinese(Traditional)',
-    'english(usa)'                  =>  'English(USA)',
-    'english(england)'              =>  'English(England)',
+    'chinese(simplified)' => 'Chinese(Simplified)',
+    'chinese(traditional)' => 'Chinese(Traditional)',
+    'english(usa)' => 'English(USA)',
+    'english(england)' => 'English(England)',
 
     // noun array
     'lang_list' => [

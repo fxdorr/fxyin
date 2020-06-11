@@ -8,6 +8,8 @@
 // +----------------------------------------------------------------------
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
+$tray['scheme'] = $_SERVER['REQUEST_SCHEME'] ?? null;
+$tray['method'] = $_SERVER['REQUEST_METHOD'] ?? null;
 
 /**
  * 基础配置
@@ -30,9 +32,9 @@ return [
             // 主机名称
             'web' => '',
             // 请求方案
-            'scheme' => $_SERVER['REQUEST_SCHEME'] ?? null,
+            'scheme' => !is_null($tray['scheme']) ? strtolower($tray['scheme']) : null,
             // 请求方法
-            'method' => $_SERVER['REQUEST_METHOD'] ?? null,
+            'method' => !is_null($tray['method']) ? strtolower($tray['method']) : null,
             // 名称
             'name' => '',
         ],

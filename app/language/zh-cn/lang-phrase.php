@@ -20,7 +20,7 @@ return [
     // 动词-v.-verb
 
     // 动词词组-verb phrase
-    'welcome to'                    =>  '欢迎来到',
-    'welcome visit'                 =>  '欢迎访问',
-    'welcome to use'                =>  '欢迎使用',
+    'welcome to' => '欢迎来到',
+    'welcome visit' => '欢迎访问',
+    'welcome to use' => '欢迎使用',
 ];
