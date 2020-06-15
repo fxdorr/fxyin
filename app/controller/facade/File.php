@@ -37,7 +37,7 @@ class File
     public function getList($var, $ext = null, $limit = -1)
     {
         // 初始化变量
-        $cace['list'] = [];
+        $tray['list'] = [];
         $ext_list = explode('|', $ext);
         $loop = true;
         if ($limit == 0) {
@@ -47,22 +47,22 @@ class File
         }
         $var = realpath($var);
         if (!is_dir($var)) {
-            return $cace['list'];
+            return $tray['list'];
         }
         $files = scandir($var);
         foreach ($files as $file) {
             if ($file == '.' || $file == '..') {
                 continue;
             }
-            $cace['info'] = $var . DIRECTORY_SEPARATOR . $file;
-            if (is_file($cace['info']) && (in_array(pathinfo($file, PATHINFO_EXTENSION), $ext_list) || is_null($ext))) {
-                $cace['list'][] = $cace['info'];
-            } else if (is_dir($cace['info']) && $loop) {
-                $cace['child'] = $this->getList($cace['info'], $ext, $limit);
-                $cace['list'] = array_merge($cace['list'], $cace['child']);
+            $tray['info'] = $var . DIRECTORY_SEPARATOR . $file;
+            if (is_file($tray['info']) && (in_array(pathinfo($file, PATHINFO_EXTENSION), $ext_list) || is_null($ext))) {
+                $tray['list'][] = $tray['info'];
+            } else if (is_dir($tray['info']) && $loop) {
+                $tray['child'] = $this->getList($tray['info'], $ext, $limit);
+                $tray['list'] = array_merge($tray['list'], $tray['child']);
             }
         }
-        return $cace['list'];
+        return $tray['list'];
     }
 
     /**
@@ -73,7 +73,7 @@ class File
     public function deleteDirectory($var)
     {
         // 初始化变量
-        $cace = [];
+        $tray = [];
         $var = realpath($var);
         if (!is_dir($var)) {
             return false;
@@ -83,11 +83,11 @@ class File
             if ($file == '.' || $file == '..') {
                 continue;
             }
-            $cace['info'] = $var . DIRECTORY_SEPARATOR . $file;
-            if (is_file($cace['info'])) {
-                @unlink($cace['info']);
-            } else if (is_dir($cace['info'])) {
-                $this->deleteDirectory($cace['info']);
+            $tray['info'] = $var . DIRECTORY_SEPARATOR . $file;
+            if (is_file($tray['info'])) {
+                @unlink($tray['info']);
+            } else if (is_dir($tray['info'])) {
+                $this->deleteDirectory($tray['info']);
             }
         }
         @rmdir($var);

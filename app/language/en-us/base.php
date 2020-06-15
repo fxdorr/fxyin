@@ -9,7 +9,7 @@
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
-// english language package
+// base language package
 return [
     //============================================================
     // noun-n.-noun
@@ -261,7 +261,7 @@ return [
     'price' => 'price',
     'activity' => 'activity',
     'feedback' => 'feedback',
-
+    'member2' => 'member',
     // system noun-system noun
     'fxroy' => 'fxroy',
     'fxyin' => 'fxyin',
@@ -301,7 +301,6 @@ return [
     'mage' => 'mage',
     'plume' => 'plume',
     'rune' => 'rune',
-
     // noun phrase-noun phrase
     'log on' => 'log on',
     'longitude and latitude' => 'longitude and latitude',
@@ -314,7 +313,6 @@ return [
     'last page' => 'last page',
     'previous page' => 'previous page',
     'next page' => 'next page',
-
     //============================================================
     // verb-v.-verb
     'return' => 'return',
@@ -359,7 +357,6 @@ return [
     'matching' => 'matching',
     'clean' => 'clean',
     'receive' => 'receive',
-
     // transitive verb-vt.-transitive verb
     'request' => 'request',
     'get' => 'get',
@@ -434,12 +431,10 @@ return [
     'reset' => 'reset',
     'reconnect' => 'reconnect',
     'disconnect' => 'disconnect',
-
     // intransitive verb-vi.-intransitive verb
     'modify' => 'modify',
     'order' => 'order',
     'exist' => 'exist',
-
     // preterite verb-preterite verb
     'requested' => 'requested',
     'got' => 'got',
@@ -502,7 +497,6 @@ return [
     'disabled2' => 'disabled',
     'checked2' => 'checked',
     'established' => 'established',
-
     // present participle verb-present participle verb
     'requesting' => 'requesting',
     'getting' => 'getting',
@@ -565,7 +559,6 @@ return [
     'reconnecting' => 'reconnecting',
     'disconnecting' => 'disconnecting',
     'inuse' => 'inuse',
-
     // verb phrase-verb phrase
     'sign in' => 'sign in',
     'log in' => 'log in',
@@ -580,7 +573,6 @@ return [
     'lock screen' => 'lock screen',
     'start up' => 'start up',
     'go to' => 'go to',
-
     //============================================================
     // adverb-adv.-adverb
     'not' => 'not',
@@ -590,6 +582,7 @@ return [
     'here' => 'here',
     'there' => 'there',
     'where' => 'where',
+    'where2' => 'where',
     'lately' => 'lately',
     'again' => 'again',
     'afresh' => 'afresh',
@@ -600,14 +593,12 @@ return [
     'after' => 'after',
     'ago' => 'ago',
     'later' => 'later',
-
     // adverb phrase-adverb phrase
     'less than' => 'less than',
     'more than' => 'more than',
     'isnot' => 'isn\'t',
     'donot' => 'don\'t',
     'at least' => 'at least',
-
     //============================================================
     // adjective-adj.-adjective
     'equal' => 'equal',
@@ -656,14 +647,12 @@ return [
     'other' => 'other',
     'current' => 'current',
     'failed' => 'failed',
-
     //============================================================
     // conjunction-conj.-conjunction
     'and' => 'and',
     'and2' => 'and',
     'or' => 'or',
     'if' => 'if',
-
     //============================================================
     // preposition-prep.-preposition
     'through' => 'through',
@@ -672,10 +661,8 @@ return [
     'to2' => 'to',
     'under' => 'under',
     'higher' => 'higher',
-
     //============================================================
     // article-art.-article
-
     //============================================================
     // pronoun-pron.-pronoun
     'this' => 'this',
@@ -690,23 +677,18 @@ return [
     'each2' => 'each',
     'all' => 'all',
     'all2' => 'all',
-
     //============================================================
     // interjection-interj.-interjection
     'please' => 'please',
-
     //============================================================
     // numeral-num.-numeral
-
     //============================================================
     // auxiliary verb-aux.v.-auxiliary verb
     'have' => 'have',
     'must' => 'must',
     'will' => 'will',
-
     // auxiliary verb phrase-auxiliary verb phrase
     'not have' => 'not have',
-
     //============================================================
     // abbreviations-abbr.-abbreviations
     'xor' => 'xor',
@@ -735,7 +717,6 @@ return [
     'attach' => 'attach',
     'sn' => 'sn',
     'url2' => 'url',
-
     //============================================================
     // symbol-symbol
     '[' => '[',

@@ -38,7 +38,7 @@ class Lang
      * 语言Cookie变量
      * @var string
      */
-    protected static $langCookieVar = 'fxyin_var';
+    protected static $langCookieVar = 'lang';
 
     /**
      * 语言Cookie的过期时间

@@ -13,12 +13,9 @@
 return [
     //============================================================
     // noun-n.-noun
-
     // noun phrase
-
     //============================================================
     // verb-v.-verb
-
     // verb phrase-verb phrase
     'welcome to' => 'welcome to',
     'welcome visit' => 'welcome visit',

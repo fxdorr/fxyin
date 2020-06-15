@@ -92,13 +92,15 @@ class Text
      * 打散字符串
      * @param string $separator 分割字符串
      * @param string $string 字符串
-     * @return mixed
+     * @return array
      */
     public function explode($separator, $string)
     {
         // 初始化变量
         if (is_null($string) || '' == $string) {
             return [];
+        } else if (!is_string($string) && !is_numeric($string)) {
+            return [$string];
         }
         return array_values(array_unique(explode($separator, $string)));
     }

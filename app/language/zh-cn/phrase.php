@@ -9,22 +9,15 @@
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
-// language list package
+// 语言短语包
 return [
     //============================================================
-    // noun-n.-noun
-    'chinese' => 'Chinese',
-    'english' => 'English',
-
-    // noun phrase
-    'chinese(simplified)' => 'Chinese(Simplified)',
-    'chinese(traditional)' => 'Chinese(Traditional)',
-    'english(usa)' => 'English(USA)',
-    'english(england)' => 'English(England)',
-
-    // noun array
-    'lang_list' => [
-        'zh-cn' => 'Chinese(Simplified)',
-        'en-us' => 'English（USA）',
-    ],
+    // 名词-n.-noun
+    // 名词词组
+    //============================================================
+    // 动词-v.-verb
+    // 动词词组-verb phrase
+    'welcome to' => '欢迎来到',
+    'welcome visit' => '欢迎访问',
+    'welcome to use' => '欢迎使用',
 ];

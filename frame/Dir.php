@@ -537,7 +537,7 @@ class Dir
         while (false !== ($file = readdir($handle))) {
             if ($file != "." && $file != "..") {
                 is_dir("$source/$file") ?
-                    Dir::copyDir("$source/$file", "$destination/$file") :
+                    $this->copyDir("$source/$file", "$destination/$file") :
                     copy("$source/$file", "$destination/$file");
             }
         }

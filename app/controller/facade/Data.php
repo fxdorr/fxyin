@@ -17,93 +17,100 @@ class Data
 {
     /**
      * SQL-条件
-     * @param array $var 变量
-     * @param string $key 键
-     * @param string $value 值
+     * @param array $data 数据
+     * @param string $key 键名
+     * @param string $value 键值
      * @param string $comparison 表达式
      * @param string $logic 逻辑
      * @param int $rank 排序
      * @return string
      */
-    public function where($var, $key, $value, $comparison, $logic, $rank)
+    public function where($data, $key, $value, $comparison, $logic, $rank)
     {
-        if (!is_array($var) || is_null($key) || is_null($value) || is_null($comparison) || is_null($logic)) {
-            return $var;
+        // 初始化变量
+        if (!is_array($data) || is_null($key) || is_null($value) || is_null($comparison) || is_null($logic)) {
+            return $data;
         }
         // 过滤非法字符
         $safe = $this->whereSafe($value, $comparison);
         if (false === $safe) {
-            return $var;
+            return $data;
         }
         // 搭建函数组合
         $build = $this->whereBuild($key, $safe, $comparison);
-        $data = [
+        $elem = [
             'build' => $build,
             'logic' => $logic,
             'rank' => $rank,
         ];
-        $var[] = $data;
-        return $var;
+        $data[] = $elem;
+        return $data;
     }
 
     /**
      * SQL-条件安检
-     * @param string $var 变量
+     * @param string $value 键值
      * @param string $comparison 表达式
      * @return string
      */
-    public function whereSafe($var, &$comparison)
+    public function whereSafe($value, &$comparison)
     {
-        if (is_null($var)) {
-            return $var;
+        // 初始化变量
+        if (!(is_string($value) || is_numeric($value) || is_array($value) || is_object($value))) {
+            return false;
+        }
+        if (is_numeric($value)) {
+            $value = (string) $value;
+        } else if (is_object($value)) {
+            $value = (array) $value;
         }
         // 拆解表达式
         switch ($comparison) {
             default:
-                if (!is_array($var)) {
-                    $var = [$var];
+                if (!is_array($value)) {
+                    $value = [$value];
                 }
                 break;
             case 'in':
             case 'not in':
-                if (!is_array($var)) {
-                    $var = explode(',', $var);
+                if (!is_array($value)) {
+                    $value = explode(',', $value);
                 }
                 break;
             case 'like':
             case 'not like':
-                if (!is_array($var)) {
-                    $var = [$var];
+                if (!is_array($value)) {
+                    $value = [$value];
                 }
                 break;
             case 'like fuzzy':
             case 'not like fuzzy':
-                if (!is_array($var)) {
-                    $var = [$var];
+                if (!is_array($value)) {
+                    $value = [$value];
                 }
                 break;
             case 'between':
             case 'not between':
-                if (is_string($var) && mb_strpos($var, ' and ', null, 'utf-8') !== false) {
-                    $var = explode(' and ', $var);
-                } else if (!is_array($var)) {
-                    $var = explode(',', $var);
+                if (is_string($value) && mb_strpos($value, ' and ', null, 'utf-8') !== false) {
+                    $value = explode(' and ', $value);
+                } else if (!is_array($value)) {
+                    $value = explode(',', $value);
                 }
-                if (count($var) < 2) {
+                if (count($value) < 2) {
                     return false;
                 }
                 break;
             case 'find_in_set':
-                if (!is_array($var)) {
-                    $var = explode(',', $var);
+                if (!is_array($value)) {
+                    $value = explode(',', $value);
                 }
                 break;
         }
-        // 过滤表达式
-        $search = ["\\", "\'", "&", "\"", "<", ">"];
-        $replace = ["\\\\", "\\\'", "&amp;", "&quot;", "&lt;", "&gt;"];
-        foreach ($var as $key => $value) {
-            // 包装表达式
+        // 过滤键值
+        $search = ['\\', '\''];
+        $replace = ['\\\\', '\\\''];
+        foreach ($value as $index => $elem) {
+            // 包装键值
             switch ($comparison) {
                 case 'like':
                 case 'not like':
@@ -116,52 +123,51 @@ class Data
                     $replace = array_merge($replace, ['//', '/%', '/_']);
                     break;
             }
+            // 过滤键值
             foreach ($search as $key2 => $value2) {
-                $var[$key] = str_replace($value2, $replace[$key2], $var[$key]);
+                $elem = str_replace($value2, $replace[$key2], $elem);
             }
-            // 包装表达式
+            // 包装键值
             switch ($comparison) {
                 default:
-                    $var[$key] = '\'' . $var[$key] . '\'';
+                    $elem = '\'' . $elem . '\'';
                     break;
                 case 'like fuzzy':
                 case 'not like fuzzy':
-                    $var[$key] = '\'%' . $var[$key] . '%\'';
-                    break;
-                case 'find_in_set':
-                    $var[$key] = $var[$key];
+                    $elem = '\'%' . $elem . '%\'';
                     break;
             }
+            $value[$index] = $elem;
         }
         // 组装表达式
         switch ($comparison) {
             default:
-                $var = implode('', $var);
+                $value = implode('', $value);
                 break;
             case 'in':
             case 'not in':
-                if (!count($var)) {
-                    $var[] = "''";
+                if (!count($value)) {
+                    $value[] = '\'\'';
                 }
-                $var = implode(',', $var);
+                $value = implode(',', $value);
                 break;
             case 'like':
             case 'not like':
-                $var = implode('', $var) . " escape '/'";
+                $value = implode('', $value) . ' escape \'/\'';
                 break;
             case 'like fuzzy':
             case 'not like fuzzy':
-                $var = implode('', $var) . " escape '/'";
+                $value = implode('', $value) . ' escape \'/\'';
                 break;
             case 'between':
             case 'not between':
-                $var = implode(' and ', $var);
+                $value = implode(' and ', $value);
                 break;
             case 'find_in_set':
-                if (!count($var)) {
-                    $var[] = "''";
+                if (!count($value)) {
+                    $value[] = '\'\'';
                 }
-                $var = implode(',', $var);
+                $value = implode(',', $value);
                 break;
         }
         // 解析表达式
@@ -173,70 +179,78 @@ class Data
                 $comparison = 'not like';
                 break;
         }
-        return $var;
+        return $value;
     }
 
     /**
      * SQL-条件搭建
-     * @param string $key 键
-     * @param string $value 值
+     * @param string $key 键名
+     * @param string $value 键值
      * @param string $comparison 表达式
      * @return string
      */
     public function whereBuild($key, $value, $comparison)
     {
         // 初始化变量
-        $data = '';
+        $echo = '';
         // 组装函数
         switch ($comparison) {
             default:
-                $data = "{$key} {$comparison} {$value}";
+                $echo = $key . ' ' . $comparison . ' ' . $value;
                 break;
             case 'in':
             case 'not in':
-                $data = "{$key} {$comparison} ({$value})";
+                $echo = $key . ' ' . $comparison . ' (' . $value . ')';
                 break;
             case 'find_in_set':
                 $value = explode(',', $value);
-                foreach ($value as $key2 => $value2) {
-                    if ($data) {
-                        $data .= " or {$comparison}({$value2},{$key})";
+                foreach ($value as $value2) {
+                    if ($echo) {
+                        $echo .= ' or ' . $comparison . '(' . $value2 . ',' . $key . ')';
                     } else {
-                        $data = "{$comparison}({$value2},{$key})";
+                        $echo = $comparison . '(' . $value2 . ',' . $key . ')';
                     }
                 }
-                $data = "({$data})";
+                $echo = '(' . $echo . ')';
                 break;
         }
-        return $data;
+        return $echo;
     }
 
     /**
      * SQL-条件组装
-     * @param array $var 变量
+     * @param array $data 数据
      * @param int $type 类型
      * @return string
      */
-    public function whereMake($var, $type = 1)
+    public function whereMake($data, $type = 1)
     {
-        $data = [];
-        if (!is_array($var)) {
-            return $var;
+        $echo = [];
+        if (!is_array($data)) {
+            return $data;
         }
         // 搭建查询组合
-        foreach ($var as $key => $value) {
-            if (isset($data[$value['rank']])) {
-                $data[$value['rank']] .= " {$value['logic']} {$value['build']}";
+        foreach ($data as $key => $value) {
+            if (isset($echo[$value['rank']])) {
+                $echo[$value['rank']] .= ' ' . $value['logic'] . ' ' . $value['build'];
             } else {
-                $data[$value['rank']] = $value['build'];
+                $echo[$value['rank']] = $value['build'];
             }
         }
+        // 搭建查询组合
         foreach ($data as $key => $value) {
-            if ($key == 1) continue;
-            $value = "({$value})";
-            $data[$key] = $value;
+            if (isset($echo[$value['rank']])) {
+                $echo[$value['rank']] .= " {$value['logic']} {$value['build']}";
+            } else {
+                $echo[$value['rank']] = $value['build'];
+            }
         }
-        $data = implode(' and ', $data);
+        foreach ($echo as $key => $value) {
+            if ($key == 1) continue;
+            $value = '(' . $value . ')';
+            $echo[$key] = $value;
+        }
+        $echo = implode(' and ', $echo);
         switch ($type) {
             default:
             case 1:
@@ -244,10 +258,50 @@ class Data
                 break;
             case 2:
                 // 拼接Where
-                $data = strlen($data) > 0 ? 'where ' . $data : $data;
+                $echo = strlen($echo) > 0 ? 'where ' . $echo : $echo;
                 break;
         }
-        return $data;
+        return $echo;
+    }
+
+    /**
+     * SQL-插入
+     * @param string $table 表名
+     * @param array $data 数据
+     * @return bool|string
+     */
+    public function insert($table, $data)
+    {
+        if (!is_string($table) || !is_array($data) || count($data) < 1) {
+            return false;
+        }
+        // 疏理键名
+        $tray['key'] = array_keys(current($data));
+        $tray['key'] = array_map(function ($value) {
+            return '`' . $value . '`';
+        }, $tray['key']);
+        $tray['key'] = implode(',', $tray['key']);
+        // 疏理键值
+        $tray['value'] = [];
+        foreach ($data as $elem) {
+            $elem = array_map(function ($value) {
+                if (is_null($value)) $value = 'null';
+                // 过滤键值
+                $search = ['\\', '\''];
+                $replace = ['\\\\', '\\\''];
+                foreach ($search as $key2 => $value2) {
+                    $value = str_replace($value2, $replace[$key2], $value);
+                }
+                $value = '\'' . $value . '\'';
+                return $value;
+            }, $elem);
+            $elem = '(' . implode(',', $elem) . ')';
+            $tray['value'][] = $elem;
+        }
+        $tray['value'] = implode(',', $tray['value']);
+        // 拼接Insert
+        $echo = 'insert into `' . $table . '` (' . $tray['key'] . ')' . ' values' . $tray['value'];
+        return $echo;
     }
 
     /**
@@ -272,8 +326,8 @@ class Data
         $fields = implode(',', array_map(function ($value) {
             return "'" . $value . "'";
         }, $fields));
-        $sql = sprintf("UPDATE `%s` SET %s WHERE `%s` IN (%s) %s", $table, $case, $field, $fields, $where);
-        return $sql;
+        $echo = sprintf("update `%s` SET %s where `%s` in (%s) %s", $table, $case, $field, $fields, $where);
+        return $echo;
     }
 
     /**
@@ -284,22 +338,22 @@ class Data
      */
     public function updateCase($data, $field)
     {
-        $sql = '';
-        $keys = array_keys(current($data));
+        $echo = '';
+        $keys = array_keys(current($data) ?: []);
         foreach ($keys as $column) {
-            $sql .= sprintf("`%s` = CASE `%s` \n", $column, $field);
+            $echo .= sprintf("`%s` = case `%s` \n", $column, $field);
             foreach ($data as $line) {
                 // 过滤表达式
-                $search = ["\\", "\'", "\""];
-                $replace = ["\\\\", "\\\'", "\\\""];
+                $search = ['\\', '\''];
+                $replace = ['\\\\', '\\\''];
                 foreach ($search as $key2 => $value2) {
                     $line[$column] = str_replace($value2, $replace[$key2], $line[$column]);
                 }
-                $sql .= sprintf("WHEN '%s' THEN '%s' \n", $line[$field], $line[$column]);
+                $echo .= sprintf("when '%s' then '%s' \n", $line[$field], $line[$column]);
             }
-            $sql .= "END,";
+            $echo .= 'end,';
         }
-        return rtrim($sql, ',');
+        return rtrim($echo, ',');
     }
 
     /**
@@ -464,7 +518,7 @@ class Data
             default:
             case 1:
                 // 日期时间
-                $bool = 'from_unixtime(' . $field . ')';
+                $bool = 'from_unixtime(' . $field . ',\'%Y-%m-%d %H:%i:%S\')';
                 break;
             case 2:
                 // 日期
