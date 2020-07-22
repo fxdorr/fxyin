@@ -18,30 +18,61 @@ class Data
     /**
      * SQL-条件
      * @param array $data 数据
-     * @param string $key 键名
-     * @param string $value 键值
-     * @param string $comparison 表达式
-     * @param string $logic 逻辑
-     * @param int $rank 排序
-     * @return string
+     * @param array $param 参数
+     * @return array
      */
-    public function where($data, $key, $value, $comparison, $logic, $rank)
+    public function where($data, $param)
     {
         // 初始化变量
-        if (!is_array($data) || is_null($key) || is_null($value) || is_null($comparison) || is_null($logic)) {
+        $predefined = [
+            // 键名
+            0 => null,
+            // 键值
+            1 => null,
+            // 方法
+            2 => null,
+            // 逻辑
+            3 => 'and',
+            // 分组
+            4 => 1,
+            // 取反
+            5 => 0,
+        ];
+        $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
+        $predefined = [
+            // 键名
+            'key' => $param[0],
+            // 键值
+            'value' => $param[1],
+            // 方法
+            'method' => $param[2],
+            // 逻辑
+            'logic' => $param[3],
+            // 分组
+            'group' => $param[4],
+            // 取反
+            'not' => $param[5],
+        ];
+        $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
+        if (!is_array($data)) {
             return $data;
         }
         // 过滤非法字符
-        $safe = $this->whereSafe($value, $comparison);
-        if (false === $safe) {
+        $param['value'] = $this->whereSafe($param['value'], $param['method']);
+        if (false === $param['value']) {
             return $data;
         }
-        // 搭建函数组合
-        $build = $this->whereBuild($key, $safe, $comparison);
+        // 搭建表达式
+        $build = $this->whereBuild($param['key'], $param['value'], $param['method']);
         $elem = [
+            // 表达式
             'build' => $build,
-            'logic' => $logic,
-            'rank' => $rank,
+            // 逻辑
+            'logic' => $param['logic'],
+            // 分组
+            'group' => $param['group'],
+            // 取反
+            'not' => $param['not'],
         ];
         $data[] = $elem;
         return $data;
@@ -50,22 +81,24 @@ class Data
     /**
      * SQL-条件安检
      * @param string $value 键值
-     * @param string $comparison 表达式
+     * @param string $method 方法
      * @return string
      */
-    public function whereSafe($value, &$comparison)
+    public function whereSafe($value, &$method)
     {
         // 初始化变量
         if (!(is_string($value) || is_numeric($value) || is_array($value) || is_object($value))) {
             return false;
+        } else if (is_null($method)) {
+            return $value;
         }
         if (is_numeric($value)) {
             $value = (string) $value;
         } else if (is_object($value)) {
             $value = (array) $value;
         }
-        // 拆解表达式
-        switch ($comparison) {
+        // 拆解方法
+        switch ($method) {
             default:
                 if (!is_array($value)) {
                     $value = [$value];
@@ -111,7 +144,7 @@ class Data
         $replace = ['\\\\', '\\\''];
         foreach ($value as $index => $elem) {
             // 包装键值
-            switch ($comparison) {
+            switch ($method) {
                 case 'like':
                 case 'not like':
                     $search = array_merge($search, ['/', '_']);
@@ -128,7 +161,7 @@ class Data
                 $elem = str_replace($value2, $replace[$key2], $elem);
             }
             // 包装键值
-            switch ($comparison) {
+            switch ($method) {
                 default:
                     $elem = '\'' . $elem . '\'';
                     break;
@@ -139,8 +172,8 @@ class Data
             }
             $value[$index] = $elem;
         }
-        // 组装表达式
-        switch ($comparison) {
+        // 组装方法
+        switch ($method) {
             default:
                 $value = implode('', $value);
                 break;
@@ -170,13 +203,13 @@ class Data
                 $value = implode(',', $value);
                 break;
         }
-        // 解析表达式
-        switch ($comparison) {
+        // 解析方法
+        switch ($method) {
             case 'like fuzzy':
-                $comparison = 'like';
+                $method = 'like';
                 break;
             case 'not like fuzzy':
-                $comparison = 'not like';
+                $method = 'not like';
                 break;
         }
         return $value;
@@ -186,32 +219,32 @@ class Data
      * SQL-条件搭建
      * @param string $key 键名
      * @param string $value 键值
-     * @param string $comparison 表达式
+     * @param string $method 方法
      * @return string
      */
-    public function whereBuild($key, $value, $comparison)
+    public function whereBuild($key, $value, $method)
     {
         // 初始化变量
-        $echo = '';
         // 组装函数
-        switch ($comparison) {
+        switch ($method) {
             default:
-                $echo = $key . ' ' . $comparison . ' ' . $value;
+                $echo = [$key, $method, $value];
+                $echo = array_filter($echo, function ($value) {
+                    return !is_blank($value);
+                });
+                $echo = implode(' ', $echo);
                 break;
             case 'in':
             case 'not in':
-                $echo = $key . ' ' . $comparison . ' (' . $value . ')';
+                $echo = $key . ' ' . $method . ' (' . $value . ')';
                 break;
             case 'find_in_set':
                 $value = explode(',', $value);
-                foreach ($value as $value2) {
-                    if ($echo) {
-                        $echo .= ' or ' . $comparison . '(' . $value2 . ',' . $key . ')';
-                    } else {
-                        $echo = $comparison . '(' . $value2 . ',' . $key . ')';
-                    }
+                $echo = [];
+                foreach ($value as $cell) {
+                    $echo[] = $method . '(' . $cell . ',' . $key . ')';
                 }
-                $echo = '(' . $echo . ')';
+                $echo = '(' . implode(' or ', $echo) . ')';
                 break;
         }
         return $echo;
@@ -225,26 +258,30 @@ class Data
      */
     public function whereMake($data, $type = 1)
     {
-        $echo = [];
+        // 初始化变量
         if (!is_array($data)) {
             return $data;
         }
-        // 搭建查询组合
+        // 疏理条件
+        $where = [];
         foreach ($data as $key => $value) {
-            if (isset($echo[$value['rank']])) {
-                $echo[$value['rank']] .= ' ' . $value['logic'] . ' ' . $value['build'];
-            } else {
-                $echo[$value['rank']] = $value['build'];
-            }
+            $where = $this->where($where, $value);
         }
         // 搭建查询组合
-        foreach ($data as $key => $value) {
-            if (isset($echo[$value['rank']])) {
-                $echo[$value['rank']] .= " {$value['logic']} {$value['build']}";
+        $echo = [];
+        foreach ($where as $key => $value) {
+            // 校验表达式
+            if (is_blank($value['build'])) continue;
+            // 配置取反
+            if ($value['not']) $value['build'] = '!(' . $value['build'] . ')';
+            // 疏理分组
+            if (isset($echo[$value['group']])) {
+                $echo[$value['group']] .= ' ' . $value['logic'] . ' ' . $value['build'];
             } else {
-                $echo[$value['rank']] = $value['build'];
+                $echo[$value['group']] = $value['build'];
             }
         }
+        // 组装条件语句
         foreach ($echo as $key => $value) {
             if ($key == 1) continue;
             $value = '(' . $value . ')';
@@ -308,26 +345,113 @@ class Data
      * SQL-更新
      * @param string $table 表名
      * @param array $data 数据
-     * @param string $field string 字段
-     * @param array $param array 参数
+     * @param array $param 参数
      * @return bool|string
      */
-    public function update($table, $data, $field = 'id', $param = [])
+    public function update($table, $data, $param = [])
     {
-        if (!is_string($table) || !is_array($data) || !is_string($field) || !is_array($param)) {
+        if (!is_string($table) || !is_array($data) || !is_array($param)) {
             return false;
         }
-        $case = $this->updateCase($data, $field);
-        $where = $this->updateParam($param);
-        // 获取所有键名为$field列的值，值两边加上单引号，保存在$fields数组中
-        // array_column()函数需要PHP5.5.0+，如果小于这个版本，可以自己实现，
-        // 参考地址：http://php.net/manual/zh/function.array-column.php#118831
-        $fields = array_column($data, $field);
-        $fields = implode(',', array_map(function ($value) {
-            return "'" . $value . "'";
-        }, $fields));
-        $echo = sprintf("update `%s` SET %s where `%s` in (%s) %s", $table, $case, $field, $fields, $where);
+        // 疏理主键
+        $param['key'] = !is_blank($param['key']) ? $param['key'] : 'id';
+        // 疏理数据
+        $data = array_map(function ($data) {
+            $data = array_map(function ($data) {
+                // 过滤表达式
+                $search = ['\\', '\''];
+                $replace = ['\\\\', '\\\''];
+                foreach ($search as $key => $value) {
+                    $data = str_replace($value, $replace[$key], $data);
+                }
+                return '\'' . $data . '\'';
+            }, $data);
+            return $data;
+        }, $data);
+        $tray['value'] = [];
+        // 疏理替换值
+        foreach ($data as $elem) {
+            foreach ($elem as $key => $cell) {
+                $tray['value'][$key][$elem[$param['key']]] = $cell;
+            }
+        }
+        // 疏理替换值
+        $tray['value'] = array_map(function ($value) {
+            foreach ($value as $key => $value) {
+                $data[] = implode(' ', ['when', $key, 'then', $value]);
+            }
+            $data = implode(PHP_EOL, $data);
+            return $data;
+        }, $tray['value']);
+        $echo = [];
+        foreach ($tray['value'] as $key => $value) {
+            $echo[] = implode('', [PHP_EOL, '`', $key, '` = case `', $param['key'], '`', PHP_EOL, '', $value, PHP_EOL, 'end']);
+        }
+        $echo = implode(',', $echo);
+        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where `' . $param['key'] . '` in (' . implode(',', array_column($data, $param['key'])) . ')';
         return $echo;
+
+
+        // $echo = [];
+        // fxy_dump($data);
+        // foreach ($data as $key => $value) {
+        //     foreach ($value as $key2 => $value2) {
+        //         // 过滤表达式
+        //         $search = ['\\', '\''];
+        //         $replace = ['\\\\', '\\\''];
+        //         foreach ($search as $key3 => $value3) {
+        //             $value2 = str_replace($value3, $replace[$key3], $value2);
+        //         }
+        //         $data[$key][$key2] = $value2;
+        //         $echo[$key2][$value[$field]] = $value2;
+        //     }
+        // }
+        // fxy_dump($echo);
+        // // 疏理详情图
+        // $echo = array_map(function ($value) {
+        //     foreach ($value as $key => $value) {
+        //         $data[] = 'when "' . $key . '" then "' . $value . '"';
+        //     }
+        //     $data = implode(PHP_EOL, $data);
+        //     return $data;
+        // }, $echo);
+        // $echo2 = [];
+        // foreach ($echo as $key => $value) {
+        //     $echo2[] = '`' . $key . '` = case `' . $field . '` ' . $value . ' end';
+        // }
+        // $echo2 = implode(',', $echo2);
+        // fxy_dump($echo);
+        // fxy_dump($field);
+        // $echo2 = 'update ' . $table . ' set ' . $echo2 . ' where ' . $field . ' in (' . implode(',', array_column($data, $field)) . ')';
+        // fxy_dump($echo2);
+        // fxy_dump("UPDATE categories 
+        // SET display_order = CASE id 
+        // WHEN 1 THEN 3 
+        // WHEN 2 THEN 4 
+        // WHEN 3 THEN 5 
+        // END, 
+        // title = CASE id 
+        // WHEN 1 THEN 'New Title 1' 
+        // WHEN 2 THEN 'New Title 2' 
+        // WHEN 3 THEN 'New Title 3' 
+        // END 
+        // WHERE id IN (1,2,3) ");
+        // exit;
+
+
+
+
+        // $case = $this->updateCase($data, $field);
+        // $where = $this->updateParam($param);
+        // // 获取所有键名为$field列的值，值两边加上单引号，保存在$fields数组中
+        // // array_column()函数需要PHP5.5.0+，如果小于这个版本，可以自己实现，
+        // // 参考地址：http://php.net/manual/zh/function.array-column.php#118831
+        // $fields = array_column($data, $field);
+        // $fields = implode(',', array_map(function ($value) {
+        //     return "'" . $value . "'";
+        // }, $fields));
+        // $echo = sprintf("update `%s` SET %s where `%s` in (%s) %s", $table, $case, $field, $fields, $where);
+        // return $echo;
     }
 
     /**
@@ -374,7 +498,7 @@ class Data
      * 处理参数-更新比较
      * @param array $data_new 新数据
      * @param array $data_old 旧数据
-     * @return mixed
+     * @return array
      */
     public function updateContrast($data_new, $data_old)
     {
@@ -382,21 +506,27 @@ class Data
         $echo = \fxapp\Server::echo();
         if (!isset($data_new)) {
             $echo[0] = false;
+            $echo[1] = 1002;
             $echo[2] = \fxapp\Base::lang(['lack', 'new', 'data']);
+            return $echo;
         } else if (!isset($data_old)) {
             $echo[0] = false;
+            $echo[1] = 1002;
             $echo[2] = \fxapp\Base::lang(['lack', 'old', 'data']);
-        } else if (is_array($data_new) && is_array($data_old)) {
-            foreach ($data_new as $key => $value) {
-                if ($value != $data_old[$key]) {
-                    $echo[0] = false;
-                    $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
-                    break;
-                }
-            }
-        } else {
+            return $echo;
+        } else if (!is_array($data_new) || !is_array($data_old)) {
             $echo[0] = false;
+            $echo[1] = 1002;
             $echo[2] = \fxapp\Base::lang(['data', 'format', 'error']);
+            return $echo;
+        }
+        foreach ($data_new as $key => $value) {
+            if ($value != $data_old[$key]) {
+                $echo[0] = false;
+                $echo[1] = 1002;
+                $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
+                break;
+            }
         }
         return $echo;
     }
@@ -481,7 +611,7 @@ class Data
      */
     public function fieldText($field, $replace = '', $mode = 1)
     {
-        if (!$this->paramEmpty([$field])[0]) {
+        if (!$this->paramEmpty([$field], 1)[0]) {
             $field = '\'' . $field . '\'';
         }
         switch ($mode) {
@@ -511,7 +641,7 @@ class Data
      */
     public function fieldDate($field, $replace = '', $type = 1)
     {
-        if (!$this->paramEmpty([$field])[0]) {
+        if (!$this->paramEmpty([$field], 1)[0]) {
             $field = '\'' . $field . '\'';
         }
         switch ($type) {
@@ -542,7 +672,7 @@ class Data
      * 处理HTML-过滤
      * @param string $string 字符串
      * @param string $flags 标签
-     * @return mixed
+     * @return string
      */
     public function htmlFilter($string, $flags = null)
     {
@@ -572,7 +702,7 @@ class Data
      * 处理HTML-移除
      * @param string $string 字符串
      * @param string $flags 标签
-     * @return mixed
+     * @return string
      */
     public function htmlRemove($string, $flags = null)
     {
@@ -598,26 +728,25 @@ class Data
      * @param string $parnet_name 父名称
      * @param string $index 索引
      * @param string $child_name 子名称
-     * @return mixed
+     * @return array
      */
     public function listToTree($list, $parent_id = 0, $parnet_name = 'parent_id', $index = 'id', $child_name = '_child')
     {
         // 初始化变量
-        $tree = array();
-        if (is_array($list)) {
-            $refer = array();
-            foreach ($list as $key => $value) {
-                $refer[$value[$index]] = &$list[$key];
-            }
-            foreach ($list as $key => $value) {
-                $parentId = $value[$parnet_name];
-                if ($parentId == $parent_id) {
-                    $tree[] = &$list[$key];
-                } else {
-                    if (isset($refer[$parentId])) {
-                        $parent = &$refer[$parentId];
-                        $parent[$child_name][] = &$list[$key];
-                    }
+        $tree = [];
+        if (!is_array($list)) return $tree;
+        $refer = [];
+        foreach ($list as $key => $value) {
+            $refer[$value[$index]] = &$list[$key];
+        }
+        foreach ($list as $key => $value) {
+            $parentId = $value[$parnet_name];
+            if ($parentId == $parent_id) {
+                $tree[] = &$list[$key];
+            } else {
+                if (isset($refer[$parentId])) {
+                    $parent = &$refer[$parentId];
+                    $parent[$child_name][] = &$list[$key];
                 }
             }
         }
@@ -625,9 +754,47 @@ class Data
     }
 
     /**
+     * 处理参数-补全
+     * @param array $param 参数
+     * @return array
+     */
+    public function paramRepair($param)
+    {
+        // 初始化变量
+        $echo = \fxapp\Server::echo();
+        if (!isset($param)) {
+            $echo[0] = false;
+            $echo[1] = 1000;
+            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
+            return $echo;
+        } else if (!is_array($param)) {
+            $echo[0] = false;
+            $echo[1] = 1001;
+            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            return $echo;
+        }
+        // 抽取主键
+        $tray['format'] = [];
+        foreach ($param as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                $tray['format'][$key2] = '';
+            }
+        }
+        // 补全主键
+        foreach ($param as $key => $value) {
+            foreach ($tray['format'] as $key2 => $value2) {
+                $param[$key][$key2] = $param[$key][$key2] ?? $value2;
+            }
+        }
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $param;
+        return $echo;
+    }
+
+    /**
      * 处理参数-过滤
      * @param array $param 参数
-     * @return mixed
+     * @return array
      */
     public function paramFilter($param)
     {
@@ -637,49 +804,76 @@ class Data
             $echo[0] = false;
             $echo[1] = 1000;
             $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-        } else if (is_array($param)) {
-            foreach ($param as $key => $value) {
-                if (is_null($value)) {
-                    unset($param[$key]);
-                }
-            }
-            $echo[2] = \fxapp\Base::lang(['request', 'success']);
-            $echo[3] = $param;
-        } else {
+            return $echo;
+        } else if (!is_array($param)) {
             $echo[0] = false;
             $echo[1] = 1001;
             $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            return $echo;
         }
+        foreach ($param as $key => $value) {
+            if (is_null($value)) {
+                unset($param[$key]);
+            }
+        }
+        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[3] = $param;
         return $echo;
     }
 
     /**
      * 检查参数-空参
      * @param array $param 参数
-     * @return mixed
+     * @param int $type 类型
+     * @return array
      */
-    public function paramEmpty($param)
+    public function paramEmpty($param, $type = 1)
     {
         // 初始化变量
         $echo = \fxapp\Server::echo();
+        $echo[3] = $param;
         if (!isset($param)) {
             $echo[0] = false;
             $echo[1] = 1000;
             $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-        } else if (is_array($param)) {
-            foreach ($param as $key => $value) {
-                if (is_null($value) || $value === '') {
-                    $name = is_numeric($key) ? 'param' : $key;
-                    $echo[0] = false;
-                    $echo[1] = 1000;
-                    $echo[2] = \fxapp\Base::lang(['lack', $name]);
-                    break;
-                }
-            }
-        } else {
+            return $echo;
+        } else if (!is_array($param)) {
             $echo[0] = false;
             $echo[1] = 1001;
             $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            return $echo;
+        }
+        // 疏理键值
+        foreach ($param as $key => $value) {
+            // 识别类型
+            switch ($type) {
+                default:
+                case 1:
+                    // 默认
+                    if (!is_blank($value)) continue 2;
+                    break;
+                case 2:
+                    // 非NULL
+                    if (!is_null($value)) continue 2;
+                    break;
+            }
+            $name = is_numeric($key) ? 'param' : $key;
+            if ($echo[0]) {
+                $echo[0] = false;
+                $echo[1] = 1000;
+                $echo[4]['error']['name'] = 'lack';
+            }
+            $echo[4]['error']['data'][$name] = $value;
+        }
+        // 疏理消息
+        if (!$echo[0]) {
+            $echo[2] = array_keys($echo[4]['error']['data']);
+            $echo[2] = array_map(function ($value) {
+                $value = ['and2', '[', $value, ']'];
+                return $value;
+            }, $echo[2]);
+            unset($echo[2][0][0]);
+            $echo[2] = \fxapp\Base::lang(['lack', $echo[2]]);
         }
         return $echo;
     }
@@ -687,7 +881,7 @@ class Data
     /**
      * 检查参数-非空
      * @param array $param 参数
-     * @return mixed
+     * @return array
      */
     public function paramExist($param)
     {
@@ -697,23 +891,24 @@ class Data
             $echo[0] = false;
             $echo[1] = 1000;
             $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-        } else if (is_array($param)) {
-            foreach ($param as $key => $value) {
-                if (is_null($value) || $value === '') {
-                    $echo[0] = false;
-                    $echo[1] = 1000;
-                    $echo[2] = \fxapp\Base::lang(['lack', 'param']);
-                } else {
-                    $echo[0] = true;
-                    $echo[1] = 0;
-                    $echo[2] = \fxapp\Base::lang(['check', 'success']);
-                    break;
-                }
-            }
-        } else {
+            return $echo;
+        } else if (!is_array($param)) {
             $echo[0] = false;
             $echo[1] = 1001;
             $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
+            return $echo;
+        }
+        foreach ($param as $key => $value) {
+            if (is_blank($value)) {
+                $echo[0] = false;
+                $echo[1] = 1000;
+                $echo[2] = \fxapp\Base::lang(['lack', 'param']);
+            } else {
+                $echo[0] = true;
+                $echo[1] = 0;
+                $echo[2] = \fxapp\Base::lang(['check', 'success']);
+                break;
+            }
         }
         return $echo;
     }

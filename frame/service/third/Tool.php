@@ -70,7 +70,7 @@ class ToolService extends Tool
         $tray['content'] = $entry['content'];
         $tray['file_name'] = $entry['file_name'];
         $tray['file_path'] = $entry['file_path'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         $tray['file_url'] = $entry['file_url'];
         $tray['level'] = $entry['level'];
@@ -113,7 +113,7 @@ class ToolService extends Tool
         $entry = \fxapp\Param::define([$entry, $predefined], '1.1.2');
         $tray['title'] = $entry['title'];
         $tray['data'] = $entry['data'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         $tray['file_name'] = $entry['file_name'];
         // 服务处理

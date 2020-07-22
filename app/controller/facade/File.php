@@ -29,12 +29,12 @@ class File
 
     /**
      * 查询文件-获取列表
-     * @param mixed $var 变量
+     * @param mixed $path 路径
      * @param string $type 类型
      * @param string $limit 次数
      * @return mixed
      */
-    public function getList($var, $ext = null, $limit = -1)
+    public function getList($path, $ext = null, $limit = -1)
     {
         // 初始化变量
         $tray['list'] = [];
@@ -45,16 +45,16 @@ class File
         } else if ($limit > 0) {
             --$limit;
         }
-        $var = realpath($var);
-        if (!is_dir($var)) {
+        $path = realpath($path);
+        if (!is_dir($path)) {
             return $tray['list'];
         }
-        $files = scandir($var);
+        $files = scandir($path);
         foreach ($files as $file) {
             if ($file == '.' || $file == '..') {
                 continue;
             }
-            $tray['info'] = $var . DIRECTORY_SEPARATOR . $file;
+            $tray['info'] = $path . DIRECTORY_SEPARATOR . $file;
             if (is_file($tray['info']) && (in_array(pathinfo($file, PATHINFO_EXTENSION), $ext_list) || is_null($ext))) {
                 $tray['list'][] = $tray['info'];
             } else if (is_dir($tray['info']) && $loop) {
@@ -66,31 +66,59 @@ class File
     }
 
     /**
-     * 处理文件-删除目录
-     * @param mixed $var 变量
+     * 处理文件-移动目录
+     * @param mixed $oldpath 旧路径
+     * @param mixed $newpath 新路径
      * @return mixed
      */
-    public function deleteDirectory($var)
+    public function moveDirectory($oldpath, $newpath)
+    {
+        // 初始化变量
+        $tray['path_old'] = $oldpath;
+        $tray['path_new'] = $newpath;
+        if (!is_dir($tray['path_old'])) {
+            return false;
+        } else if (!is_dir($tray['path_new'])) {
+            \fxyin\Dir::create($tray['path_new']);
+        }
+        // 移除目标文件夹重复文件
+        $tray['file'] = $this->getList($tray['path_old']);
+        $tray['file'] = array_map(function ($value) use ($tray) {
+            $value2 = $tray['path_new'] . pathinfo($value, PATHINFO_BASENAME);
+            @rename($value, $value2);
+            return $value2;
+        }, $tray['file']);
+        // 移除旧目录
+        @rmdir($tray['path_old']);
+        return true;
+    }
+
+    /**
+     * 处理文件-删除目录
+     * @param mixed $path 路径
+     * @return mixed
+     */
+    public function deleteDirectory($path)
     {
         // 初始化变量
         $tray = [];
-        $var = realpath($var);
-        if (!is_dir($var)) {
+        $path = realpath($path);
+        if (!is_dir($path)) {
             return false;
         }
-        $files = scandir($var);
+        $files = scandir($path);
         foreach ($files as $file) {
             if ($file == '.' || $file == '..') {
                 continue;
             }
-            $tray['info'] = $var . DIRECTORY_SEPARATOR . $file;
+            $tray['info'] = $path . DIRECTORY_SEPARATOR . $file;
             if (is_file($tray['info'])) {
                 @unlink($tray['info']);
             } else if (is_dir($tray['info'])) {
                 $this->deleteDirectory($tray['info']);
             }
         }
-        @rmdir($var);
+        @rmdir($path);
         return true;
     }
 

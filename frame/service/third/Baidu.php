@@ -58,7 +58,7 @@ class Lbsyun extends Baidu
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ip'] = $entry['ip'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         // 应用钥匙
         $conf['app_key'] = \fxapp\Base::config('third.baidu.location.app_key');

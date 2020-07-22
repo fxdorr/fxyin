@@ -168,6 +168,7 @@ return [
     'choice' => '选择',
     'page' => '页码',
     'page2' => '页',
+    'page3' => '页面',
     'relationship' => '关系',
     'prompt' => '提示',
     'keyword' => '关键字',
@@ -250,7 +251,7 @@ return [
     'resource' => '资源',
     'remote' => '远程',
     'floor' => '楼',
-    'view' => '查看',
+    'view' => '视图',
     'watermark' => '水印',
     'base' => '基础',
     'loop' => '循环',
@@ -262,6 +263,14 @@ return [
     'activity' => '活动',
     'feedback' => '反馈',
     'member2' => '会员',
+    'promote' => '推广',
+    'picture2' => '图',
+    'subtitle' => '副标题',
+    'website' => '网站',
+    'feature' => '功能',
+    'name3' => '名',
+    'abstract' => '摘要',
+    'routine' => '常规',
     // 系统名词-system noun
     'fxroy' => '方弦',
     'fxyin' => '风音',
@@ -301,6 +310,7 @@ return [
     'mage' => '方士',
     'plume' => '羽流',
     'rune' => '符文',
+    'copyright' => '版权',
     // 名词词组-noun phrase
     'log on' => '登录',
     'longitude and latitude' => '经纬度',
@@ -313,6 +323,7 @@ return [
     'last page' => '尾页',
     'previous page' => '上一页',
     'next page' => '下一页',
+    'not configured' => '未配置',
     //============================================================
     // 动词-v.-verb
     'return' => '返回',
@@ -357,6 +368,8 @@ return [
     'matching' => '匹配',
     'clean' => '清理',
     'receive' => '接收',
+    'require' => '要求',
+    'delete2' => '删除',
     // 及物动词-vt.-transitive verb
     'request' => '请求',
     'get' => '获取',

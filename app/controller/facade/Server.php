@@ -131,7 +131,7 @@ class Server
                 // 通用
                 $base = \fxapp\Base::config('app.echo.format');
                 // 处理数据
-                $data[2] = \fxapp\Base::lang($data[2]);
+                $data[2] = \fxapp\Base::lang($data[2] ?? '');
                 foreach ($base as $key => $value) {
                     if (array_key_exists($key, $data)) {
                         $echo[$value] = $data[$key];

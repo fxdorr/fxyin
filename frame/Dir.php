@@ -15,7 +15,7 @@ namespace fxyin;
  */
 class Dir
 {
-    private $_values = array();
+    private $_values = [];
     public $error = "";
 
     /**
@@ -68,10 +68,10 @@ class Dir
      */
     public function listFile($pathname, $pattern = '*')
     {
-        static $_listDirs = array();
+        static $_listDirs = [];
         $guid = md5($pathname . $pattern);
         if (!isset($_listDirs[$guid])) {
-            $dir = array();
+            $dir = [];
             $list = glob($pathname . $pattern);
             foreach ($list as $i => $file) {
                 // $dir[$i]['filename']    = basename($file);

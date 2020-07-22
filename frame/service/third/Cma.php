@@ -56,7 +56,7 @@ class Cnwea extends Cma
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ctid'] = $entry['ctid'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.cnwea.weather.domain');
@@ -91,7 +91,7 @@ class Cnwea extends Cma
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ctid'] = $entry['ctid'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         // 接口域
         $conf['domain'] = \fxapp\Base::config('third.cnwea.weather2.domain');

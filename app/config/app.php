@@ -14,6 +14,11 @@
  * @return array
  */
 return [
+    // 基础设置
+    'base' => [
+        // 默认时区
+        'timezone' => 'PRC',
+    ],
     // 参数配置
     'param' => [
         // 入参
@@ -73,14 +78,38 @@ return [
     ],
     // 语言配置
     'lang' => [
-        // 开关-多语言
+        // 多语言开关
         'switch' => true,
-        // 前缀-忽略转换
+        // 默认语言
+        'default' => 'zh-cn',
+        // 忽略转换
         'prefix' => '!@',
-        // 前缀-忽略文本
+        // 忽略文本
         'ignore' => '!#',
         // 缓存有效期
+        'expire' => 315360000,
+    ],
+    // Session设置
+    'session' => [
+        // 是否自动开启
+        'auto_start' => true,
+        // 启用安全传输
+        'secure' => false,
+        // httponly设置
+        'httponly' => true,
+    ],
+    // Cookie设置
+    'cookie' => [
+        // 保存时间
         'expire' => 0,
+        // 保存路径
+        'path' => '/',
+        // 有效域名
+        'domain' => '',
+        // 启用安全传输
+        'secure' => false,
+        // httponly设置
+        'httponly' => false,
     ],
     // 媒体配置
     'media' => [

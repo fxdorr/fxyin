@@ -38,7 +38,7 @@ class Push extends Notify
         $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['title'] = $param['title'];
         $tray['content'] = $param['content'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         $tray['param'] = $param['param'];
         // 初始化信息参数
@@ -69,7 +69,7 @@ class Push extends Notify
         $conf['app_secret'] = \fxapp\Base::config('notify.push.jpush.app_secret');
         // SDK地址
         $conf['url_sdk'] = \fxapp\Base::config('notify.push.jpush.url_sdk');
-        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        $tray['check'] = \fxapp\Data::paramEmpty($conf, 1);
         if (!$tray['check'][0]) {
             $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $tray['check'];

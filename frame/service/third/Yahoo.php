@@ -57,7 +57,7 @@ class Yahwea extends Yahoo
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ctname'] = $entry['ctname'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         // 环境
         $conf['env'] = \fxapp\Base::config('third.yahwea.weather.env');

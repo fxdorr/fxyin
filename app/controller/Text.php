@@ -20,7 +20,8 @@ namespace fxapp;
  * @method static mixed strlen(string $string = null, int $start = 0, int $end = 0) 检查字符串长度
  * @method static string letters(string $var, string $in_charset = 'utf-8', string $out_charset = 'gb2312') 首字母组
  * @method static string letter(string $var, string $in_charset = 'utf-8', string $out_charset = 'gb2312') 首字母
- * @method static string timeChange(int|string $time, string $type = null) 处理时间-转换
+ * @method static string timeRange(array|string $time, array $start = [], array $end = []) 处理时间-范围
+ * @method static string timeChange(int|string $time, string $type = null, string $format = null) 处理时间-转换
  * @method static string timeMilli(string $mtime = null) 处理时间-毫米
  * @method static string timeFormat(string $time = null, string $type = null) 处理时间-格式化
  * @method static mixed ipv4(mixed $var, string $type) 解析Ipv4

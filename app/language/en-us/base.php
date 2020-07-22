@@ -168,6 +168,7 @@ return [
     'choice' => 'choice',
     'page' => 'page',
     'page2' => 'page',
+    'page3' => 'page',
     'relationship' => 'relationship',
     'prompt' => 'prompt',
     'keyword' => 'keyword',
@@ -262,6 +263,14 @@ return [
     'activity' => 'activity',
     'feedback' => 'feedback',
     'member2' => 'member',
+    'promote' => 'promote',
+    'picture2' => 'picture',
+    'subtitle' => 'subtitle',
+    'website' => 'website',
+    'feature' => 'feature',
+    'name3' => 'name',
+    'abstract' => 'abstract',
+    'routine' => 'routine',
     // system noun-system noun
     'fxroy' => 'fxroy',
     'fxyin' => 'fxyin',
@@ -301,6 +310,7 @@ return [
     'mage' => 'mage',
     'plume' => 'plume',
     'rune' => 'rune',
+    'copyright' => 'copyright',
     // noun phrase-noun phrase
     'log on' => 'log on',
     'longitude and latitude' => 'longitude and latitude',
@@ -313,6 +323,7 @@ return [
     'last page' => 'last page',
     'previous page' => 'previous page',
     'next page' => 'next page',
+    'not configured' => 'not configured',
     //============================================================
     // verb-v.-verb
     'return' => 'return',
@@ -357,6 +368,8 @@ return [
     'matching' => 'matching',
     'clean' => 'clean',
     'receive' => 'receive',
+    'require' => 'require',
+    'delete2' => 'del',
     // transitive verb-vt.-transitive verb
     'request' => 'request',
     'get' => 'get',

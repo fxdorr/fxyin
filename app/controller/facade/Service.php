@@ -83,7 +83,7 @@ class Service
         $downloaded_file = fopen($file, 'w');
         fwrite($downloaded_file, $response);
         fclose($downloaded_file);
-        if (\fxapp\Data::paramEmpty([$response])[0]) {
+        if (\fxapp\Data::paramEmpty([$response], 1)[0]) {
             return $file;
         } else {
             return false;

@@ -29,20 +29,19 @@ class Config
      */
     public static function load($file, $name = null)
     {
-        if (is_file($file)) {
-            $data = require $file;
-            if (is_string($name)) {
-                // 解析名称
-                $name = array_reverse(explode('.', $name));
-                foreach ($name as $elem) {
-                    $elem = str_replace('/_', '.', $elem);
-                    $data = [$elem => $data];
-                }
+        // 解析文件
+        if (!is_file($file)) return false;
+        $data = require $file;
+        if (is_string($name)) {
+            // 解析名称
+            $name = array_reverse(explode('.', $name));
+            foreach ($name as $elem) {
+                $elem = str_replace('/_', '.', $elem);
+                $data = [$elem => $data];
             }
-            self::set($data);
-            return true;
         }
-        return false;
+        self::set($data);
+        return true;
     }
 
     /**
@@ -74,9 +73,7 @@ class Config
     public static function get($name = null)
     {
         // 获取所有
-        if (is_null($name)) {
-            return self::$data;
-        }
+        if (is_null($name)) return self::$data;
         // 解析名称
         $name = explode('.', $name);
         $data = self::$data;

@@ -39,7 +39,7 @@ class Sms extends Notify
         ];
         $param['_param'] = \fxapp\Param::define([$param['_param'], $predefined], '1.2.1');
         $tray['account'] = $param['account'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         $tray['_param'] = $param['_param'];
         // 初始化环境变量
@@ -49,7 +49,7 @@ class Sms extends Notify
         $conf['secretKey'] = \fxapp\Base::config('notify.sms.alidayu.app_secret');
         // SDK地址
         $conf['url_sdk'] = \fxapp\Base::config('notify.sms.alidayu.url_sdk');
-        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        $tray['check'] = \fxapp\Data::paramEmpty($conf, 1);
         if (!$tray['check'][0]) {
             $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $tray['check'];
@@ -103,7 +103,7 @@ class Sms extends Notify
         $param = \fxapp\Param::define([$param, $predefined], '1.2.1');
         $tray['account'] = $param['account'];
         $tray['content'] = $param['content'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         // 初始化环境变量
         // 企业账号
@@ -112,7 +112,7 @@ class Sms extends Notify
         $conf['src_tele_num'] = \fxapp\Base::config('notify.sms.webservice.src_tele_num');
         // 接口域
         $conf['domain'] = \fxapp\Base::config('notify.sms.webservice.domain');
-        $tray['check'] = \fxapp\Data::paramEmpty($conf);
+        $tray['check'] = \fxapp\Data::paramEmpty($conf, 1);
         if (!$tray['check'][0]) {
             $tray['check'][2] = \fxapp\Base::lang(['lack', 'api', 'config']);
             return $tray['check'];

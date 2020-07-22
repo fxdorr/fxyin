@@ -10,19 +10,32 @@
 // +----------------------------------------------------------------------
 
 /**
- * 电子邮箱格式校验
+ * 校验Json
  * @param string $data 数据
- * @return boolean
+ * @return mixed
  */
-function is_email($data)
+function is_json($data)
 {
     // 初始化变量
-    if (!is_string($data) || empty($data)) return false;
-    return preg_match('/^[a-z0-9]+([\+_\-\.]?[a-z0-9]+)*@([a-z0-9]+[\-]?[a-z0-9]+\.)+[a-z]{2,6}$/i', $data);
+    if (!is_string($data)) return false;
+    $data = json_decode($data, true);
+    if (null !== $data && is_array($data)) return true;
+    return false;
 }
 
 /**
- * 手机号码格式校验
+ * 校验空白
+ * @param string $data 数据
+ * @return mixed
+ */
+function is_blank($data)
+{
+    // 初始化变量
+    return is_null($data) || $data === '' ? true : false;
+}
+
+/**
+ * 校验手机
  * @param string $data 数据
  * @return boolean
  */
@@ -34,7 +47,19 @@ function is_mobile($data)
 }
 
 /**
- * 邮政编码格式校验
+ * 校验邮箱
+ * @param string $data 数据
+ * @return boolean
+ */
+function is_email($data)
+{
+    // 初始化变量
+    if (!is_string($data) || empty($data)) return false;
+    return preg_match('/^[a-z0-9]+([\+_\-\.]?[a-z0-9]+)*@([a-z0-9]+[\-]?[a-z0-9]+\.)+[a-z]{2,6}$/i', $data);
+}
+
+/**
+ * 校验邮政编码
  * @param string $data 数据
  * @return boolean
  */
@@ -43,20 +68,6 @@ function is_zipcode($data)
     // 初始化变量
     if (!is_string($data) || empty($data)) return false;
     return preg_match('/^[1-9][0-9]{5}$/', $data);
-}
-
-/**
- * Json格式校验
- * @param string $data 数据
- * @return mixed
- */
-function is_json($data)
-{
-    // 初始化变量
-    if (!is_string($data)) return false;
-    $data = json_decode($data, true);
-    if (null !== $data && is_array($data)) return true;
-    return false;
 }
 
 /**

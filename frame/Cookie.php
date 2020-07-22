@@ -37,13 +37,14 @@ class Cookie
     public static function set(...$vars)
     {
         // 初始化变量
+        $config = \fxapp\Base::config('app.cookie');
         $predefined = [
-            // name-value-expire
-            0 => null, 1 => '', 2 => 0,
-            // path-domain-secure
-            3 => '/', 4 => '', 5 => false,
-            // httponly
-            6 => false,
+            // 键名-键值-保存时间
+            0 => null, 1 => '', 2 => $config['expire'],
+            // 保存路径-有效域名-启用安全传输
+            3 => $config['path'], 4 => $config['domain'], 5 => $config['secure'],
+            // httponly设置
+            6 => $config['httponly'],
         ];
         $vars = \fxapp\Param::define([$vars, $predefined], '1.1.1');
         if (is_null($vars[0])) return false;

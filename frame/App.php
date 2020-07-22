@@ -16,7 +16,7 @@ namespace fxyin;
 class App
 {
     /**
-     * 系统-初始化
+     * 初始化系统
      * @param string $name 名称
      * @return boolean
      */
@@ -39,7 +39,7 @@ class App
     }
 
     /**
-     * 系统-加载
+     * 加载应用
      * @param string $path 路径
      * @return mixed
      */
@@ -104,7 +104,7 @@ class App
     }
 
     /**
-     * 运行
+     * 运行应用
      * @return void
      */
     public static function run()

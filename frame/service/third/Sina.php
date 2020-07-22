@@ -57,7 +57,7 @@ class SinaOpen extends Sina
         ];
         $entry = \fxapp\Param::define([$entry, $predefined], '1.2.2');
         $tray['ip'] = $entry['ip'];
-        $tray['check'] = \fxapp\Data::paramEmpty($tray);
+        $tray['check'] = \fxapp\Data::paramEmpty($tray, 1);
         if (!$tray['check'][0]) return $tray['check'];
         // 返回格式
         $conf['format'] = \fxapp\Base::config('third.sina.location.format');

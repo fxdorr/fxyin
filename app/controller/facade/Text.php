@@ -189,31 +189,31 @@ class Text
             $data = iconv($in_charset, $out_charset, $var);
             if (preg_match("/^[\x7f-\xff]/", $data)) {
                 $fchar = ord($data[0]);
-                if ($fchar >= ord("A") and $fchar <= ord("z")) return strtoupper($data[0]);
+                if ($fchar >= ord('A') and $fchar <= ord('z')) return strtoupper($data[0]);
                 $char = ord($data[0]) * 256 + ord($data[1]) - 65536;
-                if ($char >= -20319 and $char <= -20284) return "A";
-                if ($char >= -20283 and $char <= -19776) return "B";
-                if ($char >= -19775 and $char <= -19219) return "C";
-                if ($char >= -19218 and $char <= -18711) return "D";
-                if ($char >= -18710 and $char <= -18527) return "E";
-                if ($char >= -18526 and $char <= -18240) return "F";
-                if ($char >= -18239 and $char <= -17923) return "G";
-                if ($char >= -17922 and $char <= -17418) return "H";
-                if ($char >= -17417 and $char <= -16475) return "J";
-                if ($char >= -16474 and $char <= -16213) return "K";
-                if ($char >= -16212 and $char <= -15641) return "L";
-                if ($char >= -15640 and $char <= -15166) return "M";
-                if ($char >= -15165 and $char <= -14923) return "N";
-                if ($char >= -14922 and $char <= -14915) return "O";
-                if ($char >= -14914 and $char <= -14631) return "P";
-                if ($char >= -14630 and $char <= -14150) return "Q";
-                if ($char >= -14149 and $char <= -14091) return "R";
-                if ($char >= -14090 and $char <= -13319) return "S";
-                if ($char >= -13318 and $char <= -12839) return "T";
-                if ($char >= -12838 and $char <= -12557) return "W";
-                if ($char >= -12556 and $char <= -11848) return "X";
-                if ($char >= -11847 and $char <= -11056) return "Y";
-                if ($char >= -11055 and $char <= -10247) return "Z";
+                if ($char >= -20319 and $char <= -20284) return 'A';
+                if ($char >= -20283 and $char <= -19776) return 'B';
+                if ($char >= -19775 and $char <= -19219) return 'C';
+                if ($char >= -19218 and $char <= -18711) return 'D';
+                if ($char >= -18710 and $char <= -18527) return 'E';
+                if ($char >= -18526 and $char <= -18240) return 'F';
+                if ($char >= -18239 and $char <= -17923) return 'G';
+                if ($char >= -17922 and $char <= -17418) return 'H';
+                if ($char >= -17417 and $char <= -16475) return 'J';
+                if ($char >= -16474 and $char <= -16213) return 'K';
+                if ($char >= -16212 and $char <= -15641) return 'L';
+                if ($char >= -15640 and $char <= -15166) return 'M';
+                if ($char >= -15165 and $char <= -14923) return 'N';
+                if ($char >= -14922 and $char <= -14915) return 'O';
+                if ($char >= -14914 and $char <= -14631) return 'P';
+                if ($char >= -14630 and $char <= -14150) return 'Q';
+                if ($char >= -14149 and $char <= -14091) return 'R';
+                if ($char >= -14090 and $char <= -13319) return 'S';
+                if ($char >= -13318 and $char <= -12839) return 'T';
+                if ($char >= -12838 and $char <= -12557) return 'W';
+                if ($char >= -12556 and $char <= -11848) return 'X';
+                if ($char >= -11847 and $char <= -11056) return 'Y';
+                if ($char >= -11055 and $char <= -10247) return 'Z';
             }
             return $var;
         } catch (\Throwable $th) {
@@ -222,43 +222,77 @@ class Text
     }
 
     /**
+     * 处理时间-范围
+     * @param array|string $time 时间
+     * @param array $start 开始时间
+     * @param array $end 结束时间
+     * @return string
+     */
+    public function timeRange($time, $start = [], $end = [])
+    {
+        // 初始化变量
+        if (is_string($time)) {
+            $time = explode(',', $time);
+        } else if (!is_array($time) || !is_array($start) || !is_array($end)) {
+            return $time;
+        }
+        $time = array_values($time);
+        // 疏理开始时间
+        $predefined = [
+            // 默认值
+            0,
+            // 类型
+            '1',
+            // 格式
+            'Y-m-d H:i:s',
+        ];
+        $start = \fxapp\Param::define([$start, $predefined], '2.1.2');
+        // 疏理结束时间
+        $predefined = [
+            // 默认值
+            time(),
+            // 类型
+            '1',
+            // 格式
+            'Y-m-d H:i:s',
+        ];
+        $end = \fxapp\Param::define([$end, $predefined], '2.1.2');
+        // 疏理时间
+        $predefined = [
+            // 开始时间
+            $start[0],
+            // 结束时间
+            $end[0],
+        ];
+        $time = \fxapp\Param::define([$time, $predefined], '2.1.2');
+        $time[0] = $this->timeChange(trim($time[0]), $start[1], $start[2]);
+        $time[1] = $this->timeChange(trim($time[1]), $end[1], $end[2]);
+        return $time;
+    }
+
+    /**
      * 处理时间-转换
      * @param int|string $time 时间
      * @param string $type 类型
+     * @param string $format 格式
      * @return string
      */
-    public function timeChange($time, $type = null)
+    public function timeChange($time, $type = null, $format = 'Y-m-d H:i:s')
     {
         // 初始化变量
         if (is_string($time) && !is_numeric($time)) {
             $time = strtotime($time);
         }
         if (is_null($time) || false === $time) return;
+        // 格式化时间
         switch ($type) {
-            case '1.1':
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d H:i:s', $time));
+            case '1':
+                // 解析时间戳
+                $time = strtotime(date($format, $time));
                 break;
-            case '1.2':
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d 00:00:00', $time));
-                break;
-            case '1.3':
-                // 日期转时间戳
-                $time = strtotime(date('Y-m-d 23:59:59', $time));
-                break;
-            case '2.1':
-                // 时间戳转日期
-                $time = date('Y-m-d H:i:s', $time);
-                break;
-            case '2.2':
-                // 时间戳转日期
-                $time = date('Y-m-d 00:00:00', $time);
-                break;
-            case '2.3':
-                // 时间戳转日期
-                $time = date('Y-m-d 23:59:59', $time);
-                break;
+            case '2':
+                // 格式化日期
+                $time = date($format, $time);
         }
         return $time;
     }
@@ -276,7 +310,7 @@ class Text
             if (strlen($mtime) != 13) {
                 return false;
             }
-            $echo = date("Y-m-d H:i:s", substr($mtime, 0, 10));
+            $echo = date('Y-m-d H:i:s', substr($mtime, 0, 10));
             $echo = $echo . '.' . substr($mtime, 10, 3);
         } else if (is_string($mtime)) {
             $echo = explode('.', $mtime);
