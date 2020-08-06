@@ -175,6 +175,9 @@ class Data
         // 组装方法
         switch ($method) {
             default:
+                $value = array_map(function ($value) {
+                    return 'binary ' . $value;
+                }, $value);
                 $value = implode('', $value);
                 break;
             case 'in':
@@ -182,24 +185,39 @@ class Data
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
+                $value = array_map(function ($value) {
+                    return 'binary ' . $value;
+                }, $value);
                 $value = implode(',', $value);
                 break;
             case 'like':
             case 'not like':
+                $value = array_map(function ($value) {
+                    return 'binary ' . $value;
+                }, $value);
                 $value = implode('', $value) . ' escape \'/\'';
                 break;
             case 'like fuzzy':
             case 'not like fuzzy':
+                $value = array_map(function ($value) {
+                    return 'binary ' . $value;
+                }, $value);
                 $value = implode('', $value) . ' escape \'/\'';
                 break;
             case 'between':
             case 'not between':
+                $value = array_map(function ($value) {
+                    return 'binary ' . $value;
+                }, $value);
                 $value = implode(' and ', $value);
                 break;
             case 'find_in_set':
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
+                $value = array_map(function ($value) {
+                    return 'binary ' . $value;
+                }, $value);
                 $value = implode(',', $value);
                 break;
         }
@@ -378,7 +396,7 @@ class Data
         // 疏理替换值
         $tray['value'] = array_map(function ($value) {
             foreach ($value as $key => $value) {
-                $data[] = implode(' ', ['when', $key, 'then', $value]);
+                $data[] = implode(' ', ['when binary', $key, 'then', $value]);
             }
             $data = implode(PHP_EOL, $data);
             return $data;
@@ -388,7 +406,11 @@ class Data
             $echo[] = implode('', [PHP_EOL, '`', $key, '` = case `', $param['key'], '`', PHP_EOL, '', $value, PHP_EOL, 'end']);
         }
         $echo = implode(',', $echo);
-        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where `' . $param['key'] . '` in (' . implode(',', array_column($data, $param['key'])) . ')';
+        $tray['key'] = array_column($data, $param['key']);
+        $tray['key'] = array_map(function ($value) {
+            return 'binary ' . $value;
+        }, $tray['key']);
+        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where `' . $param['key'] . '` in (' . implode(',', $tray['key']) . ')';
         return $echo;
 
 
