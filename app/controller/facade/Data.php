@@ -37,6 +37,8 @@ class Data
             4 => 1,
             // 取反
             5 => 0,
+            // 大小写敏感
+            6 => 1,
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
         $predefined = [
@@ -52,13 +54,15 @@ class Data
             'group' => $param[4],
             // 取反
             'not' => $param[5],
+            // 大小写敏感
+            'case' => $param[6],
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
         if (!is_array($data)) {
             return $data;
         }
         // 过滤非法字符
-        $param['value'] = $this->whereSafe($param['value'], $param['method']);
+        $param['value'] = $this->whereSafe($param['value'], $param['method'], $param['case']);
         if (false === $param['value']) {
             return $data;
         }
@@ -82,9 +86,10 @@ class Data
      * SQL-条件安检
      * @param string $value 键值
      * @param string $method 方法
+     * @param string $case 大小写敏感
      * @return string
      */
-    public function whereSafe($value, &$method)
+    public function whereSafe($value, &$method, $case)
     {
         // 初始化变量
         if (!(is_string($value) || is_numeric($value) || is_array($value) || is_object($value))) {
@@ -100,30 +105,35 @@ class Data
         // 拆解方法
         switch ($method) {
             default:
+                // 默认
                 if (!is_array($value)) {
                     $value = [$value];
                 }
                 break;
             case 'in':
             case 'not in':
+                // 批量
                 if (!is_array($value)) {
                     $value = explode(',', $value);
                 }
                 break;
             case 'like':
             case 'not like':
+                // 模糊
                 if (!is_array($value)) {
                     $value = [$value];
                 }
                 break;
             case 'like fuzzy':
             case 'not like fuzzy':
+                // 模糊
                 if (!is_array($value)) {
                     $value = [$value];
                 }
                 break;
             case 'between':
             case 'not between':
+                // 范围
                 if (is_string($value) && mb_strpos($value, ' and ', null, 'utf-8') !== false) {
                     $value = explode(' and ', $value);
                 } else if (!is_array($value)) {
@@ -134,6 +144,7 @@ class Data
                 }
                 break;
             case 'find_in_set':
+                // 批量
                 if (!is_array($value)) {
                     $value = explode(',', $value);
                 }
@@ -147,11 +158,13 @@ class Data
             switch ($method) {
                 case 'like':
                 case 'not like':
+                    // 模糊
                     $search = array_merge($search, ['/', '_']);
                     $replace = array_merge($replace, ['//', '/_']);
                     break;
                 case 'like fuzzy':
                 case 'not like fuzzy':
+                    // 模糊
                     $search = array_merge($search, ['/', '%', '_']);
                     $replace = array_merge($replace, ['//', '/%', '/_']);
                     break;
@@ -163,70 +176,69 @@ class Data
             // 包装键值
             switch ($method) {
                 default:
+                    // 默认
                     $elem = '\'' . $elem . '\'';
                     break;
                 case 'like fuzzy':
                 case 'not like fuzzy':
+                    // 模糊
                     $elem = '\'%' . $elem . '%\'';
                     break;
             }
             $value[$index] = $elem;
         }
         // 组装方法
+        $tray['glue'] = '';
+        $tray['tail'] = '';
         switch ($method) {
             default:
-                $value = array_map(function ($value) {
-                    return 'binary ' . $value;
-                }, $value);
-                $value = implode('', $value);
+                // 默认
                 break;
             case 'in':
             case 'not in':
+                // 批量
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
-                $value = array_map(function ($value) {
-                    return 'binary ' . $value;
-                }, $value);
-                $value = implode(',', $value);
+                $tray['glue'] = ',';
                 break;
             case 'like':
             case 'not like':
-                $value = array_map(function ($value) {
-                    return 'binary ' . $value;
-                }, $value);
-                $value = implode('', $value) . ' escape \'/\'';
+                // 模糊
+                $tray['tail'] = ' escape \'/\'';
                 break;
             case 'like fuzzy':
             case 'not like fuzzy':
-                $value = array_map(function ($value) {
-                    return 'binary ' . $value;
-                }, $value);
-                $value = implode('', $value) . ' escape \'/\'';
+                // 模糊
+                $tray['tail'] = ' escape \'/\'';
                 break;
             case 'between':
             case 'not between':
-                $value = array_map(function ($value) {
-                    return 'binary ' . $value;
-                }, $value);
-                $value = implode(' and ', $value);
+                // 范围
+                $tray['glue'] = ' and ';
                 break;
             case 'find_in_set':
+                // 批量
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
-                $value = array_map(function ($value) {
-                    return 'binary ' . $value;
-                }, $value);
-                $value = implode(',', $value);
+                $tray['glue'] = ',';
                 break;
         }
+        // 组装方法
+        $value = array_map(function ($value) use ($case) {
+            if ($case) $value = 'binary ' . $value;
+            return $value;
+        }, $value);
+        $value = implode($tray['glue'], $value) . $tray['tail'];
         // 解析方法
         switch ($method) {
             case 'like fuzzy':
+                // 模糊
                 $method = 'like';
                 break;
             case 'not like fuzzy':
+                // 模糊
                 $method = 'not like';
                 break;
         }
@@ -246,6 +258,7 @@ class Data
         // 组装函数
         switch ($method) {
             default:
+                // 默认
                 $echo = [$key, $method, $value];
                 $echo = array_filter($echo, function ($value) {
                     return !is_blank($value);
@@ -254,9 +267,11 @@ class Data
                 break;
             case 'in':
             case 'not in':
+                // 批量
                 $echo = $key . ' ' . $method . ' (' . $value . ')';
                 break;
             case 'find_in_set':
+                // 批量
                 $value = explode(',', $value);
                 $echo = [];
                 foreach ($value as $cell) {
