@@ -241,7 +241,7 @@ class Push extends Notify
         } catch (\Throwable $th) {
             $echo[0] = false;
             $echo[1] = 1002;
-            $echo[2] = $e->getMessage();
+            $echo[2] = $th->getMessage();
             return $echo;
         }
         if ($record) {

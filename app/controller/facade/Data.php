@@ -588,7 +588,7 @@ class Data
                     COS(($late * 3.1415) / 180 ) *
                     COS(($lngs * 3.1415) / 180 - ($lnge * 3.1415) / 180 ) 
                 ) * 6378.137";
-        $echo = str_replace(array(" ", "　", "\t", "\n", "\r"), '', $form);
+        $echo = str_replace([" ", "　", "\t", "\n", "\r"], '', $form);
         return $echo;
     }
 
@@ -603,16 +603,16 @@ class Data
             return false;
         }
         $form = "ELT(
-                    INTERVAL(CONV(HEX(left(CONVERT({$field} USING gbk),'1')),'16','10'),
+                    INTERVAL(CONV(HEX(left(CONVERT(" . $field . " USING gbk),'1')),'16','10'),
                     0,
                     0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
                     0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
                     0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
-                    UPPER(left({$field},'1')),
+                    UPPER(left(" . $field . ",'1')),
                     'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
                     'Q','R','S','T','W','X','Y','Z'
                 )";
-        $echo = str_replace(array("  ", "　", "\t", "\n", "\r"), '', $form);
+        $echo = str_replace(["  ", "　", "\t", "\n", "\r"], '', $form);
         return $echo;
     }
 
@@ -629,11 +629,11 @@ class Data
             default:
             case 1:
                 // 默认
-                $echo = "if(json_valid({$field}), trim(both '\"' from {$field}->'{$param}'), {$field})";
+                $echo = 'if(json_valid(' . $field . '), trim(both \'"\' from ' . $field . '->\'' . $param . '\'), ' . $field . ')';
                 break;
             case 2:
                 // 非Json则替换
-                $echo = "if(json_valid({$field}), {$field}, '{}')";
+                $echo = 'if(json_valid(' . $field . '), ' . $field . ', \'{}\')';
                 break;
         }
         return $echo;
@@ -655,7 +655,9 @@ class Data
             default:
             case 1:
                 // 默认
-                if (is_numeric($replace)) {
+                if (is_numeric($replace) && is_int($replace + 0)) {
+                    $echo = 'convert(if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . '),signed)';
+                } else if (is_numeric($replace)) {
                     $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
                 } else {
                     $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),\'' . $replace . '\',' . $field . ')';
@@ -664,6 +666,10 @@ class Data
             case 2:
                 // 为空则替换
                 $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
+                break;
+            case 3:
+                // 转为整型
+                $echo = 'convert(if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . '),signed)';
                 break;
         }
         return $echo;
@@ -718,9 +724,9 @@ class Data
             foreach ($string as $key => $val) {
                 $string[$key] = $this->htmlFilter($val, $flags);
             }
-        } else {
+        } else if (!is_blank($string)) {
             if ($flags === null) {
-                $string = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $string);
+                $string = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $string);
                 if (strpos($string, '&amp;#') !== false) {
                     $string = preg_replace('/&amp;((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $string);
                 }
@@ -748,7 +754,7 @@ class Data
             foreach ($string as $key => $val) {
                 $string[$key] = $this->htmlRemove($val, $flags);
             }
-        } else {
+        } else if (!is_blank($string)) {
             if ($flags === null) {
                 $string = strip_tags($string, $flags);
             } else {

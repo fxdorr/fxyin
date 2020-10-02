@@ -46,6 +46,7 @@ class Facade
         if (empty($config)) {
             $config = (require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php')['env']['facade'] ?? [];
         }
+        ksort($config);
         foreach ($config as $elem) {
             $class = $elem . static::getClass();
             if (!isset(static::$data[$class])) {

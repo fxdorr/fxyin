@@ -138,7 +138,7 @@ class Base
             return \fxyin\Cookie::get($vars[0]);
         } else {
             $vars[1] = $vars[1] ?? null;
-            return \fxyin\Cookie::set($vars[0], $vars[1]);
+            return \fxyin\Cookie::set(...$vars);
         }
     }
 
@@ -207,7 +207,7 @@ class Base
                 } else if (is_object($data)) {
                     $data = (array) $data;
                 } else if (is_string($data)) {
-                    parse_str($data, $data);
+                    $data = \fxapp\Text::strDecode($data);
                 } else if (!is_array($data)) {
                     $data = !is_null($data) ? [$data] : [];
                 }
@@ -266,17 +266,19 @@ class Base
         } catch (\Throwable $th) {
             // 执行异常处理
             if (true !== \fxapp\Base::config('app.debug.switch')) {
-                exit('系统异常');
+                $echo = '系统异常';
             } else if (\fxapp\Base::env('base.method') == 'get') {
-                exit(\fxapp\Text::throwable($th));
+                $echo = \fxapp\Text::throwable($th, '1.1');
             } else if (PHP_SAPI !== 'cli') {
                 $echo = \fxapp\Server::echo();
                 $echo[0] = false;
-                $echo[2] = \fxapp\Text::throwable($th);
-                \fxapp\Server::return(\fxapp\Server::format($echo, 2));
+                $echo[2] = \fxapp\Text::throwable($th, '1.1');
+                header('Content-Type:application/json; charset=utf-8');
+                $echo = \fxapp\Base::json(\fxapp\Server::format($echo, 2), 'encode');
             } else {
                 throw $th;
             }
         }
+        exit($echo);
     }
 }

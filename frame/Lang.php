@@ -35,10 +35,10 @@ class Lang
     protected static $langDetectVar = 'lang';
 
     /**
-     * 语言Cookie变量
+     * 语言Cookie名称
      * @var string
      */
-    protected static $langCookieVar = 'lang';
+    protected static $langCookieName = 'lang';
 
     /**
      * 语言Cookie的过期时间
@@ -58,6 +58,7 @@ class Lang
      */
     public static function range($range = '')
     {
+        // 初始化变量
         if ('' == $range) {
             return self::$range;
         } else {
@@ -67,18 +68,20 @@ class Lang
 
     /**
      * 设置语言定义(不区分大小写)
-     * @param array|string  $name 语言变量
+     * @param array|string  $name 语言名称
      * @param string        $value 语言值
      * @param string        $range 语言作用域
      * @return mixed
      */
     public static function set($name, $value = null, $range = '')
     {
+        // 初始化变量
         $range = $range ?: self::$range;
-        // 批量定义
+        // 识别作用域
         if (!isset(self::$lang[$range])) {
             self::$lang[$range] = [];
         }
+        // 批量定义
         if (is_array($name)) {
             return self::$lang[$range] = \fxapp\Param::merge(self::$lang[$range], $name);
         } else {
@@ -94,7 +97,9 @@ class Lang
      */
     public static function load($file, $range = '')
     {
+        // 初始化变量
         $range = $range ?: self::$range;
+        // 识别作用域
         if (!isset(self::$lang[$range])) {
             self::$lang[$range] = [];
         }
@@ -112,34 +117,40 @@ class Lang
             }
         }
         if (!empty($lang)) {
-            self::$lang[$range] = $lang + self::$lang[$range];
+            self::$lang[$range] = \fxapp\Param::merge(self::$lang[$range], $lang);
         }
         return self::$lang[$range];
     }
 
     /**
      * 获取语言定义(不区分大小写)
-     * @param string|null   $name 语言变量
+     * @param string|null   $name 语言名称
      * @param array         $vars 变量替换
      * @param string        $range 语言作用域
      * @return mixed
      */
     public static function has($name, $range = '')
     {
+        // 初始化变量
         $range = $range ?: self::$range;
         return isset(self::$lang[$range][$name]);
     }
 
     /**
      * 获取语言定义(不区分大小写)
-     * @param string|null   $name 语言变量
+     * @param string|null   $name 语言名称
      * @param array         $vars 变量替换
      * @param string        $range 语言作用域
      * @return mixed
      */
     public static function get($name = null, $vars = [], $range = '')
     {
+        // 初始化变量
         $range = $range ?: self::$range;
+        // 识别作用域
+        if (!isset(self::$lang[$range])) {
+            self::$lang[$range] = [];
+        }
         // 空参数返回所有定义
         if (is_null($name)) {
             return self::$lang[$range];
@@ -176,22 +187,23 @@ class Lang
      */
     public static function detect()
     {
-        // 自动侦测设置获取语言选择
+        // 初始化变量
         $langSet = '';
+        // 自动侦测设置获取语言选择
         if (isset($_GET[self::$langDetectVar])) {
             // url中设置了语言变量
             $langSet = strtolower($_GET[self::$langDetectVar]);
             if (PHP_SAPI !== 'cli') {
-                Cookie::set(self::$langCookieVar, $langSet, self::$langCookieExpire);
+                Cookie::set(self::$langCookieName, $langSet, self::$langCookieExpire);
             }
-        } else if (Cookie::get(self::$langCookieVar)) {
+        } else if (Cookie::get(self::$langCookieName)) {
             // 获取上次用户的选择
-            $langSet = strtolower(Cookie::get(self::$langCookieVar));
+            $langSet = strtolower(Cookie::get(self::$langCookieName));
         } else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // 自动侦测浏览器语言
             preg_match('/^([a-z\d\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);
             $langSet = strtolower($matches[1]);
-            Cookie::set(self::$langCookieVar, $langSet, self::$langCookieExpire);
+            Cookie::set(self::$langCookieName, $langSet, self::$langCookieExpire);
         }
         if (empty(self::$allowLangList) || in_array($langSet, self::$allowLangList)) {
             // 合法的语言
@@ -210,6 +222,7 @@ class Lang
      */
     public static function setLangDetectVar($var)
     {
+        // 初始化变量
         self::$langDetectVar = $var;
     }
 
@@ -218,9 +231,10 @@ class Lang
      * @param string $var 变量名称
      * @return void
      */
-    public static function setLangCookieVar($var)
+    public static function setLangCookieName($var)
     {
-        self::$langCookieVar = $var;
+        // 初始化变量
+        self::$langCookieName = $var;
     }
 
     /**
@@ -230,6 +244,7 @@ class Lang
      */
     public static function setLangCookieExpire($expire)
     {
+        // 初始化变量
         self::$langCookieExpire = $expire;
     }
 

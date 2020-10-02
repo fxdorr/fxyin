@@ -104,7 +104,7 @@ class BaiduTranslate extends Baidu
      * 支持的语种
      * @var ArrayAccess
      */
-    static $Lang = array(
+    static $Lang = [
         'auto' => '自动检测',
         'ara' => '阿拉伯语',
         'de' => '德语',
@@ -121,8 +121,8 @@ class BaiduTranslate extends Baidu
         'it' => '意大利语',
         'en' => '英语',
         'yue' => '粤语',
-        'zh' => '中文'
-    );
+        'zh' => '中文',
+    ];
 
     /**
      * 获取支持的语种
@@ -144,11 +144,11 @@ class BaiduTranslate extends Baidu
     {
         // http://fanyi.baidu.com/v2transapi?from=zh&query=%E7%94%A8%E8%BD%A6%E8%B5%84%E8%AE%AF&to=fra
         $url = "http://fanyi.baidu.com/v2transapi";
-        $data = array(
+        $data = [
             'from' => $from,
             'to' => $to,
-            'query' => $text
-        );
+            'query' => $text,
+        ];
         $data = http_build_query($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

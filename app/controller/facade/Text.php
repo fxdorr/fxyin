@@ -187,7 +187,7 @@ class Text
             // 初始化变量
             // 如果程序是gbk的，此行就要注释掉
             $data = iconv($in_charset, $out_charset, $var);
-            if (preg_match("/^[\x7f-\xff]/", $data)) {
+            if (preg_match('/^[\x7f-\xff]/', $data)) {
                 $fchar = ord($data[0]);
                 if ($fchar >= ord('A') and $fchar <= ord('z')) return strtoupper($data[0]);
                 $char = ord($data[0]) * 256 + ord($data[1]) - 65536;
@@ -420,6 +420,122 @@ class Text
     }
 
     /**
+     * 处理字符串-编码
+     * @param array $data 数据
+     * @return string
+     */
+    public function strEncode($data)
+    {
+        // 初始化变量
+        $echo = [];
+        // 解析数据
+        foreach ($data as $key => $value) {
+            // 解析数据
+            $value = $this->strEncodeMerge($value);
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            // 疏理数据
+            foreach ($value as $key2 => $value2) {
+                $echo[] = $key . $value2;
+            }
+        }
+        $echo = implode('&', $echo);
+        return $echo;
+    }
+
+    /**
+     * 处理字符串-编码-合并数组
+     * @param array $data 数据
+     * @return array
+     */
+    public function strEncodeMerge($data)
+    {
+        // 初始化变量
+        $tray = [];
+        if (!is_array($data)) {
+            return '=' . $data;
+        }
+        foreach ($data as $key => $value) {
+            $value = $this->strEncodeMerge($value);
+            if (array_keys($data) != array_flip(array_keys($data))) {
+                $tray[] = '[' . $key . ']' . $value;
+            } else {
+                $tray[] = '[]' . $value;
+            }
+        }
+        return $tray;
+    }
+
+    /**
+     * 处理字符串-解码
+     * @param string $data 数据
+     * @return array
+     */
+    public function strDecode($data)
+    {
+        // 初始化变量
+        $echo = [];
+        // 解析数据
+        $data = explode('&', $data);
+        foreach ($data as $key => $value) {
+            // 解析数据
+            $value = explode('=', $value, 2);
+            $predefined = [
+                // 键钥
+                0,
+                // 键值
+                1,
+            ];
+            $value = \fxapp\Param::define([$value, $predefined], '1.2.1');
+            if (is_blank($value[0]) && is_null($value[1])) continue;
+            // 疏理键值
+            $value[1] = !is_null($value[1]) ? urldecode($value[1]) : $value[1];
+            // 解析键钥
+            $value[0] = preg_replace('/^([^\[]*)/', '[$1]', $value[0]);
+            $value[2] = $echo;
+            $value = $this->strDecodeMerge($value);
+            // 合并数据
+            $echo = \fxapp\Param::merge($echo, $value[2]);
+        }
+        return $echo;
+    }
+
+    /**
+     * 处理字符串-解码-合并数组
+     * @param array $data 数据
+     * @return array
+     */
+    public function strDecodeMerge($data)
+    {
+        // 初始化变量
+        $tray = [];
+        $tray['find'] = '^\[([^\]]*)\]';
+        preg_match('/' . $tray['find'] . '/', $data[0], $tray['key']);
+        $data[0] = preg_replace('/^\\[[^\\]]*\\]/', '', $data[0]);
+        if (empty($tray['key'])) {
+            return [];
+        }
+        // 解析数据
+        $data[2] = !is_null($data[2]) ? $data[2] : [];
+        if ($tray['key'][0] == '[]') {
+            $tray['key'][1] = -1;
+            foreach ($data[2] as $key => $value) {
+                if (!is_numeric($key) || floor($key) != $key) continue;
+                $tray['key'][1] = $tray['key'][1] > $key ? $tray['key'][1] : $key;
+            }
+            $tray['key'][1]++;
+        }
+        // 疏理数据
+        if (!empty(preg_match('/' . $tray['find'] . '/', $data[0]))) {
+            $data[2][$tray['key'][1]] = $this->strDecodeMerge([$data[0], $data[1], $data[2][$tray['key'][1]] ?? null])[2] ?? null;
+        } else {
+            $data[2][$tray['key'][1]] = $data[1];
+        }
+        return $data;
+    }
+
+    /**
      * 解析Ipv4
      * @param mixed $var 变量
      * @param string $type 类型
@@ -510,16 +626,45 @@ class Text
     /**
      * 提取抛出
      * @param \Throwable $th 抛出对象
-     * @return string
+     * @param string $type 类型
+     * @param array $param 参数
+     * @return mixed
      */
-    public function throwable($th)
+    public function throwable($th, $type, $param = [])
     {
-        // 返回抛出
-        $echo = [
-            $th->getMessage(),
-            $th->getFile(),
-            $th->getLine(),
-        ];
-        return implode(' ', $echo);
+        // 疏理数据
+        switch ($type) {
+            default:
+                // 默认
+            case '1.1':
+                // 简略
+                $echo = [
+                    $th->getMessage(),
+                    $th->getFile(),
+                    $th->getLine(),
+                ];
+                $echo = implode(' ', $echo);
+                break;
+            case '1.2':
+                // 详细
+                $echo = [
+                    // 逻辑状态
+                    0 => false,
+                    // 状态代码
+                    1 => -1,
+                    // 提示信息
+                    2 => $this->throwable($th, '1.1'),
+                    // 响应数据
+                    3 => [],
+                    // 扩展数据
+                    4 => [
+                        'throwable' => $this->throwable($th, '1.1'),
+                        'trace' => $th->getTrace(),
+                    ],
+                ];
+                $echo = \fxapp\Param::merge(2, $echo, $param);
+                break;
+        }
+        return $echo;
     }
 }

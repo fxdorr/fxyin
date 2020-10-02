@@ -24,9 +24,13 @@ namespace fxapp;
  * @method static string timeChange(int|string $time, string $type = null, string $format = null) 处理时间-转换
  * @method static string timeMilli(string $mtime = null) 处理时间-毫米
  * @method static string timeFormat(string $time = null, string $type = null) 处理时间-格式化
+ * @method static string strEncode(array $data) 处理字符串-编码
+ * @method static string strEncodeMerge(array $data) 处理字符串-编码-合并数组
+ * @method static array strDecode(string $data) 处理字符串-解码
+ * @method static string strDecodeMerge(array $data) 处理字符串-解码-合并数组
  * @method static mixed ipv4(mixed $var, string $type) 解析Ipv4
  * @method static mixed convert(mixed $var, string $type) 进制转换
- * @method static string throwable(\Throwable $th) 提取抛出
+ * @method static mixed throwable(\Throwable $th, string $type, array $param) 提取抛出
  */
 class Text extends \fxyin\Facade
 {

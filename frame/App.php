@@ -29,10 +29,12 @@ class App
         if (isset($config[$name])) {
             $config = [$name => $config[$name]];
         }
+        ksort($config);
         // 加载应用
         foreach ($config as $key => $value) {
             if (array_key_exists($key, $data)) continue;
             self::load($value);
+            Config::set('env.base.lang.' . $key, \fxapp\Base::config('env.view.lang'));
             $data[$key] = $value;
         }
         return true;
@@ -73,10 +75,11 @@ class App
         }
         // 加载语言包
         if (is_dir($path . 'language')) {
-            $lang = Lang::detect();
+            $config = \fxapp\Base::config('app.lang');
+            $lang = \fxapp\Base::config('env.view.lang');
             $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
             if (!is_dir($dir)) {
-                $lang = 'zh-cn';
+                $lang = $config['default'];
             }
             Lang::range($lang);
             $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
@@ -122,12 +125,12 @@ class App
         $app = \fxapp\Base::config('env.base.name') ?: 'app';
         $class = '\\' . $app . '\\' . implode('\\', $class);
         if (!class_exists($class)) {
-            \fxapp\Base::throwable('控制器不存在');
+            \fxapp\Base::throwable('控制器不存在', '1.1');
         };
         $class = new $class();
         // 解析方法
         if (!is_callable([$class, $method])) {
-            \fxapp\Base::throwable('方法不存在');
+            \fxapp\Base::throwable('方法不存在', '1.1');
         }
         return call_user_func_array([$class, $method], []);
     }

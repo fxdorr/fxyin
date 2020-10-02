@@ -37,6 +37,8 @@ return [
             'method' => !is_null($tray['method']) ? strtolower($tray['method']) : null,
             // 名称
             'name' => '',
+            // 语言
+            'lang' => [],
         ],
         // 门面配置
         'facade' => [

@@ -11,14 +11,11 @@
 namespace fxapp;
 
 /**
- * 服务器类
- * @see \fxapp\facade\Server
+ * 视图类
+ * @see \fxapp\facade\View
  * @package fxapp\facade
- * @method static mixed ip() 获取IP
- * @method static mixed system(int $type = -1) 获取系统
- * @method static array format(array $data, int $type = 1) 处理数据-格式
- * @method static array echo() 初始化响应
+ * @method static mixed echo(mixed $data, string $type = '') 处理数据-输出
  */
-class Server extends \fxyin\Facade
+class View extends \fxyin\Facade
 {
 }

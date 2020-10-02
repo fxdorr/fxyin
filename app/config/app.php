@@ -38,16 +38,18 @@ return [
     // 调试配置
     'debug' => [
         // 开关
-        'switch' => true,
+        'switch' => false,
         // 等级
-        'level' => null,
+        'level' => ['error', 'warning', 'notice', 'info', 'debug', 'trace', 'depot', 'ignore'],
+        // 跟踪
+        'trace' => null,
     ],
     // 日志配置
     'log' => [
         // 开关
         'switch' => false,
         // 等级
-        'level' => '1,2,3,4,5,6',
+        'level' => ['error', 'warning', 'notice', 'info', 'debug', 'trace', 'depot', 'ignore'],
     ],
     // 响应配置
     'echo' => [
@@ -80,6 +82,8 @@ return [
     'lang' => [
         // 多语言开关
         'switch' => true,
+        // 名称
+        'name' => 'lang',
         // 默认语言
         'default' => 'zh-cn',
         // 忽略转换

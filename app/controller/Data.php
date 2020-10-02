@@ -18,7 +18,8 @@ namespace fxapp;
  * @method static string whereSafe(string $var, string &$comparison) SQL-条件安检
  * @method static string whereBuild(string $key, string $value, string $comparison) SQL-条件搭建
  * @method static string whereMake(array $var, int $type = 1) SQL-条件组装
- * @method static bool|string update(string $table, array $data, string $field = 'id', array $param = []) SQL-更新
+ * @method static bool|string insert(string $table, array $data) SQL-插入
+ * @method static bool|string update(string $table, array $data, array $param = []) SQL-更新
  * @method static string updateCase(array $data, string $field) SQL-更新条件-将二维数组转换成CASE WHEN THEN的批量更新条件
  * @method static string updateParam(array $param) SQL-查询解析where条件
  * @method static array updateContrast(array $data_new, array $data_old) 处理参数-更新比较

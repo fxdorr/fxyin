@@ -37,7 +37,7 @@ class Client
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         // IP地址合法验证
-        $long = sprintf("%u", \fxapp\Text::ipv4($ip, 'encode'));
+        $long = sprintf('%u', \fxapp\Text::ipv4($ip, 'encode'));
         $ip = $long ? [$ip, $long] : ['0.0.0.0', 0];
         return $ip[$type];
     }
@@ -52,39 +52,39 @@ class Client
         // 初始化变量
         $echo = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : null;
         // 开始检测
-        if (strpos($echo, strtolower("MicroMessenger"))) {
+        if (strpos($echo, strtolower('MicroMessenger'))) {
             // 微信内置浏览器
-            $echo = "MicroMessenger";
-        } else if (strpos($echo, strtolower("Alipay"))) {
+            $echo = 'MicroMessenger';
+        } else if (strpos($echo, strtolower('Alipay'))) {
             // 支付宝内置浏览器
-            $echo = "Alipay";
-        } else if (strpos($echo, strtolower("MSIE 8.0"))) {
+            $echo = 'Alipay';
+        } else if (strpos($echo, strtolower('MSIE 8.0'))) {
             // IE8.0
-            $echo = "Internet Explorer 8.0";
-        } else if (strpos($echo, strtolower("MSIE 7.0"))) {
+            $echo = 'Internet Explorer 8.0';
+        } else if (strpos($echo, strtolower('MSIE 7.0'))) {
             // IE7.0
-            $echo = "Internet Explorer 7.0";
-        } else if (strpos($echo, strtolower("MSIE 6.0"))) {
+            $echo = 'Internet Explorer 7.0';
+        } else if (strpos($echo, strtolower('MSIE 6.0'))) {
             // IE6.0
-            $echo = "Internet Explorer 6.0";
-        } else if (strpos($echo, strtolower("Firefox/3"))) {
+            $echo = 'Internet Explorer 6.0';
+        } else if (strpos($echo, strtolower('Firefox/3'))) {
             // 火狐浏览器
-            $echo = "Firefox 3";
-        } else if (strpos($echo, strtolower("Firefox/2"))) {
+            $echo = 'Firefox 3';
+        } else if (strpos($echo, strtolower('Firefox/2'))) {
             // 火狐浏览器
-            $echo = "Firefox 2";
-        } else if (strpos($echo, strtolower("Chrome"))) {
+            $echo = 'Firefox 2';
+        } else if (strpos($echo, strtolower('Chrome'))) {
             // 谷歌浏览器
-            $echo = "Google Chrome";
-        } else if (strpos($echo, strtolower("Safari"))) {
+            $echo = 'Google Chrome';
+        } else if (strpos($echo, strtolower('Safari'))) {
             // 游猎浏览器
-            $echo = "Safari";
-        } else if (strpos($echo, strtolower("Opera"))) {
+            $echo = 'Safari';
+        } else if (strpos($echo, strtolower('Opera'))) {
             // 欧朋浏览器
-            $echo = "Opera";
+            $echo = 'Opera';
         } else {
             // 其他
-            $echo = "Others";
+            $echo = 'Others';
         }
         switch ($type) {
             case 1:
@@ -109,55 +109,55 @@ class Client
         // 初始化变量
         $echo = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : null;
         // 开始检测
-        if (preg_match("/win/i", $echo) && preg_match("/95/i", $echo)) {
+        if (preg_match('/win/i', $echo) && preg_match('/95/i', $echo)) {
             $echo = 'Windows 95';
-        } else if (preg_match("/win 9x/i", $echo) && preg_match("/4.90/i", $echo)) {
+        } else if (preg_match('/win 9x/i', $echo) && preg_match('/4.90/i', $echo)) {
             $echo = 'Windows ME';
-        } else if (preg_match("/win/i", $echo) && preg_match("/98/i", $echo)) {
+        } else if (preg_match('/win/i', $echo) && preg_match('/98/i', $echo)) {
             $echo = 'Windows 98';
-        } else if (preg_match("/win/i", $echo) && preg_match("/nt 5.1/i", $echo)) {
+        } else if (preg_match('/win/i', $echo) && preg_match('/nt 5.1/i', $echo)) {
             $echo = 'Windows XP';
-        } else if (preg_match("/win/i", $echo) && preg_match("/nt 5.2/i", $echo)) {
+        } else if (preg_match('/win/i', $echo) && preg_match('/nt 5.2/i', $echo)) {
             $echo = 'Windows 2003';
-        } else if (preg_match("/win/i", $echo) && preg_match("/nt 5/i", $echo)) {
+        } else if (preg_match('/win/i', $echo) && preg_match('/nt 5/i', $echo)) {
             $echo = 'Windows 2000';
-        } else if (preg_match("/win/i", $echo) && preg_match("/nt/i", $echo)) {
+        } else if (preg_match('/win/i', $echo) && preg_match('/nt/i', $echo)) {
             $echo = 'Windows NT';
-        } else if (preg_match("/win/i", $echo) && preg_match("/32/i", $echo)) {
+        } else if (preg_match('/win/i', $echo) && preg_match('/32/i', $echo)) {
             $echo = 'Windows 32';
-        } else if (preg_match("/linux/i", $echo)) {
+        } else if (preg_match('/linux/i', $echo)) {
             $echo = 'Linux';
-        } else if (preg_match("/unix/i", $echo)) {
+        } else if (preg_match('/unix/i', $echo)) {
             $echo = 'Unix';
-        } else if (preg_match("/sun/i", $echo) && preg_match("/os/i", $echo)) {
+        } else if (preg_match('/sun/i', $echo) && preg_match('/os/i', $echo)) {
             $echo = 'SunOS';
-        } else if (preg_match("/ibm/i", $echo) && preg_match("/os/i", $echo)) {
+        } else if (preg_match('/ibm/i', $echo) && preg_match('/os/i', $echo)) {
             $echo = 'IBM OS/2';
-        } else if (preg_match("/Mac/i", $echo) && preg_match("/PC/i", $echo)) {
+        } else if (preg_match('/Mac/i', $echo) && preg_match('/PC/i', $echo)) {
             $echo = 'Macintosh';
-        } else if (preg_match("/PowerPC/i", $echo)) {
+        } else if (preg_match('/PowerPC/i', $echo)) {
             $echo = 'PowerPC';
-        } else if (preg_match("/AIX/i", $echo)) {
+        } else if (preg_match('/AIX/i', $echo)) {
             $echo = 'AIX';
-        } else if (preg_match("/HPUX/i", $echo)) {
+        } else if (preg_match('/HPUX/i', $echo)) {
             $echo = 'HPUX';
-        } else if (preg_match("/NetBSD/i", $echo)) {
+        } else if (preg_match('/NetBSD/i', $echo)) {
             $echo = 'NetBSD';
-        } else if (preg_match("/BSD/i", $echo)) {
+        } else if (preg_match('/BSD/i', $echo)) {
             $echo = 'BSD';
-        } else if (preg_match("/OSF1/i", $echo)) {
+        } else if (preg_match('/OSF1/i', $echo)) {
             $echo = 'OSF1';
-        } else if (preg_match("/IRIX/i", $echo)) {
+        } else if (preg_match('/IRIX/i', $echo)) {
             $echo = 'IRIX';
-        } else if (preg_match("/FreeBSD/i", $echo)) {
+        } else if (preg_match('/FreeBSD/i', $echo)) {
             $echo = 'FreeBSD';
-        } else if (preg_match("/teleport/i", $echo)) {
+        } else if (preg_match('/teleport/i', $echo)) {
             $echo = 'teleport';
-        } else if (preg_match("/flashget/i", $echo)) {
+        } else if (preg_match('/flashget/i', $echo)) {
             $echo = 'flashget';
-        } else if (preg_match("/webzip/i", $echo)) {
+        } else if (preg_match('/webzip/i', $echo)) {
             $echo = 'webzip';
-        } else if (preg_match("/offline/i", $echo)) {
+        } else if (preg_match('/offline/i', $echo)) {
             $echo = 'offline';
         } else {
             $echo = 'Others';
@@ -187,8 +187,12 @@ class Client
         $echo = [];
         $input = file_get_contents('php://input');
         $predefined = [
-            // GET-POST-INPUT
-            'get' => $_GET, 'post' => $_POST, 'input' => $input,
+            // GET
+            'get' => $_GET,
+            // POST
+            'post' => $_POST,
+            // INPUT
+            'input' => $input,
             // CLI
             'cli' => \fxapp\Base::config('app.param.cli'),
         ];
@@ -199,7 +203,7 @@ class Client
             switch ($value) {
                 case 'param':
                     // 全部入参
-                    $echo = array_merge(...array_values($base));
+                    $echo = array_merge($echo, ...array_values($base));
                     break;
                 case 'get':
                 case 'post':

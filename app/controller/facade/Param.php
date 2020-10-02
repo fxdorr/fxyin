@@ -243,29 +243,53 @@ class Param
     }
 
     /**
-     * 空数组转对象
+     * 数组填充空值
      * @param array $param 参数
-     * @return mixed
+     * @param int $limit 次数限制
+     * @return array
      */
-    public function object($param)
+    public function array($param, int $limit = -1)
     {
         // 初始化变量
-        if (is_array($param)) {
-            // 空数组直接返回
-            if (!count($param)) {
-                return $param;
-            }
-            // 过滤空元素
-            if (!isset($param[''])) {
-                unset($param['']);
-            }
-            // 处理数组
-            if (!count($param)) {
-                $param = new \StdClass();
-            } else {
-                foreach ($param as $key => $value) {
-                    $param[$key] = $this->object($value);
-                }
+        if (!is_array($param) || $limit === 0) {
+            return $param;
+        }
+        if ($limit > 0) {
+            $limit--;
+        }
+        // 处理数组
+        foreach ($param as $key => $value) {
+            $param[$key] = $this->array($value);
+        }
+        $param[''] = null;
+        return $param;
+    }
+
+    /**
+     * 空数组转对象
+     * @param array $param 参数
+     * @param int $limit 次数限制
+     * @return mixed
+     */
+    public function object($param, int $limit = -1)
+    {
+        // 初始化变量
+        if (!is_array($param) || !count($param) || $limit === 0) {
+            return $param;
+        }
+        if ($limit > 0) {
+            $limit--;
+        }
+        // 过滤空元素
+        if (!isset($param[''])) {
+            unset($param['']);
+        }
+        // 处理数组
+        if (!count($param)) {
+            $param = new \StdClass();
+        } else {
+            foreach ($param as $key => $value) {
+                $param[$key] = $this->object($value);
             }
         }
         return $param;
@@ -335,47 +359,113 @@ class Param
 
     /**
      * 合并数组
+     * @param array|int $limit 次数限制或数组第一条
      * @param array $args 数组集合
      * @return mixed
      */
-    public function merge(...$args)
+    public function merge($limit = -1, ...$args)
     {
         // 初始化变量
         $echo = [];
+        // 疏理限制
+        if (!is_int($limit)) {
+            array_unshift($args, $limit);
+            $limit = -1;
+        }
         if (count($args) < 2) {
             return array_shift($args);
         } else if (count($args) > 2) {
             $echo[0] = array_shift($args);
-            $echo[1] = $this->merge(...$args);
+            $echo[1] = $this->merge($limit, ...$args);
         } else {
             $echo = $args;
         }
-        return $this->cover($echo);
+        return $this->cover($echo, $limit);
     }
 
     /**
      * 覆盖数组
      * @param array $args 数组集合
+     * @param int $limit 次数限制
      * @return array
      */
-    public function cover($args)
+    public function cover($args, int $limit = -1)
     {
         // 初始化变量
-        if (!is_array($args[0])) {
+        if (!is_array($args[0]) || $limit === 0) {
             $args[0] = $args[1];
         } else if (is_array($args[1])) {
+            if ($limit > 0) {
+                $limit--;
+            }
             // 数组融合，已存在配置参数则覆盖
             foreach ($args[1] as $key => $value) {
                 if (!isset($args[0][$key])) {
                     $args[0][$key] = $value;
                 } else if (is_array($value)) {
-                    $args[0][$key] = $this->cover([$args[0][$key], $args[1][$key]]);
+                    $args[0][$key] = $this->cover([$args[0][$key], $value], $limit);
                 } else {
                     $args[0][$key] = $value;
                 }
             }
         }
         return $args[0];
+    }
+
+    /**
+     * 设置/获取URL
+     * @param array $data 数据
+     * @return mixed
+     */
+    public function url($data)
+    {
+        // 初始化变量
+        $predefined = [
+            // 类型
+            'type' => null,
+            // 地址
+            'url' => null,
+            // 名称
+            'name' => null,
+        ];
+        $data = $this->define([$data, $predefined], '1.1.1');
+        $predefined = [
+            // 参数
+            'param' => [],
+        ];
+        $data = $this->define([$data, $predefined], '1.1.3');
+        switch ($data['type']) {
+            case '1.1':
+                // 组装地址
+                $data['param'] = $this->merge($this->url([
+                    'type' => '2.1',
+                ]), $data['param']);
+            case '1.2':
+                // 组装地址
+                // 解析地址
+                $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.uri');
+                $data['url'] = explode('?', $data['url'], 2);
+                // 疏理数据
+                $data['url'] = [$data['url'][0]];
+                $data['param'] = $this->merge(\fxapp\Text::strDecode($data['url'][1]), $data['param']);
+                $data['param'] = \fxapp\Text::strEncode($data['param']);
+                // 拼接地址
+                if (!is_blank($data['param'])) {
+                    $data['url'][] = $data['param'];
+                }
+                return implode('?', $data['url']);
+            case '2.1':
+                // 获取参数
+                // 解析地址
+                $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.web') . \fxapp\Base::env('base.uri');
+                $data['url'] = explode('?', $data['url'], 2);
+                // 解析数据
+                $data['param'] = \fxapp\Text::strDecode($data['url'][1]);
+                if (!is_null($data['name'])) {
+                    return $data['param'][$data['name']];
+                }
+                return $data['param'];
+        }
     }
 
     /**

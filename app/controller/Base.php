@@ -19,6 +19,7 @@ namespace fxapp;
  * @method static string langList(array|string $name, array $vars = [], string $lang = '') 语言-列表
  * @method static string langParse(array|string $name) 语言-解析
  * @method static mixed config(array ...$vars) 配置参数-[获取|设置]
+ * @method static mixed cookie(array ...$vars) 配置Cookie-[获取|设置]
  * @method static mixed env(array ...$vars) 环境参数-[获取|设置]
  * @method static void dump(array ...$vars) 浏览器友好的变量输出
  * @method static mixed json(mixed $var, string $type) 解析Json

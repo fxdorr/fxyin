@@ -31,6 +31,7 @@ class Loader
         }
         $config = $config[$name[0]] ?? null;
         if (!is_array($config)) return;
+        ksort($config);
         // 执行加载器
         array_shift($name);
         $name = implode(DIRECTORY_SEPARATOR, $name);
