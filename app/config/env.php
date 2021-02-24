@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
+
 $param = \fxapp\Client::param();
 $param['view'] = \fxapp\Base::json($param['view'] ?? null, 'decode');
 \fxyin\Lang::setLangCookieName(\fxapp\Base::config('app.lang.name'));

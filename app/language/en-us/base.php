@@ -614,6 +614,8 @@ return [
     'after' => 'after',
     'ago' => 'ago',
     'later' => 'later',
+    'already' => 'already',
+    'already2' => 'already',
     // adverb phrase-adverb phrase
     'less than' => 'less than',
     'more than' => 'more than',
@@ -740,6 +742,8 @@ return [
     'url2' => 'url',
     //============================================================
     // symbol-symbol
+    '(' => '(',
+    ')' => ')',
     '[' => '[',
     ']' => ']',
     ',' => ',',

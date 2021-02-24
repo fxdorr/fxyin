@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
+
 namespace fxapp\facade;
 
 /**
@@ -454,6 +455,7 @@ class Text
         // 初始化变量
         $tray = [];
         if (!is_array($data)) {
+            $data = urlencode($data);
             return '=' . $data;
         }
         foreach ($data as $key => $value) {
@@ -647,21 +649,15 @@ class Text
                 break;
             case '1.2':
                 // 详细
-                $echo = [
-                    // 逻辑状态
-                    0 => false,
-                    // 状态代码
-                    1 => -1,
-                    // 提示信息
-                    2 => $this->throwable($th, '1.1'),
-                    // 响应数据
-                    3 => [],
-                    // 扩展数据
-                    4 => [
-                        'throwable' => $this->throwable($th, '1.1'),
-                        'trace' => $th->getTrace(),
-                    ],
-                ];
+                $echo = \fxapp\Server::echo();
+                $echo[0] = false;
+                $echo[1] = -1;
+                $echo[2] = $this->throwable($th, '1.1');
+                $echo[4]['throwable'] = $this->throwable($th, '1.1');
+                $echo[4]['trace'] = array_map(function ($value) {
+                    unset($value['args']);
+                    return $value;
+                }, array_slice($th->getTrace(), 0, 6));
                 $echo = \fxapp\Param::merge(2, $echo, $param);
                 break;
         }

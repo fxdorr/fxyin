@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
+
 namespace fxapp\facade;
 
 /**
@@ -246,9 +247,10 @@ class Param
      * 数组填充空值
      * @param array $param 参数
      * @param int $limit 次数限制
+     * @param bool $filter 过滤器
      * @return array
      */
-    public function array($param, int $limit = -1)
+    public function array($param, int $limit = -1, bool $filter = true)
     {
         // 初始化变量
         if (!is_array($param) || $limit === 0) {
@@ -259,9 +261,11 @@ class Param
         }
         // 处理数组
         foreach ($param as $key => $value) {
-            $param[$key] = $this->array($value);
+            $param[$key] = $this->array($value, $limit, $filter);
         }
-        $param[''] = null;
+        if ($filter) {
+            $param[''] = null;
+        }
         return $param;
     }
 
@@ -269,9 +273,10 @@ class Param
      * 空数组转对象
      * @param array $param 参数
      * @param int $limit 次数限制
+     * @param bool $filter 过滤器
      * @return mixed
      */
-    public function object($param, int $limit = -1)
+    public function object($param, int $limit = -1, bool $filter = true)
     {
         // 初始化变量
         if (!is_array($param) || !count($param) || $limit === 0) {
@@ -285,12 +290,12 @@ class Param
             unset($param['']);
         }
         // 处理数组
-        if (!count($param)) {
-            $param = new \StdClass();
-        } else {
+        if (count($param)) {
             foreach ($param as $key => $value) {
-                $param[$key] = $this->object($value);
+                $param[$key] = $this->object($value, $limit, $filter);
             }
+        } else if ($filter) {
+            $param = new \StdClass();
         }
         return $param;
     }

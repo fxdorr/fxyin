@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
+
 namespace fxapp\facade;
 
 /**
@@ -25,6 +26,8 @@ class Data
     {
         // 初始化变量
         $predefined = [
+            // 表达式
+            -1 => null,
             // 键名
             0 => null,
             // 键值
@@ -34,7 +37,7 @@ class Data
             // 逻辑
             3 => 'and',
             // 分组
-            4 => 1,
+            4 => '1',
             // 取反
             5 => 0,
             // 大小写敏感
@@ -42,6 +45,8 @@ class Data
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
         $predefined = [
+            // 表达式
+            'build' => $param[-1],
             // 键名
             'key' => $param[0],
             // 键值
@@ -58,19 +63,21 @@ class Data
             'case' => $param[6],
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
-        if (!is_array($data)) {
-            return $data;
+        if (is_null($param['build'])) {
+            if (!is_array($data)) {
+                return $data;
+            }
+            // 过滤非法字符
+            $param['value'] = $this->whereSafe($param['value'], $param['method'], $param['case']);
+            if (false === $param['value']) {
+                return $data;
+            }
+            // 搭建表达式
+            $param['build'] = $this->whereBuild($param['key'], $param['value'], $param['method']);
         }
-        // 过滤非法字符
-        $param['value'] = $this->whereSafe($param['value'], $param['method'], $param['case']);
-        if (false === $param['value']) {
-            return $data;
-        }
-        // 搭建表达式
-        $build = $this->whereBuild($param['key'], $param['value'], $param['method']);
         $elem = [
             // 表达式
-            'build' => $build,
+            'build' => $param['build'],
             // 逻辑
             'logic' => $param['logic'],
             // 分组
@@ -111,29 +118,29 @@ class Data
                 }
                 break;
             case 'in':
-            case 'not in':
                 // 批量
+            case 'not in':
+                // 批量-取反
                 if (!is_array($value)) {
                     $value = explode(',', $value);
                 }
                 break;
             case 'like':
+                // 模糊
             case 'not like':
-                // 模糊
-                if (!is_array($value)) {
-                    $value = [$value];
-                }
-                break;
+                // 模糊-取反
             case 'like fuzzy':
-            case 'not like fuzzy':
                 // 模糊
+            case 'not like fuzzy':
+                // 模糊-取反
                 if (!is_array($value)) {
                     $value = [$value];
                 }
                 break;
             case 'between':
-            case 'not between':
                 // 范围
+            case 'not between':
+                // 范围-取反
                 if (is_string($value) && mb_strpos($value, ' and ', null, 'utf-8') !== false) {
                     $value = explode(' and ', $value);
                 } else if (!is_array($value)) {
@@ -157,14 +164,16 @@ class Data
             // 包装键值
             switch ($method) {
                 case 'like':
-                case 'not like':
                     // 模糊
+                case 'not like':
+                    // 模糊-取反
                     $search = array_merge($search, ['/', '_']);
                     $replace = array_merge($replace, ['//', '/_']);
                     break;
                 case 'like fuzzy':
-                case 'not like fuzzy':
                     // 模糊
+                case 'not like fuzzy':
+                    // 模糊-取反
                     $search = array_merge($search, ['/', '%', '_']);
                     $replace = array_merge($replace, ['//', '/%', '/_']);
                     break;
@@ -180,8 +189,9 @@ class Data
                     $elem = '\'' . $elem . '\'';
                     break;
                 case 'like fuzzy':
-                case 'not like fuzzy':
                     // 模糊
+                case 'not like fuzzy':
+                    // 模糊-取反
                     $elem = '\'%' . $elem . '%\'';
                     break;
             }
@@ -195,26 +205,28 @@ class Data
                 // 默认
                 break;
             case 'in':
-            case 'not in':
                 // 批量
+            case 'not in':
+                // 批量-取反
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
                 $tray['glue'] = ',';
                 break;
             case 'like':
+                // 模糊
             case 'not like':
-                // 模糊
-                $tray['tail'] = ' escape \'/\'';
-                break;
+                // 模糊-取反
             case 'like fuzzy':
-            case 'not like fuzzy':
                 // 模糊
+            case 'not like fuzzy':
+                // 模糊-取反
                 $tray['tail'] = ' escape \'/\'';
                 break;
             case 'between':
-            case 'not between':
                 // 范围
+            case 'not between':
+                // 范围-取反
                 $tray['glue'] = ' and ';
                 break;
             case 'find_in_set':
@@ -238,7 +250,7 @@ class Data
                 $method = 'like';
                 break;
             case 'not like fuzzy':
-                // 模糊
+                // 模糊-取反
                 $method = 'not like';
                 break;
         }
@@ -266,6 +278,7 @@ class Data
                 $echo = implode(' ', $echo);
                 break;
             case 'in':
+                // 批量
             case 'not in':
                 // 批量
                 $echo = $key . ' ' . $method . ' (' . $value . ')';
@@ -280,6 +293,33 @@ class Data
                 $echo = '(' . implode(' or ', $echo) . ')';
                 break;
         }
+        return $echo;
+    }
+
+    /**
+     * SQL-条件装配
+     * @param array $data 数据
+     * @return string
+     */
+    public function whereAssemble($data)
+    {
+        // 初始化变量
+        if (!is_array($data)) {
+            return $data;
+        }
+        $echo = [];
+        foreach ($data as $key => $value) {
+            if (isset($value['self'])) {
+                $echo[$key][] = $value['self'];
+            }
+            if (isset($value['child'])) {
+                $value['child'] = $this->whereAssemble($value['child']);
+                $echo[$key][] = $value['child'];
+            }
+            $echo[$key] = implode(' and ', $echo[$key]);
+            $echo[$key] = '(' . $echo[$key] . ')';
+        }
+        $echo = implode(' and ', $echo);
         return $echo;
     }
 
@@ -300,27 +340,39 @@ class Data
         foreach ($data as $key => $value) {
             $where = $this->where($where, $value);
         }
-        // 搭建查询组合
-        $echo = [];
+        // 打包条件
+        $tray['save'] = [];
         foreach ($where as $key => $value) {
             // 校验表达式
             if (is_blank($value['build'])) continue;
             // 配置取反
             if ($value['not']) $value['build'] = '!(' . $value['build'] . ')';
             // 疏理分组
-            if (isset($echo[$value['group']])) {
-                $echo[$value['group']] .= ' ' . $value['logic'] . ' ' . $value['build'];
+            if (isset($tray['save'][$value['group']])) {
+                $tray['save'][$value['group']] .= ' ' . $value['logic'] . ' ' . $value['build'];
             } else {
-                $echo[$value['group']] = $value['build'];
+                $tray['save'][$value['group']] = $value['build'];
             }
         }
-        // 组装条件语句
-        foreach ($echo as $key => $value) {
-            if ($key == 1) continue;
-            $value = '(' . $value . ')';
-            $echo[$key] = $value;
+        // 分拣条件
+        $echo = [];
+        foreach ($tray['save'] as $key => $value) {
+            $key = explode('.', $key);
+            $key = array_reverse($key);
+            foreach ($key as $key2 => $value2) {
+                $tray['echo'] = [];
+                if ($key2 == 0) {
+                    $tray['echo'][$value2]['self'] = $value;
+                    $value = $tray['echo'];
+                } else {
+                    $tray['echo'][$value2]['child'] = $value;
+                    $value = $tray['echo'];
+                }
+            }
+            $echo = \fxapp\Param::merge($echo, $value);
         }
-        $echo = implode(' and ', $echo);
+        // 装配条件
+        $echo = $this->whereAssemble($echo);
         switch ($type) {
             default:
             case 1:
@@ -427,108 +479,6 @@ class Data
         }, $tray['key']);
         $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where `' . $param['key'] . '` in (' . implode(',', $tray['key']) . ')';
         return $echo;
-
-
-        // $echo = [];
-        // fxy_dump($data);
-        // foreach ($data as $key => $value) {
-        //     foreach ($value as $key2 => $value2) {
-        //         // 过滤表达式
-        //         $search = ['\\', '\''];
-        //         $replace = ['\\\\', '\\\''];
-        //         foreach ($search as $key3 => $value3) {
-        //             $value2 = str_replace($value3, $replace[$key3], $value2);
-        //         }
-        //         $data[$key][$key2] = $value2;
-        //         $echo[$key2][$value[$field]] = $value2;
-        //     }
-        // }
-        // fxy_dump($echo);
-        // // 疏理详情图
-        // $echo = array_map(function ($value) {
-        //     foreach ($value as $key => $value) {
-        //         $data[] = 'when "' . $key . '" then "' . $value . '"';
-        //     }
-        //     $data = implode(PHP_EOL, $data);
-        //     return $data;
-        // }, $echo);
-        // $echo2 = [];
-        // foreach ($echo as $key => $value) {
-        //     $echo2[] = '`' . $key . '` = case `' . $field . '` ' . $value . ' end';
-        // }
-        // $echo2 = implode(',', $echo2);
-        // fxy_dump($echo);
-        // fxy_dump($field);
-        // $echo2 = 'update ' . $table . ' set ' . $echo2 . ' where ' . $field . ' in (' . implode(',', array_column($data, $field)) . ')';
-        // fxy_dump($echo2);
-        // fxy_dump("UPDATE categories 
-        // SET display_order = CASE id 
-        // WHEN 1 THEN 3 
-        // WHEN 2 THEN 4 
-        // WHEN 3 THEN 5 
-        // END, 
-        // title = CASE id 
-        // WHEN 1 THEN 'New Title 1' 
-        // WHEN 2 THEN 'New Title 2' 
-        // WHEN 3 THEN 'New Title 3' 
-        // END 
-        // WHERE id IN (1,2,3) ");
-        // exit;
-
-
-
-
-        // $case = $this->updateCase($data, $field);
-        // $where = $this->updateParam($param);
-        // // 获取所有键名为$field列的值，值两边加上单引号，保存在$fields数组中
-        // // array_column()函数需要PHP5.5.0+，如果小于这个版本，可以自己实现，
-        // // 参考地址：http://php.net/manual/zh/function.array-column.php#118831
-        // $fields = array_column($data, $field);
-        // $fields = implode(',', array_map(function ($value) {
-        //     return "'" . $value . "'";
-        // }, $fields));
-        // $echo = sprintf("update `%s` SET %s where `%s` in (%s) %s", $table, $case, $field, $fields, $where);
-        // return $echo;
-    }
-
-    /**
-     * SQL-更新条件-将二维数组转换成CASE WHEN THEN的批量更新条件
-     * @param array $data 二维数组
-     * @param string $field 列名
-     * @return string
-     */
-    public function updateCase($data, $field)
-    {
-        $echo = '';
-        $keys = array_keys(current($data) ?: []);
-        foreach ($keys as $column) {
-            $echo .= sprintf("`%s` = case `%s` \n", $column, $field);
-            foreach ($data as $line) {
-                // 过滤表达式
-                $search = ['\\', '\''];
-                $replace = ['\\\\', '\\\''];
-                foreach ($search as $key2 => $value2) {
-                    $line[$column] = str_replace($value2, $replace[$key2], $line[$column]);
-                }
-                $echo .= sprintf("when '%s' then '%s' \n", $line[$field], $line[$column]);
-            }
-            $echo .= 'end,';
-        }
-        return rtrim($echo, ',');
-    }
-
-    /**
-     * SQL-查询解析where条件
-     * @param array $param 参数
-     * @return string
-     */
-    public function updateParam($param)
-    {
-        $where = [];
-        foreach ($param as $key => $value) {
-            $where[] = sprintf("`%s` = '%s'", $key, $value);
-        }
-        return $where ? ' AND ' . implode(' AND ', $where) : '';
     }
 
     /**
@@ -828,6 +778,7 @@ class Data
             foreach ($tray['format'] as $key2 => $value2) {
                 $param[$key][$key2] = $param[$key][$key2] ?? $value2;
             }
+            ksort($param[$key]);
         }
         $echo[2] = \fxapp\Base::lang(['request', 'success']);
         $echo[3] = $param;
