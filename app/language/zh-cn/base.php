@@ -616,6 +616,8 @@ return [
     'later' => '以后',
     'already' => '已经',
     'already2' => '已',
+    'defined' => '已定义',
+    'undefined' => '未定义',
     // 副词词组-adverb phrase
     'less than' => '小于',
     'more than' => '大于',

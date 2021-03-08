@@ -616,6 +616,8 @@ return [
     'later' => 'later',
     'already' => 'already',
     'already2' => 'already',
+    'defined' => 'defined',
+    'undefined' => 'undefined',
     // adverb phrase-adverb phrase
     'less than' => 'less than',
     'more than' => 'more than',

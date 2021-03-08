@@ -40,10 +40,18 @@ class Cookie
         // 初始化变量
         $config = \fxapp\Base::config('app.cookie');
         $predefined = [
-            // 键名-键值-保存时间
-            0 => null, 1 => '', 2 => $config['expire'],
-            // 保存路径-有效域名-启用安全传输
-            3 => $config['path'], 4 => $config['domain'], 5 => $config['secure'],
+            // 键名
+            0 => null,
+            // 键值
+            1 => '',
+            // 保存时间
+            2 => $config['expire'],
+            // 保存路径
+            3 => $config['path'],
+            // 有效域名
+            4 => $config['domain'],
+            // 启用安全传输
+            5 => $config['secure'],
             // httponly设置
             6 => $config['httponly'],
         ];
