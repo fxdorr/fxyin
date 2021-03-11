@@ -113,7 +113,7 @@ class Push extends Notify
                                 'category' => 'jiguang',
                                 'extras' => $tray['_param']['_set_extras'],
                             ]);
-                        break;;
+                        break;
                     case 4:
                         // Android通知
                         $model = $model

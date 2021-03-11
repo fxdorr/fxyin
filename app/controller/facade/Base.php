@@ -93,7 +93,7 @@ class Base
         if (is_array($name)) {
             foreach ($name as $key => $value) {
                 if (is_array($value)) {
-                    $name[$key] = $this->langParse($value);;
+                    $name[$key] = $this->langParse($value);
                 }
             }
             switch ($type) {

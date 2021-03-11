@@ -147,7 +147,7 @@ class Email
             return false;
         }
         $this->log_write("Connected to relay host " . $this->relay_host . "\n");
-        return true;;
+        return true;
     }
 
     public function smtp_sockopen_mx($address)
@@ -226,7 +226,7 @@ class Email
         $message = date("M d H:i:s ") . get_current_user() . "[" . getmypid() . "]: " . $message;
         if (!@file_exists($this->log_file) || !($fp = @fopen($this->log_file, "a"))) {
             $this->smtp_debug("Warning: Cannot open log file \"" . $this->log_file . "\"\n");
-            return false;;
+            return false;
         }
         flock($fp, LOCK_EX);
         fputs($fp, $message);
