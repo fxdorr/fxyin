@@ -629,35 +629,35 @@ class Data
      * 处理字段-日期
      * @param string $field 字段名
      * @param string $replace 替换值
-     * @param int $type 类型
+     * @param string $param 参数
      * @return string
      */
-    public function fieldDate($field, $replace = '', $type = 1)
+    public function fieldDate($field, $replace = '', $param = 1)
     {
         if (!$this->paramEmpty([$field], 1)[0]) {
             $field = '\'' . $field . '\'';
         }
-        switch ($type) {
-            default:
+        switch ($param) {
             case 1:
                 // 日期时间
-                $bool = 'from_unixtime(' . $field . ',\'%Y-%m-%d %H:%i:%S\')';
+                $param = '%Y-%m-%d %H:%i:%S';
                 break;
             case 2:
                 // 日期
-                $bool = 'from_unixtime(' . $field . ',\'%Y-%m-%d\')';
+                $param = '%Y-%m-%d';
                 break;
             case 3:
                 // 时间
-                $bool = 'from_unixtime(' . $field . ',\'%H:%i:%S\')';
+                $param = '%H:%i:%S';
                 break;
         }
+        $param = 'from_unixtime(' . $field . ',\'' . $param . '\')';
         if (is_null($replace)) {
-            $replace = $bool;
+            $replace = $param;
         } else {
             $replace = '\'' . $replace . '\'';
         }
-        $echo = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $bool . ')';
+        $echo = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $param . ')';
         return $echo;
     }
 
