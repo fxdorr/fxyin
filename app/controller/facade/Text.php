@@ -491,7 +491,8 @@ class Text
             ];
             $value = \fxapp\Param::define([$value, $predefined], '1.2.1');
             if (is_blank($value[0]) && is_null($value[1])) continue;
-            // 疏理键值
+            // 疏理数据
+            $value[0] = !is_null($value[0]) ? urldecode($value[0]) : $value[0];
             $value[1] = !is_null($value[1]) ? urldecode($value[1]) : $value[1];
             // 解析键钥
             $value[0] = preg_replace('/^([^\[]*)/', '[$1]', $value[0]);
