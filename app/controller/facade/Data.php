@@ -93,10 +93,41 @@ class Data
      * SQL-条件安检
      * @param string $value 键值
      * @param string $method 方法
-     * @param string $case 大小写敏感
+     * @param int $case 大小写敏感
      * @return string
      */
-    public function whereSafe($value, &$method, $case)
+    public function whereSafe($value, &$method, $case = 0)
+    {
+        // 初始化变量
+        if (!(is_string($value) || is_numeric($value) || is_array($value) || is_object($value))) {
+            return false;
+        } else if (is_null($method)) {
+            return $value;
+        }
+        // 条件过滤
+        $value = $this->whereFilter($value, $method, $case);
+        // 解析方法
+        switch ($method) {
+            case 'like fuzzy':
+                // 模糊
+                $method = 'like';
+                break;
+            case 'not like fuzzy':
+                // 模糊-取反
+                $method = 'not like';
+                break;
+        }
+        return $value;
+    }
+
+    /**
+     * SQL-条件过滤
+     * @param string $value 键值
+     * @param string $method 方法
+     * @param int $case 大小写敏感
+     * @return string
+     */
+    public function whereFilter($value, $method, $case = 0)
     {
         // 初始化变量
         if (!(is_string($value) || is_numeric($value) || is_array($value) || is_object($value))) {
@@ -156,6 +187,12 @@ class Data
                     $value = explode(',', $value);
                 }
                 break;
+            case 'json in':
+                // 对象-批量
+                if (!is_array($value)) {
+                    $value = explode(',', $value);
+                }
+                break;
         }
         // 过滤键值
         $search = ['\\', '\''];
@@ -193,6 +230,9 @@ class Data
                 case 'not like fuzzy':
                     // 模糊-取反
                     $elem = '\'%' . $elem . '%\'';
+                    break;
+                case 'field':
+                    // 字段
                     break;
             }
             $value[$index] = $elem;
@@ -236,6 +276,13 @@ class Data
                 }
                 $tray['glue'] = ',';
                 break;
+            case 'json in':
+                // 对象-批量
+                if (!count($value)) {
+                    $value[] = '\'\'';
+                }
+                $tray['glue'] = ',';
+                break;
         }
         // 组装方法
         $value = array_map(function ($value) use ($case) {
@@ -243,17 +290,6 @@ class Data
             return $value;
         }, $value);
         $value = implode($tray['glue'], $value) . $tray['tail'];
-        // 解析方法
-        switch ($method) {
-            case 'like fuzzy':
-                // 模糊
-                $method = 'like';
-                break;
-            case 'not like fuzzy':
-                // 模糊-取反
-                $method = 'not like';
-                break;
-        }
         return $value;
     }
 
@@ -291,6 +327,10 @@ class Data
                     $echo[] = $method . '(' . $cell . ',' . $key . ')';
                 }
                 $echo = '(' . implode(' or ', $echo) . ')';
+                break;
+            case 'json in':
+                // 对象-批量
+                $echo = 'json_contains(json_array(' . $value . '), ' . $key . ')';
                 break;
         }
         return $echo;
