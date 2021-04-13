@@ -303,6 +303,33 @@ class Data
     public function whereBuild($key, $value, $method)
     {
         // 初始化变量
+        // 疏理类型
+        if (strpos($key, '->') !== false) {
+            $tray['type'] = 'json';
+        } else {
+            $tray['type'] = 'field';
+        }
+        // 处理数据
+        switch ($tray['type']) {
+            case 'json':
+                // 对象
+                $key = explode('->', $key, 2);
+                $key[0] = explode('.', $key[0]);
+                $key[0] = array_map(function ($value) {
+                    // 疏理数据
+                    if (strpos($value, '`') === false) {
+                        $value = '`' . $value . '`';
+                    }
+                    return $value;
+                }, $key[0]);
+                $key[0] = implode('.', $key[0]);
+                if (strpos($method, 'json') !== 0) {
+                    $key = $key[0] . '->\'$.' . $key[1] . '\'+\'\'';
+                } else {
+                    $key = $key[0] . '->\'$.' . $key[1] . '\'';
+                }
+                break;
+        }
         // 组装函数
         switch ($method) {
             default:
