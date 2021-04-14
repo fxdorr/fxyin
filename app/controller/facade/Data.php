@@ -575,13 +575,13 @@ class Data
             return $echo;
         }
         foreach ($data_new as $key => $value) {
-            if ($value != $data_old[$key]) {
-                $echo[0] = false;
-                $echo[1] = 1002;
-                $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
-                break;
-            }
+            if ($value == $data_old[$key]) continue;
+            $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
+            return $echo;
         }
+        $echo[0] = false;
+        $echo[1] = 1002;
+        $echo[2] = \fxapp\Base::lang(['data', 'same']);
         return $echo;
     }
 
