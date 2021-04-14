@@ -318,6 +318,7 @@ return [
     'rune' => '符文',
     'copyright' => '版权',
     'table' => '表',
+    'script' => '脚本',
     // 名词词组-noun phrase
     'log on' => '登录',
     'longitude and latitude' => '经纬度',

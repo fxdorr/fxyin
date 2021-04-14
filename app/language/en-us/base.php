@@ -318,6 +318,7 @@ return [
     'rune' => 'rune',
     'copyright' => 'copyright',
     'table' => 'table',
+    'script' => 'script',
     // noun phrase-noun phrase
     'log on' => 'log on',
     'longitude and latitude' => 'longitude and latitude',
