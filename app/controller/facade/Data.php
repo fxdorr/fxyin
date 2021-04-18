@@ -281,6 +281,7 @@ class Data
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
+                $case = 0;
                 $tray['glue'] = ',';
                 break;
         }
@@ -324,9 +325,9 @@ class Data
                 }, $key[0]);
                 $key[0] = implode('.', $key[0]);
                 if (strpos($method, 'json') !== 0) {
-                    $key = $key[0] . '->\'$.' . $key[1] . '\'+\'\'';
-                } else {
                     $key = $key[0] . '->\'$.' . $key[1] . '\'';
+                } else {
+                    $key = 'concat(' . $key[0] . '->\'$.' . $key[1] . '\')';
                 }
                 break;
         }
