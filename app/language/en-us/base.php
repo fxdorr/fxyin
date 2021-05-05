@@ -277,6 +277,8 @@ return [
     'element' => 'element',
     'card' => 'card',
     'material' => 'material',
+    'window' => 'window',
+    'plugin' => 'plugin',
     // system noun-system noun
     'fxroy' => 'fxroy',
     'fxyin' => 'fxyin',
@@ -331,6 +333,7 @@ return [
     'previous page' => 'previous page',
     'next page' => 'next page',
     'not configured' => 'not configured',
+    'not loaded' => 'not loaded',
     //============================================================
     // verb-v.-verb
     'return' => 'return',

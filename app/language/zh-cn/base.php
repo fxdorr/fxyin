@@ -277,6 +277,8 @@ return [
     'element' => '元素',
     'card' => '卡片',
     'material' => '物料',
+    'window' => '窗口',
+    'plugin' => '插件',
     // 系统名词-system noun
     'fxroy' => '方弦',
     'fxyin' => '风音',
@@ -331,6 +333,7 @@ return [
     'previous page' => '上一页',
     'next page' => '下一页',
     'not configured' => '未配置',
+    'not loaded' => '未加载',
     //============================================================
     // 动词-v.-verb
     'return' => '返回',
