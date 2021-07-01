@@ -63,6 +63,8 @@ class Service
         }
         // 发送请求
         $response = curl_exec($request);
+        // 清除BOM头
+        $response = ltrim($response, "\XEF\XBB\XBF");
         curl_close($request);
         return $response;
     }
