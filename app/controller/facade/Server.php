@@ -17,6 +17,17 @@ namespace fxapp\facade;
 class Server
 {
     /**
+     * 初始化响应
+     * @return array
+     */
+    public function echo()
+    {
+        // 初始化变量
+        $echo = \fxapp\Base::config('app.echo.template');
+        return $echo;
+    }
+
+    /**
      * 获取IP
      * @return mixed
      */
@@ -183,13 +194,89 @@ class Server
     }
 
     /**
-     * 初始化响应
-     * @return array
+     * 处理数据-环境
+     * @return mixed
      */
-    public function echo()
+    public function env()
     {
-        // 初始化变量
-        $echo = \fxapp\Base::config('app.echo.template');
-        return $echo;
+        // 配置请求主机
+        if (PHP_SAPI === 'cli' && !isset($_SERVER['SERVER_NAME'])) {
+            // 载入数据
+            $tray['host'] = \fxapp\Base::config('app.param.cli.svr_name');
+            $tray['host'] = !is_null($tray['host']) ? strtolower($tray['host']) : null;
+            // 配置数据
+            $_SERVER['SERVER_NAME'] = $tray['host'];
+            \fxapp\Base::config('env.base.host', $tray['host']);
+            \fxapp\Base::env('base.host', $tray['host']);
+        }
+        // 配置请求路径
+        if (PHP_SAPI === 'cli' && !isset($_SERVER['REQUEST_URI'])) {
+            // 载入数据
+            $tray['uri'] = \fxapp\Base::config('app.param.cli.svr_uri');
+            $tray['uri'] = !is_null($tray['uri']) ? strtolower($tray['uri']) : null;
+            // 配置数据
+            $_SERVER['REQUEST_URI'] = $tray['uri'];
+            \fxapp\Base::config('env.base.uri', $tray['uri']);
+            \fxapp\Base::env('base.uri', $tray['uri']);
+        }
+    }
+
+    /**
+     * 处理数据-分支
+     * @return mixed
+     */
+    public function branch()
+    {
+        // 载入分支
+        $tray['branch'] = \fxapp\Base::env('base.host');
+        $tray['store'] = \fxapp\Base::config('branch.store');
+        foreach ($tray['store'] as $index => $elem) {
+            foreach (explode(',', $index) as $value) {
+                // 全文匹配
+                $data['full'][$value] = $index;
+                // 特殊匹配
+                $data['initial'] = mb_substr($value, 0, 1, 'utf-8');
+                $data['after'] = mb_substr($value, 1, null, 'utf-8');
+                switch ($data['initial']) {
+                    case '^':
+                        // 正则表达式
+                        $data['regular'][$data['after']] = $value;
+                        break;
+                    case '$':
+                        // 正则表达式-完整
+                        $data['regular_all'][$data['after']] = $value;
+                        break;
+                }
+            }
+        }
+        // 全文匹配
+        if (isset($data['full'][$tray['branch']])) {
+            $tray['echo'] = $tray['branch'];
+        }
+        // 特殊匹配-正则表达式
+        if (!isset($tray['echo']) && isset($data['regular'])) {
+            foreach ($data['regular'] as $key => $value) {
+                if (!preg_match('/' . $key . '/i', $tray['branch'])) continue;
+                $tray['echo'] = $value;
+                break;
+            }
+        }
+        // 特殊匹配-正则表达式-完整
+        if (!isset($tray['echo']) && isset($data['regular_all'])) {
+            foreach ($data['regular_all'] as $key => $value) {
+                if (!preg_match($key, $tray['branch'])) continue;
+                $tray['echo'] = $value;
+                break;
+            }
+        }
+        // 默认分支
+        if (!isset($tray['echo'])) {
+            $tray['echo'] = \fxapp\Base::config('branch.default');
+        }
+        // 配置分支
+        $tray['echo'] = $tray['store'][$data['full'][$tray['echo']]];
+        foreach ($tray['echo'] as $elem) {
+            \fxapp\Base::config($elem[1], \fxapp\Base::config($elem[0]));
+        }
     }
 }

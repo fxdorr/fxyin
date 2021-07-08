@@ -94,7 +94,7 @@ class App
                 }
             }
         }
-        // 加载百货文件
+        // 加载商店文件
         if (is_dir($path . 'store')) {
             $dir = $path . 'store';
             $files = scandir($dir);

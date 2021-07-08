@@ -172,7 +172,7 @@ class Data
                 // 范围
             case 'not between':
                 // 范围-取反
-                if (is_string($value) && mb_strpos($value, ' and ', null, 'utf-8') !== false) {
+                if (is_string($value) && mb_strpos($value, ' and ', 0, 'utf-8') !== false) {
                     $value = explode(' and ', $value);
                 } else if (!is_array($value)) {
                     $value = explode(',', $value);
