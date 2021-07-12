@@ -92,6 +92,11 @@ return [
         'ignore' => '!#',
         // 缓存有效期
         'expire' => 315360000,
+        // 列表
+        'list' => [
+            'zh-cn',
+            'en-us',
+        ],
     ],
     // Session设置
     'session' => [

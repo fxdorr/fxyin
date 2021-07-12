@@ -15,16 +15,9 @@ $param['view'] = \fxapp\Base::json($param['view'] ?? null, 'decode');
 // 视图配置
 $tray['lang'] = $param['view']['lang'] ?? ($_SERVER['HTTP_LANG'] ?? \fxyin\Lang::detect());
 // 识别语言
-switch ($tray['lang']) {
-    default:
-        // 未知
-        $tray['lang'] = \fxapp\Base::config('app.lang.default');
-        break;
-    case 'zh-cn':
-        // 中文(简体)
-    case 'en-us':
-        // 英语(美式)
-        break;
+$config = \fxapp\Base::config('app.lang');
+if (!in_array($tray['lang'], $config['list'])) {
+    $tray['lang'] = \fxapp\Base::config('app.lang.default');
 }
 
 /**
