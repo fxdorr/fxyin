@@ -26,6 +26,7 @@ namespace fxapp;
  * @method static array updateContrast(array $data_new, array $data_old) 处理参数-更新比较
  * @method static string fieldDistance(string $lngs, string $lats, string $lnge, string $late) 处理字段-计算经纬度距离
  * @method static string fieldInitial(string $field) 处理字段-首字母
+ * @method static string fieldDivision(string $dividend, string $divisor) 处理字段-除法
  * @method static string fieldJson(string $field, string $param, int $mode = null) 处理字段-Json
  * @method static string fieldText(string $field, string $replace = '', int $mode = 1) 处理字段-文本
  * @method static string fieldDate(string $field, string $replace = '', int $type = 1) 处理字段-日期

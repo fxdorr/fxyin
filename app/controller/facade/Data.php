@@ -599,14 +599,14 @@ class Data
         if (is_null($lngs) || is_null($lats) || is_null($lnge) || is_null($late)) {
             return false;
         }
-        $form = "ACOS(
+        $echo = "ACOS(
                     SIN(($lats * 3.1415) / 180 ) *
                     SIN(($late * 3.1415) / 180 ) +
                     COS(($lats * 3.1415) / 180 ) *
                     COS(($late * 3.1415) / 180 ) *
                     COS(($lngs * 3.1415) / 180 - ($lnge * 3.1415) / 180 ) 
                 ) * 6378.137";
-        $echo = str_replace([" ", "　", "\t", "\n", "\r"], '', $form);
+        $echo = str_replace([" ", "　", "\t", "\n", "\r"], '', $echo);
         return $echo;
     }
 
@@ -620,7 +620,7 @@ class Data
         if (is_null($field)) {
             return false;
         }
-        $form = "ELT(
+        $echo = "ELT(
                     INTERVAL(CONV(HEX(left(CONVERT(" . $field . " USING gbk),'1')),'16','10'),
                     0,
                     0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
@@ -630,7 +630,22 @@ class Data
                     'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
                     'Q','R','S','T','W','X','Y','Z'
                 )";
-        $echo = str_replace(["  ", "　", "\t", "\n", "\r"], '', $form);
+        $echo = str_replace(["  ", "　", "\t", "\n", "\r"], '', $echo);
+        return $echo;
+    }
+
+    /**
+     * 处理字段-除法
+     * @param string $dividend 被除数
+     * @param string $divisor 除数
+     * @return string
+     */
+    public function fieldDivision($dividend, $divisor)
+    {
+        if (is_null($dividend) || is_null($divisor)) {
+            return false;
+        }
+        $echo = 'if(' . $divisor . '=0,0,' . $dividend . '/' . $divisor . ')';
         return $echo;
     }
 
