@@ -35,7 +35,6 @@ class App
         foreach ($config as $key => $value) {
             if (array_key_exists($key, $data)) continue;
             self::load($value);
-            Config::set('env.base.lang.' . $key, \fxapp\Base::config('env.view.lang'));
             $data[$key] = $value;
         }
         return true;

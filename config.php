@@ -34,8 +34,6 @@ return [
             'app' => '',
             // 应用名称
             'name' => '',
-            // 语言
-            'lang' => [],
             // 请求方案
             'scheme' => !is_null($tray['scheme']) ? strtolower($tray['scheme']) : null,
             // 请求主机
