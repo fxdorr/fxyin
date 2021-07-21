@@ -382,6 +382,8 @@ return [
     'delete2' => 'del',
     'publish' => 'publish',
     'machine' => 'machine',
+    'fold' => 'fold',
+    'unfold' => 'unfold',
     // transitive verb-vt.-transitive verb
     'request' => 'request',
     'get' => 'get',

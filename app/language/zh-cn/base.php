@@ -382,6 +382,8 @@ return [
     'delete2' => '删除',
     'publish' => '发表',
     'machine' => '加工',
+    'fold' => '折叠',
+    'unfold' => '展开',
     // 及物动词-vt.-transitive verb
     'request' => '请求',
     'get' => '获取',
