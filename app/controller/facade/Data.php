@@ -325,7 +325,7 @@ class Data
                 }, $key[0]);
                 $key[0] = implode('.', $key[0]);
                 if (strpos($method, 'json') !== 0) {
-                    $key = $key[0] . '->\'$.' . $key[1] . '\'';
+                    $key = 'if(json_valid(' . $key[0] . '), trim(both \'"\' from ' . $key[0] . '->\'$.' . $key[1] . '\'), ' . $key[0] . ')';
                 } else {
                     $key = 'concat(' . $key[0] . '->\'$.' . $key[1] . '\')';
                 }
