@@ -25,24 +25,7 @@ class Data
     public function where($data, $param)
     {
         // 初始化变量
-        $predefined = [
-            // 表达式
-            -1 => null,
-            // 键名
-            0 => null,
-            // 键值
-            1 => null,
-            // 方法
-            2 => null,
-            // 逻辑
-            3 => 'and',
-            // 分组
-            4 => '1',
-            // 取反
-            5 => 0,
-            // 大小写敏感
-            6 => 1,
-        ];
+        $predefined = \fxapp\Base::config('facade.data.where');
         $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
         $predefined = [
             // 表达式

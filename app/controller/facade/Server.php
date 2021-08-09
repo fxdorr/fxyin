@@ -23,7 +23,7 @@ class Server
     public function echo()
     {
         // 初始化变量
-        $echo = \fxapp\Base::config('app.echo.template');
+        $echo = \fxapp\Base::config('facade.server.echo.template');
         return $echo;
     }
 
@@ -141,7 +141,7 @@ class Server
                 break;
             case 2:
                 // 通用
-                $base = \fxapp\Base::config('app.echo.format');
+                $base = \fxapp\Base::config('facade.server.echo.format');
                 // 处理数据
                 $data[2] = \fxapp\Base::lang($data[2] ?? '');
                 foreach ($base as $key => $value) {

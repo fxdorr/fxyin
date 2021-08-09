@@ -51,33 +51,6 @@ return [
         // 等级
         'level' => ['error', 'warning', 'notice', 'info', 'debug', 'trace', 'depot', 'ignore'],
     ],
-    // 响应配置
-    'echo' => [
-        // 模板
-        'template' => [
-            // 逻辑状态
-            0 => true,
-            // 状态代码
-            1 => 200,
-            // 提示信息
-            2 => '',
-            // 响应数据
-            3 => [],
-            // 扩展数据
-            4 => ['' => null],
-        ],
-        // 格式
-        'format' => [
-            // 状态代码
-            1 => 'code',
-            // 提示信息
-            2 => 'message',
-            // 响应数据
-            3 => 'data',
-            // 扩展数据
-            4 => 'extend',
-        ]
-    ],
     // 语言配置
     'lang' => [
         // 多语言开关
