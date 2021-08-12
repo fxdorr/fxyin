@@ -170,8 +170,11 @@ class Data
                     $value = explode(',', $value);
                 }
                 break;
-            case 'json in':
-                // 对象-批量
+            case 'json array':
+                // 简谱-数组
+                break;
+            case 'json object':
+                // 简谱-对象
                 if (!is_array($value)) {
                     $value = explode(',', $value);
                 }
@@ -216,6 +219,10 @@ class Data
                     break;
                 case 'field':
                     // 字段
+                case 'json array':
+                    // 简谱-数组
+                case 'json object':
+                    // 简谱-对象
                     break;
             }
             $value[$index] = $elem;
@@ -259,9 +266,20 @@ class Data
                 }
                 $tray['glue'] = ',';
                 break;
-            case 'json in':
-                // 对象-批量
+            case 'json array':
+                // 简谱-数组
                 if (!count($value)) {
+                    $value[] = '\'\'';
+                }
+                $case = 0;
+                $tray['glue'] = ',';
+                break;
+            case 'json object':
+                // 简谱-对象
+                if (!count($value)) {
+                    $value[] = '\'\'';
+                }
+                if (count($value) % 2 == 1) {
                     $value[] = '\'\'';
                 }
                 $case = 0;
@@ -289,30 +307,7 @@ class Data
         // 初始化变量
         // 疏理类型
         if (strpos($key, '->') !== false) {
-            $tray['type'] = 'json';
-        } else {
-            $tray['type'] = 'field';
-        }
-        // 处理数据
-        switch ($tray['type']) {
-            case 'json':
-                // 对象
-                $key = explode('->', $key, 2);
-                $key[0] = explode('.', $key[0]);
-                $key[0] = array_map(function ($value) {
-                    // 疏理数据
-                    if (strpos($value, '`') === false) {
-                        $value = '`' . $value . '`';
-                    }
-                    return $value;
-                }, $key[0]);
-                $key[0] = implode('.', $key[0]);
-                if (strpos($method, 'json') !== 0) {
-                    $key = 'if(json_valid(' . $key[0] . '), trim(both \'"\' from ' . $key[0] . '->\'$.' . $key[1] . '\'), ' . $key[0] . ')';
-                } else {
-                    $key = 'concat(' . $key[0] . '->\'$.' . $key[1] . '\')';
-                }
-                break;
+            $key = $this->fieldJson($key, null, 1);
         }
         // 组装函数
         switch ($method) {
@@ -339,9 +334,13 @@ class Data
                 }
                 $echo = '(' . implode(' or ', $echo) . ')';
                 break;
-            case 'json in':
-                // 对象-批量
-                $echo = 'json_contains(json_array(' . $value . '), ' . $key . ')';
+            case 'json array':
+                // 简谱-数组
+                $echo = 'json_contains(' . $key . ', json_array(' . $value . '))';
+                break;
+            case 'json object':
+                // 简谱-对象
+                $echo = 'json_contains(' . $key . ', json_object(' . $value . '))';
                 break;
         }
         return $echo;
@@ -579,6 +578,7 @@ class Data
      */
     public function fieldDistance($lngs, $lats, $lnge, $late)
     {
+        // 初始化变量
         if (is_null($lngs) || is_null($lats) || is_null($lnge) || is_null($late)) {
             return false;
         }
@@ -600,6 +600,7 @@ class Data
      */
     public function fieldInitial($field)
     {
+        // 初始化变量
         if (is_null($field)) {
             return false;
         }
@@ -625,6 +626,7 @@ class Data
      */
     public function fieldDivision($dividend, $divisor)
     {
+        // 初始化变量
         if (is_null($dividend) || is_null($divisor)) {
             return false;
         }
@@ -635,23 +637,44 @@ class Data
     /**
      * 处理字段-Json
      * @param string $field 字段名
-     * @param string $param 参数
-     * @param int $mode 模式
+     * @param string $replace 替换值
+     * @param int $param 参数
      * @return string
      */
-    public function fieldJson($field, $param, $mode = null)
+    public function fieldJson($field, $replace, $param = 1)
     {
-        switch ($mode) {
+        // 初始化变量
+        $field = explode('->', $field, 2);
+        switch ($param) {
             default:
             case 1:
                 // 默认
-                $echo = 'if(json_valid(' . $field . '), trim(both \'"\' from ' . $field . '->\'' . $param . '\'), ' . $field . ')';
+                $field[0] = explode('.', $field[0], 2);
+                $field[0] = array_map(function ($value) {
+                    // 疏理数据
+                    if (strpos($value, '`') === false) {
+                        $value = '`' . $value . '`';
+                    }
+                    return $value;
+                }, $field[0]);
+                $field[0] = implode('.', $field[0]);
                 break;
             case 2:
-                // 非Json则替换
-                $echo = 'if(json_valid(' . $field . '), ' . $field . ', \'{}\')';
+                // JSON字符串
                 break;
         }
+        // 疏理子集
+        if (strpos($field[1], '$.') !== 0) {
+            $field[1] = '$.' . $field[1];
+        }
+        // 疏理替换
+        if (is_null($replace)) {
+            $replace = $field[0];
+        } else {
+            $replace = '\'' . $replace . '\'';
+        }
+        // 疏理输出
+        $echo = 'if(json_valid(' . $field[0] . '), json_unquote(json_extract(' . $field[0] . ',\'' . $field[1] . '\')), ' . $replace . ')';
         return $echo;
     }
 
@@ -659,15 +682,16 @@ class Data
      * 处理字段-文本
      * @param string $field 字段名
      * @param string $replace 替换值
-     * @param int $mode 模式
+     * @param int $param 参数
      * @return string
      */
-    public function fieldText($field, $replace = '', $mode = 1)
+    public function fieldText($field, $replace = '', $param = 1)
     {
+        // 初始化变量
         if (!$this->paramEmpty([$field], 1)[0]) {
             $field = '\'' . $field . '\'';
         }
-        switch ($mode) {
+        switch ($param) {
             default:
             case 1:
                 // 默认
@@ -695,11 +719,12 @@ class Data
      * 处理字段-日期
      * @param string $field 字段名
      * @param string $replace 替换值
-     * @param string $param 参数
+     * @param int|string $param 参数
      * @return string
      */
     public function fieldDate($field, $replace = '', $param = 1)
     {
+        // 初始化变量
         if (!$this->paramEmpty([$field], 1)[0]) {
             $field = '\'' . $field . '\'';
         }
@@ -723,6 +748,7 @@ class Data
         } else {
             $replace = '\'' . $replace . '\'';
         }
+        // 疏理输出
         $echo = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $param . ')';
         return $echo;
     }
