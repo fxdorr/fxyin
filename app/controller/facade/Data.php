@@ -645,10 +645,13 @@ class Data
     {
         // 初始化变量
         $field = explode('->', $field, 2);
+        // 疏理子集
+        $field[1] = ltrim($field[1], '$.');
         switch ($param) {
             default:
             case 1:
                 // 默认
+                // 疏理字段
                 $field[0] = explode('.', $field[0], 2);
                 $field[0] = array_map(function ($value) {
                     // 疏理数据
@@ -658,15 +661,23 @@ class Data
                     return $value;
                 }, $field[0]);
                 $field[0] = implode('.', $field[0]);
+                // 疏理子集
+                $field[1] = explode('.', $field[1]);
+                $field[1] = array_map(function ($value) {
+                    // 疏理数据
+                    if (strpos($value, '"') === false) {
+                        $value = '"' . $value . '"';
+                    }
+                    return $value;
+                }, $field[1]);
+                $field[1] = implode('.', $field[1]);
                 break;
             case 2:
-                // JSON字符串
+                // 原生
                 break;
         }
         // 疏理子集
-        if (strpos($field[1], '$.') !== 0) {
-            $field[1] = '$.' . $field[1];
-        }
+        $field[1] = '$.' . $field[1];
         // 疏理替换
         if (is_null($replace)) {
             $replace = $field[0];
