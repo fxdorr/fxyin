@@ -450,6 +450,7 @@ class Param
                 // 解析地址
                 $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.uri');
                 $data['url'] = explode('?', $data['url'], 2);
+                $data['url'][1] = $data['url'][1] ?? null;
                 // 疏理数据
                 $data['url'] = [$data['url'][0]];
                 $data['param'] = $this->merge(\fxapp\Text::strDecode($data['url'][1]), $data['param']);
@@ -464,6 +465,7 @@ class Param
                 // 解析地址
                 $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.web') . \fxapp\Base::env('base.uri');
                 $data['url'] = explode('?', $data['url'], 2);
+                $data['url'][1] = $data['url'][1] ?? null;
                 // 解析数据
                 $data['param'] = \fxapp\Text::strDecode($data['url'][1]);
                 if (!is_null($data['name'])) {
