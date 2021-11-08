@@ -641,7 +641,7 @@ class Data
      * @param int $param 参数
      * @return string
      */
-    public function fieldJson($field, $replace, $param = 1)
+    public function fieldJson($field, $replace = '', $param = 1)
     {
         // 初始化变量
         $field = explode('->', $field, 2);
@@ -685,7 +685,7 @@ class Data
             $replace = '\'' . $replace . '\'';
         }
         // 疏理输出
-        $echo = 'if(json_valid(' . $field[0] . '), json_unquote(json_extract(' . $field[0] . ',\'' . $field[1] . '\')), ' . $replace . ')';
+        $echo = 'if(json_valid(' . $field[0] . '),ifnull(json_unquote(json_extract(' . $field[0] . ',\'' . $field[1] . '\')),' . $replace . '),' . $replace . ')';
         return $echo;
     }
 
