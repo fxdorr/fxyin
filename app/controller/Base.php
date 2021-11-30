@@ -23,7 +23,7 @@ namespace fxapp;
  * @method static mixed cookie(array ...$vars) 配置Cookie-[获取|设置]
  * @method static mixed env(array ...$vars) 环境参数-[获取|设置]
  * @method static void dump(array ...$vars) 浏览器友好的变量输出
- * @method static mixed json(mixed $var, string $type) 解析Json
+ * @method static mixed json(mixed $var, string $type, mixed $param = null) 解析Json
  * @method static mixed crypt(mixed $var, string $type, string $param = null) 加密解密
  * @method static void throwable(string $message) 抛出异常
  */

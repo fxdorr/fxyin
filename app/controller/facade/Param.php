@@ -479,7 +479,7 @@ class Param
      * 解析Json
      * @param mixed $var 变量
      * @param string $type 类型
-     * @param string $param 参数
+     * @param mixed $param 参数
      * @return mixed
      */
     public function json($var, $type, $param = null)

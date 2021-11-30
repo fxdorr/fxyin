@@ -24,7 +24,7 @@ namespace fxapp;
  * @method static mixed merge(array|int $limit = -1, array ...$args) 合并数组
  * @method static array cover(array $args, int $limit = -1) 覆盖数组
  * @method static mixed url(array $data) 设置/获取URL
- * @method static mixed json(mixed $var, string $type, string $param = null) 解析Json
+ * @method static mixed json(mixed $var, string $type, mixed $param = null) 解析Json
  */
 class Param extends \fxyin\Facade
 {

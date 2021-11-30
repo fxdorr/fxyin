@@ -188,9 +188,10 @@ class Base
      * 解析Json
      * @param mixed $data 数据
      * @param string $type 类型
+     * @param mixed $param 参数
      * @return mixed
      */
-    public function json($data, $type)
+    public function json($data, $type, $param = null)
     {
         // 初始化变量
         $type = strtolower($type);
@@ -198,13 +199,13 @@ class Base
             case 'encode':
                 // 编码
                 if (!is_json($data)) {
-                    $data = \fxapp\Param::json($data, 'encode');
+                    $data = \fxapp\Param::json($data, 'encode', $param);
                 }
                 break;
             case 'decode':
                 // 解码
                 if (is_json($data)) {
-                    $data = \fxapp\Param::json($data, 'decode');
+                    $data = \fxapp\Param::json($data, 'decode', $param);
                 } else if (is_object($data)) {
                     $data = (array) $data;
                 } else if (is_string($data)) {
