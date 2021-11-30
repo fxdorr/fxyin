@@ -126,9 +126,10 @@ function fxy_dump(...$vars)
  * 解析Json
  * @param mixed $var 变量
  * @param string $type 类型
+ * @param mixed $param 参数
  * @return mixed
  */
-function fxy_json($var, $type)
+function fxy_json($var, $type, $param = null)
 {
-    return \fxapp\Base::json($var, $type);
+    return \fxapp\Base::json($var, $type, $param);
 }
