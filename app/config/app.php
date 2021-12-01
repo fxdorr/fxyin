@@ -22,7 +22,7 @@ return [
     // 参数配置
     'param' => [
         // 入参
-        'param' => \fxapp\Client::param(),
+        'param' => null,
         'get' => $_GET ?? null,
         'post' => $_POST ?? null,
         'input' => file_get_contents('php://input'),

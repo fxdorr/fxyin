@@ -16,12 +16,6 @@ namespace fxyin;
  */
 class Env
 {
-    // 框架版本
-    const VERSION = '1.1.1';
-
-    // 框架版本时间
-    const VERSION_TIME = '2020-05-24';
-
     /**
      * 数据
      * @var array
