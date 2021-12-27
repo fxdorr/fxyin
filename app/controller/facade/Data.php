@@ -569,6 +569,70 @@ class Data
     }
 
     /**
+     * 处理存储-递归上级
+     * @param array $table_name 表名
+     * @param int $link_id 初始连接ID
+     * @param string $link_name 连接名称
+     * @param string $index 索引
+     * @return string
+     */
+    public function storeUpperLevel($table_name, $link_id = 0, $link_name = 'parent_id', $index = 'id')
+    {
+        // 初始化变量
+        if (!is_string($table_name)) {
+            return false;
+        }
+        $echo = "select group_concat(`id`) `ids`
+        from (
+            select `id`,
+            if(find_in_set(`id`, @link_ids) > 0,
+                @link_ids := concat(@link_ids, ',', `link_id`),
+                0
+            ) `link_ids`
+            from (
+             select " . $index . " `id`," . $link_name . " `link_id`
+             from " . $table_name . "
+             order by `link_id` desc
+            ) `data`,
+            (select @link_ids := '" . $link_id . "') `base`
+        ) `data`
+        where `link_ids` != '0' and `id` not in ('" . $link_id . "')";
+        return $echo;
+    }
+
+    /**
+     * 处理存储-递归下级
+     * @param array $table_name 表名
+     * @param int $link_id 初始连接ID
+     * @param string $link_name 连接名称
+     * @param string $index 索引
+     * @return string
+     */
+    public function storeLowerLevel($table_name, $link_id = 0, $link_name = 'parent_id', $index = 'id')
+    {
+        // 初始化变量
+        if (!is_string($table_name)) {
+            return false;
+        }
+        $echo = "select group_concat(`id`) `ids`
+        from (
+            select `id`,
+            if(find_in_set(`link_id`, @link_ids) > 0,
+                @link_ids := concat(@link_ids, ',', `id`),
+                0
+            ) `link_ids`
+            from (
+             select " . $index . " `id`," . $link_name . " `link_id`
+             from " . $table_name . "
+             order by `link_id`
+            ) `data`,
+            (select @link_ids := '" . $link_id . "') `base`
+        ) `data`
+        where `link_ids` != '0'";
+        return $echo;
+    }
+
+    /**
      * 处理字段-计算经纬度距离
      * @param string $lngs 经度起点-longitude start
      * @param string $lats 维度起点-latitude start
@@ -582,13 +646,13 @@ class Data
         if (is_null($lngs) || is_null($lats) || is_null($lnge) || is_null($late)) {
             return false;
         }
-        $echo = "ACOS(
-                    SIN(($lats * 3.1415) / 180 ) *
-                    SIN(($late * 3.1415) / 180 ) +
-                    COS(($lats * 3.1415) / 180 ) *
-                    COS(($late * 3.1415) / 180 ) *
-                    COS(($lngs * 3.1415) / 180 - ($lnge * 3.1415) / 180 ) 
-                ) * 6378.137";
+        $echo = "acos(
+            sin(" . $lats . " * 3.1415 / 180 ) *
+            sin(" . $late . " * 3.1415 / 180 ) +
+            cos(" . $lats . " * 3.1415 / 180 ) *
+            cos(" . $late . " * 3.1415 / 180 ) *
+            cos(" . $lngs . " * 3.1415 / 180 - " . $lnge . " * 3.1415 / 180 ) 
+        ) * 6378.137";
         $echo = str_replace([" ", "　", "\t", "\n", "\r"], '', $echo);
         return $echo;
     }
@@ -604,16 +668,16 @@ class Data
         if (is_null($field)) {
             return false;
         }
-        $echo = "ELT(
-                    INTERVAL(CONV(HEX(left(CONVERT(" . $field . " USING gbk),'1')),'16','10'),
-                    0,
-                    0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
-                    0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
-                    0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
-                    UPPER(left(" . $field . ",'1')),
-                    'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
-                    'Q','R','S','T','W','X','Y','Z'
-                )";
+        $echo = "elt(
+            interval(conv(hex(left(convert(" . $field . " using gbk),'1')),'16','10'),
+            0,
+            0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
+            0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
+            0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+            UPPER(left(" . $field . ",'1')),
+            'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
+            'Q','R','S','T','W','X','Y','Z'
+        )";
         $echo = str_replace(["  ", "　", "\t", "\n", "\r"], '', $echo);
         return $echo;
     }

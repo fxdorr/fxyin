@@ -24,6 +24,8 @@ namespace fxapp;
  * @method static bool|string insert(string $table, array $data) SQL-插入
  * @method static bool|string update(string $table, array $data, array $param = []) SQL-更新
  * @method static array updateContrast(array $data_new, array $data_old) 处理参数-更新比较
+ * @method static string storeUpperLevel(string $table_name, int $link_id = 0, string $link_name = 'parent_id', string $index = 'id') 处理存储-递归上级
+ * @method static string storeLowerLevel(string $table_name, int $link_id = 0, string $link_name = 'parent_id', string $index = 'id') 处理存储-递归下级
  * @method static string fieldDistance(string $lngs, string $lats, string $lnge, string $late) 处理字段-计算经纬度距离
  * @method static string fieldInitial(string $field) 处理字段-首字母
  * @method static string fieldDivision(string $dividend, string $divisor) 处理字段-除法
