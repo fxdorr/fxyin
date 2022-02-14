@@ -23,7 +23,7 @@ namespace fxapp;
  * @method static string letter(string $var, string $in_charset = 'utf-8', string $out_charset = 'gb2312') 首字母
  * @method static string timeRange(array|string $time, array $start = [], array $end = []) 处理时间-范围
  * @method static string timeChange(int|string $time, string $type = null, string $format = null) 处理时间-转换
- * @method static string timeMilli(string $mtime = null) 处理时间-毫米
+ * @method static string timeMilli(string $mtime = null) 处理时间-毫秒
  * @method static string timeFormat(string $time = null, string $type = null) 处理时间-格式化
  * @method static string strEncode(array $data) 处理字符串-编码
  * @method static string strEncodeMerge(array $data) 处理字符串-编码-合并数组

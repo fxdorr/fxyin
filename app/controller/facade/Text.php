@@ -299,7 +299,7 @@ class Text
     }
 
     /**
-     * 处理时间-毫米
+     * 处理时间-毫秒
      * @param string $mtime 毫秒时间
      * @return string
      */
