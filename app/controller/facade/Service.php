@@ -92,26 +92,4 @@ class Service
             return false;
         }
     }
-
-    /**
-     * 配置服务-通知
-     * @param array $param 请求参数
-     * @param string $supplier 服务供应商
-     * @return \fxyin\service\Notify
-     */
-    public function notify($param = '', $supplier = '')
-    {
-        return \fxyin\Service::create($param, 'notify', $supplier);
-    }
-
-    /**
-     * 配置服务-第三方
-     * @param array $param 请求参数
-     * @param string $supplier 服务供应商
-     * @return \fxyin\service\Third
-     */
-    public function third($param = '', $supplier = '')
-    {
-        return \fxyin\Service::create($param, 'third', $supplier);
-    }
 }
