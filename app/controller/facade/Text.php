@@ -93,17 +93,26 @@ class Text
      * 打散字符串
      * @param string $separator 分割字符串
      * @param string $string 字符串
+     * @param int $unique 去重
+     * @param int $limit 元素数量
      * @return array
      */
-    public function explode($separator, $string)
+    public function explode($separator, $string, $unique = true, $limit = PHP_INT_MAX)
     {
         // 初始化变量
         if (is_null($string) || '' == $string) {
             return [];
+        } else if (is_array($string)) {
+            return $string;
         } else if (!is_string($string) && !is_numeric($string)) {
             return [$string];
         }
-        return array_values(array_unique(explode($separator, $string)));
+        $string = explode($separator, $string, $limit);
+        // 校验去重
+        if ($unique) {
+            $string = array_values(array_unique($string));
+        }
+        return $string;
     }
 
     /**

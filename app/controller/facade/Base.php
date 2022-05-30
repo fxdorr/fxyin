@@ -17,17 +17,20 @@ namespace fxapp\facade;
 class Base
 {
     /**
-     * 加载-[文件]
-     * @param string $file 文件路径
+     * 加载文件
+     * @param string $file 路径
+     * @param string $type 类型
      * @return boolean
      */
-    public function load($file)
+    public function load($file, $type = null)
     {
         static $_file = [];
         $file = realpath($file);
         if (!isset($_file[$file])) {
             if (!is_file($file)) {
                 $_file[$file] = false;
+            } else if ($type == 'data') {
+                $_file[$file] = require $file;
             } else {
                 require $file;
                 $_file[$file] = true;

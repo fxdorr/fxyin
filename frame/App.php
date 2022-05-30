@@ -54,23 +54,20 @@ class App
         // 加载函数文件
         if (is_dir($path . 'function')) {
             $dir = $path . 'function';
-            $files = scandir($dir);
+            $files = \fxapp\File::getList($dir, 'php');
             foreach ($files as $file) {
-                if (strpos($file, '.php')) {
-                    $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                    require $filename;
-                }
+                require $file;
             }
         }
         // 加载配置文件
         if (is_dir($path . 'config')) {
             $dir = $path . 'config';
-            $files = scandir($dir);
+            $files = \fxapp\File::getList($dir, 'php');
             foreach ($files as $file) {
-                if (strpos($file, '.php')) {
-                    $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                    Config::load($filename, pathinfo($file, PATHINFO_FILENAME));
-                }
+                $name = str_replace($dir, '', $file);
+                $name = str_replace(DIRECTORY_SEPARATOR, '.', $name);
+                $name = substr($name, 1, strrpos($name, '.php') - 1);
+                Config::load($file, $name);
             }
         }
         // 加载语言包
@@ -84,24 +81,18 @@ class App
             Lang::range($lang);
             $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
             if (is_dir($dir)) {
-                $files = scandir($dir);
+                $files = \fxapp\File::getList($dir, 'php');
                 foreach ($files as $file) {
-                    if (strpos($file, '.php')) {
-                        $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                        Lang::load($filename, $lang);
-                    }
+                    Lang::load($file, $lang);
                 }
             }
         }
         // 加载商店文件
         if (is_dir($path . 'store')) {
             $dir = $path . 'store';
-            $files = scandir($dir);
+            $files = \fxapp\File::getList($dir, 'php');
             foreach ($files as $file) {
-                if (strpos($file, '.php')) {
-                    $filename = $dir . DIRECTORY_SEPARATOR . $file;
-                    require $filename;
-                }
+                require $file;
             }
         }
     }

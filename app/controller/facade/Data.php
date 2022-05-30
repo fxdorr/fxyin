@@ -447,10 +447,12 @@ class Data
         if (!is_string($table) || !is_array($data) || count($data) < 1) {
             return false;
         }
+        // 疏理表名
+        $table = $this->fieldEscape($table);
         // 疏理键名
         $tray['key'] = array_keys(current($data));
         $tray['key'] = array_map(function ($value) {
-            return '`' . $value . '`';
+            return $this->fieldEscape($value);
         }, $tray['key']);
         $tray['key'] = implode(',', $tray['key']);
         // 疏理键值
@@ -472,7 +474,7 @@ class Data
         }
         $tray['value'] = implode(',', $tray['value']);
         // 拼接Insert
-        $echo = 'insert into `' . $table . '` (' . $tray['key'] . ')' . ' values' . $tray['value'];
+        $echo = 'insert into ' . $table . ' (' . $tray['key'] . ')' . ' values' . $tray['value'];
         return $echo;
     }
 
@@ -488,8 +490,22 @@ class Data
         if (!is_string($table) || !is_array($data) || !is_array($param)) {
             return false;
         }
-        // 疏理主键
-        $param['key'] = !is_blank($param['key']) ? $param['key'] : 'id';
+        // 疏理表名
+        $table = $this->fieldEscape($table);
+        // 疏理参数
+        $predefined = [
+            // 主键
+            'key' => 'id',
+        ];
+        $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+        // 疏理参数
+        $predefined = [
+            // 条件
+            'where' => $param['key'],
+        ];
+        $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
+        // 转义条件
+        $param['where'] = $this->fieldEscape($param['where']);
         // 疏理数据
         $data = array_map(function ($data) {
             $data = array_map(function ($data) {
@@ -520,14 +536,17 @@ class Data
         }, $tray['value']);
         $echo = [];
         foreach ($tray['value'] as $key => $value) {
-            $echo[] = implode('', [PHP_EOL, '`', $key, '` = case `', $param['key'], '`', PHP_EOL, '', $value, PHP_EOL, 'end']);
+            if ($key == $param['key']) continue;
+            // 转义键钥
+            $key = $this->fieldEscape($key);
+            $echo[] = implode('', [PHP_EOL, $key, ' = case ', $param['where'], PHP_EOL, '', $value, PHP_EOL, 'end']);
         }
         $echo = implode(',', $echo);
         $tray['key'] = array_column($data, $param['key']);
         $tray['key'] = array_map(function ($value) {
             return 'binary ' . $value;
         }, $tray['key']);
-        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where `' . $param['key'] . '` in (' . implode(',', $tray['key']) . ')';
+        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where ' . $param['where'] . ' in (' . implode(',', $tray['key']) . ')';
         return $echo;
     }
 
@@ -826,6 +845,45 @@ class Data
         // 疏理输出
         $echo = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $param . ')';
         return $echo;
+    }
+
+    /**
+     * 处理字段-别名
+     * @param string $data 数据
+     * @param string $alias 别名
+     * @param string $delimiter 分隔
+     * @return string
+     */
+    public function fieldAlias($data, $alias, $delimiter = '.')
+    {
+        // 初始化变量
+        if (strpos($data, $delimiter) === false) {
+            $data = $alias . $delimiter . $data;
+        } else if (strpos($data, $delimiter) === 0) {
+            $data = substr($data, 1);
+        }
+        return $data;
+    }
+
+    /**
+     * 处理字段-转义
+     * @param string $data 数据
+     * @param string $delimiter 分隔
+     * @return string
+     */
+    public function fieldEscape($data, $delimiter = '.')
+    {
+        // 初始化变量
+        $data = explode($delimiter, $data);
+        $data = array_map(function ($value) {
+            // 疏理数据
+            if (strpos($value, '`') === false) {
+                $value = '`' . $value . '`';
+            }
+            return $value;
+        }, $data);
+        $data = implode($delimiter, $data);
+        return $data;
     }
 
     /**

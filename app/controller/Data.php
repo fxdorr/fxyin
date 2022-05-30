@@ -32,6 +32,8 @@ namespace fxapp;
  * @method static string fieldJson(string $field, string $replace = null, int $param = 1) 处理字段-Json
  * @method static string fieldText(string $field, string $replace = '', int $param = 1) 处理字段-文本
  * @method static string fieldDate(string $field, string $replace = '', int|string $param = 1) 处理字段-日期
+ * @method static string fieldAlias(string $data, string $alias, string $delimiter = '.') 处理字段-别名
+ * @method static string fieldEscape(string $data, string $delimiter = '.') 处理字段-转义
  * @method static string htmlFilter(string $string, string $flags = null) 处理HTML-过滤
  * @method static string htmlRemove(string $string, string $flags = null) 处理HTML-移除
  * @method static array listToTree(array $list, int $parent_id = 0, string $parnet_name = 'parent_id', string $index = 'id', string $child_name = '_child') 列表格式树

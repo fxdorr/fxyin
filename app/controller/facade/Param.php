@@ -364,14 +364,20 @@ class Param
 
     /**
      * 合并数组
-     * @param array|int $limit 次数限制或数组第一条
+     * @param array|int $limit 次数限制或数组第1条
+     * @param boolean $cover 覆盖或数组第2条
      * @param array $args 数组集合
      * @return mixed
      */
-    public function merge($limit = -1, ...$args)
+    public function merge($limit = -1, $cover = true, ...$args)
     {
         // 初始化变量
         $echo = [];
+        // 疏理覆盖
+        if (!is_bool($cover)) {
+            array_unshift($args, $cover);
+            $cover = true;
+        }
         // 疏理限制
         if (!is_int($limit)) {
             array_unshift($args, $limit);
@@ -381,20 +387,21 @@ class Param
             return array_shift($args);
         } else if (count($args) > 2) {
             $echo[0] = array_shift($args);
-            $echo[1] = $this->merge($limit, ...$args);
+            $echo[1] = $this->merge($limit, $cover, ...$args);
         } else {
             $echo = $args;
         }
-        return $this->cover($echo, $limit);
+        return $this->cover($echo, $limit, $cover);
     }
 
     /**
      * 覆盖数组
      * @param array $args 数组集合
      * @param int $limit 次数限制
+     * @param boolean $cover 覆盖
      * @return array
      */
-    public function cover($args, int $limit = -1)
+    public function cover($args, int $limit = -1, $cover = true)
     {
         // 初始化变量
         if (!is_array($args[0]) || $limit === 0) {
@@ -408,8 +415,8 @@ class Param
                 if (!isset($args[0][$key])) {
                     $args[0][$key] = $value;
                 } else if (is_array($value)) {
-                    $args[0][$key] = $this->cover([$args[0][$key], $value], $limit);
-                } else {
+                    $args[0][$key] = $this->cover([$args[0][$key], $value], $limit, $cover);
+                } else if ($cover) {
                     $args[0][$key] = $value;
                 }
             }

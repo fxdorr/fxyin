@@ -15,7 +15,7 @@ namespace fxapp;
  * 基础类
  * @see \fxapp\facade\Base
  * @package fxapp\facade
- * @method static boolean load(string $file) 加载-[文件]
+ * @method static boolean load(string $file, string $type = null) 加载文件
  * @method static string lang(array|string $name, array $vars = [], string $lang = '') 语言
  * @method static string langList(array|string $name, array $vars = [], string $lang = '') 语言-列表
  * @method static string langParse(array|string $name) 语言-解析

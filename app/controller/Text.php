@@ -16,7 +16,7 @@ namespace fxapp;
  * @see \fxapp\facade\Text
  * @package fxapp\facade
  * @method static array uuid(string $mode = null, array $param = []) 生成UUID
- * @method static array explode(string $separator, string $string) 打散字符串
+ * @method static array explode(string $separator, string $string, int $unique = true, int $limit = PHP_INT_MAX) 打散字符串
  * @method static string splice(string $string, string $value, string $separator = '') 拼接字符串
  * @method static mixed strlen(string $string = null, int $start = 0, int $end = 0) 检查字符串长度
  * @method static string letters(string $var, string $in_charset = 'utf-8', string $out_charset = 'gb2312') 首字母组
