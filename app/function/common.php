@@ -35,6 +35,17 @@ function is_blank($data)
 }
 
 /**
+ * 校验函数
+ * @param object $data 数据
+ * @return boolean
+ */
+function is_function($data)
+{
+    // 初始化变量
+    return is_object($data) && is_callable($data);
+}
+
+/**
  * 校验手机
  * @param string $data 数据
  * @return boolean
