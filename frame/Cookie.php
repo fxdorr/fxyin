@@ -21,13 +21,14 @@ class Cookie
      * @param string $name 名称
      * @return mixed
      */
-    public static function get($name)
+    public static function get($name = null)
     {
-        // 初始化变量
-        if (isset($_COOKIE[$name])) {
-            return $_COOKIE[$name];
-        }
-        return;
+        // 获取所有
+        if (is_null($name)) return $_COOKIE;
+        // 检查数据
+        if (!isset($_COOKIE[$name])) return;
+        // 获取数据
+        return $_COOKIE[$name];
     }
 
     /**
