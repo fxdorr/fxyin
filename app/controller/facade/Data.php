@@ -473,7 +473,7 @@ class Data
             $tray['value'][] = $elem;
         }
         $tray['value'] = implode(',', $tray['value']);
-        // 拼接Insert
+        // 疏理表达式
         $echo = 'insert into ' . $table . ' (' . $tray['key'] . ')' . ' values' . $tray['value'];
         return $echo;
     }
@@ -496,16 +496,18 @@ class Data
         $predefined = [
             // 主键
             'key' => 'id',
+            // 条件
+            'where' => null,
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
         // 疏理参数
         $predefined = [
-            // 条件
-            'where' => $param['key'],
+            // 复合主键
+            'keys' => $param['key'],
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.1.2');
-        // 转义条件
-        $param['where'] = $this->fieldEscape($param['where']);
+        // 转义复合主键
+        $param['keys'] = $this->fieldEscape($param['keys']);
         // 疏理数据
         $data = array_map(function ($data) {
             $data = array_map(function ($data) {
@@ -539,14 +541,19 @@ class Data
             if ($key == $param['key']) continue;
             // 转义键钥
             $key = $this->fieldEscape($key);
-            $echo[] = implode('', [PHP_EOL, $key, ' = case ', $param['where'], PHP_EOL, '', $value, PHP_EOL, 'end']);
+            $echo[] = implode('', [PHP_EOL, $key, ' = case ', $param['keys'], PHP_EOL, '', $value, PHP_EOL, 'end']);
         }
         $echo = implode(',', $echo);
         $tray['key'] = array_column($data, $param['key']);
         $tray['key'] = array_map(function ($value) {
             return 'binary ' . $value;
         }, $tray['key']);
-        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where ' . $param['where'] . ' in (' . implode(',', $tray['key']) . ')';
+        // 疏理表达式
+        $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where ' . $param['keys'] . ' in (' . implode(',', $tray['key']) . ')';
+        // 扩展条件
+        if (!is_blank($param['where'])) {
+            $echo .= ' and ' . $param['where'];
+        }
         return $echo;
     }
 
@@ -825,7 +832,7 @@ class Data
         switch ($param) {
             case 1:
                 // 日期时间
-                $param = '%Y-%m-%d %H:%i:%S';
+                $param = '%Y-%m-%d %H:%i:%s';
                 break;
             case 2:
                 // 日期
@@ -833,7 +840,7 @@ class Data
                 break;
             case 3:
                 // 时间
-                $param = '%H:%i:%S';
+                $param = '%H:%i:%s';
                 break;
         }
         $param = 'from_unixtime(' . $field . ',\'' . $param . '\')';
@@ -857,7 +864,7 @@ class Data
     public function fieldAlias($data, $alias, $delimiter = '.')
     {
         // 初始化变量
-        if (strpos($data, $delimiter) === false) {
+        if (strpos($data, $delimiter) === false && !is_blank($alias)) {
             $data = $alias . $delimiter . $data;
         } else if (strpos($data, $delimiter) === 0) {
             $data = substr($data, 1);
@@ -874,11 +881,17 @@ class Data
     public function fieldEscape($data, $delimiter = '.')
     {
         // 初始化变量
-        $data = explode($delimiter, $data);
+        if (!is_blank($delimiter)) {
+            $data = explode($delimiter, $data, 2);
+        } else {
+            $data = [$data];
+        }
         $data = array_map(function ($value) {
             // 疏理数据
             if (strpos($value, '`') === false) {
                 $value = '`' . $value . '`';
+            } else if (strpos($value, '``') === 0) {
+                $value = substr($value, 2);
             }
             return $value;
         }, $data);
@@ -888,55 +901,55 @@ class Data
 
     /**
      * 处理HTML-过滤
-     * @param string $string 字符串
+     * @param mixed $data 数据
      * @param string $flags 标签
-     * @return string
+     * @return mixed
      */
-    public function htmlFilter($string, $flags = null)
+    public function htmlFilter($data, $flags = null)
     {
         // 初始化变量
-        if (is_array($string)) {
-            foreach ($string as $key => $val) {
-                $string[$key] = $this->htmlFilter($val, $flags);
+        if (is_array($data)) {
+            foreach ($data as $key => $val) {
+                $data[$key] = $this->htmlFilter($val, $flags);
             }
-        } else if (!is_blank($string)) {
+        } else if (!is_blank($data)) {
             if ($flags === null) {
-                $string = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $string);
-                if (strpos($string, '&amp;#') !== false) {
-                    $string = preg_replace('/&amp;((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $string);
+                $data = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $data);
+                if (strpos($data, '&amp;#') !== false) {
+                    $data = preg_replace('/&amp;((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $data);
                 }
             } else {
                 if (PHP_VERSION < '5.4.0') {
-                    $string = htmlspecialchars($string, $flags);
+                    $data = htmlspecialchars($data, $flags);
                 } else {
-                    $string = htmlspecialchars($string, $flags, 'utf-8');
+                    $data = htmlspecialchars($data, $flags, 'utf-8');
                 }
             }
         }
-        return $string;
+        return $data;
     }
 
     /**
      * 处理HTML-移除
-     * @param string $string 字符串
+     * @param mixed $data 数据
      * @param string $flags 标签
-     * @return string
+     * @return mixed
      */
-    public function htmlRemove($string, $flags = null)
+    public function htmlRemove($data, $flags = null)
     {
         // 初始化变量
-        if (is_array($string)) {
-            foreach ($string as $key => $val) {
-                $string[$key] = $this->htmlRemove($val, $flags);
+        if (is_array($data)) {
+            foreach ($data as $key => $val) {
+                $data[$key] = $this->htmlRemove($val, $flags);
             }
-        } else if (!is_blank($string)) {
+        } else if (!is_blank($data)) {
             if ($flags === null) {
-                $string = strip_tags($string, $flags);
+                $data = strip_tags($data, $flags);
             } else {
-                $string = strip_tags($string, $flags);
+                $data = strip_tags($data, $flags);
             }
         }
-        return $string;
+        return $data;
     }
 
     /**

@@ -90,46 +90,76 @@ class Text
     }
 
     /**
+     * 组合字符串
+     * @param string $delimiter 分隔
+     * @param mixed $data 数据
+     * @param boolean $explode 打散
+     * @param boolean $unique 去重
+     * @return array|string
+     */
+    public function implode($delimiter = '', $data, $explode = false, $unique = true)
+    {
+        // 初始化变量
+        if (!is_array($data)) {
+            $data = \fxapp\Text::explode($delimiter, $data, false);
+        }
+        foreach ($data as $key => $value) {
+            if (!is_array($value)) continue;
+            $data[$key] = $this->implode($delimiter, $data[$key]);
+        }
+        // 组合字符串
+        $data = implode($delimiter, $data);
+        // 校验去重
+        if ($unique) {
+            $data = \fxapp\Text::explode($delimiter, $data, $unique);
+            $data = implode($delimiter, $data);
+        }
+        if ($explode) {
+            $data = \fxapp\Text::explode($delimiter, $data, false);
+        }
+        return $data;
+    }
+
+    /**
      * 打散字符串
-     * @param string $separator 分割字符串
-     * @param string $string 字符串
-     * @param int $unique 去重
+     * @param string $delimiter 分隔
+     * @param mixed $data 数据
+     * @param boolean $unique 去重
      * @param int $limit 元素数量
      * @return array
      */
-    public function explode($separator, $string, $unique = true, $limit = PHP_INT_MAX)
+    public function explode($delimiter, $data, $unique = true, $limit = PHP_INT_MAX)
     {
         // 初始化变量
-        if (is_null($string) || '' == $string) {
-            return [];
-        } else if (is_array($string)) {
-            return $string;
-        } else if (!is_string($string) && !is_numeric($string)) {
-            return [$string];
+        if (is_null($data) || '' == $data) {
+            $data = [];
+        } else if (!is_array($data) && !is_string($data) && !is_numeric($data)) {
+            $data = [$data];
+        } else if (!is_array($data)) {
+            $data = explode($delimiter, $data, $limit);
         }
-        $string = explode($separator, $string, $limit);
         // 校验去重
         if ($unique) {
-            $string = array_values(array_unique($string));
+            $data = array_unique($data);
         }
-        return $string;
+        return array_values($data);
     }
 
     /**
      * 拼接字符串
      * @param string $string 字符串
      * @param string $value 键值
-     * @param string $separator 分隔符
+     * @param string $delimiter 分隔
      * @return string
      */
-    public function splice($string, $value, $separator = '')
+    public function splice($string, $value, $delimiter = '')
     {
         // 初始化变量
-        if (is_null($value) || is_null($separator)) {
+        if (is_null($value) || is_null($delimiter)) {
             return $string;
         }
         if ($string) {
-            $string .= $separator . $value;
+            $string .= $delimiter . $value;
         } else {
             $string = $value;
         }
@@ -336,96 +366,88 @@ class Text
 
     /**
      * 处理时间-格式化
-     * @param string $time 时间
-     * @param string $type 格式
+     * @param int $time 时间
+     * @param array $param 参数
      * @return string
      */
-    public function timeFormat($time = null, $type = null)
+    public function timeFormat($time, $param = [])
     {
         // 初始化变量
-        $echo = [];
         if (!is_numeric($time)) {
             return false;
         }
-        // 时间列表
-        $time_list = [];
-        // 时间开关
-        $time_switch = [
-            0 => false,
-            1 => true,
-            2 => true,
-            3 => true,
-            4 => true,
-            5 => true,
-            6 => true,
+        // 疏理参数
+        $param['vars'] = [];
+        // 疏理参数
+        $predefined = [
+            // 开关
+            'switch' => [0, 1, 1, 1, 1, 1, 1],
+            // 标题
+            'title' => ['millisecond', 'sec', 'minute', 'hour', 'day', 'month', 'year'],
+            // 格式
+            'format' => [1000, 60, 60, 24, 30, 12, 0],
+            // 显示
+            'show' => [0, 1, 1, 1, 1, 1, 1],
         ];
-        // 时间名称
-        $time_name = [
-            0 => 'millisecond',
-            1 => 'sec',
-            2 => 'minute',
-            3 => 'hour',
-            4 => 'day',
-            5 => 'month',
-            6 => 'year',
-        ];
-        $time_all = $time;
-        switch ($type) {
-            default:
-            case '1.1':
-                // 秒
-                break;
-            case '1.2':
-                // 毫秒
-                $time_switch[0] = true;
-                break;
-        }
-        // 毫秒
-        if ($time_switch[0]) {
-            $time_list[0] = $time_all % 1000;
-            $time_all = intval($time_all / 1000);
-        }
-        // 秒
-        if ($time_switch[1]) {
-            $time_list[1] = $time_all % 60;
-            $time_all = intval($time_all / 60);
-        }
-        // 分钟
-        if ($time_switch[2]) {
-            $time_list[2] = $time_all % 60;
-            $time_all = intval($time_all / 60);
-        }
-        // 小时
-        if ($time_switch[3]) {
-            $time_list[3] = $time_all % 24;
-            $time_all = intval($time_all / 24);
-        }
-        // 天
-        if ($time_switch[4]) {
-            $time_list[4] = $time_all % 30;
-            $time_all = intval($time_all / 30);
-        }
-        // 月
-        if ($time_switch[5]) {
-            $time_list[5] = $time_all % 12;
-            $time_all = intval($time_all / 12);
-        }
-        // 年
-        if ($time_switch[6]) {
-            $time_list[6] = $time_all;
-        }
-        krsort($time_list);
-        // 去除0
-        foreach ($time_list as $key => $value) {
-            if ($value == 0) {
-                unset($time_list[$key]);
+        // 解析参数
+        $param = \fxapp\Param::define([$param, array_keys($predefined)], '1.2.2');
+        foreach ($predefined as $key => $value) {
+            $param[$key] = \fxapp\Text::explode(',', $param[$key], false);
+            foreach ($param[$key] as $key2 => $value2) {
+                if ((is_string($value[0]) && !is_null($value2)) || (!is_string($value[0]) && !is_blank($value2))) continue;
+                unset($param[$key][$key2]);
             }
         }
-        foreach ($time_list as $key => $value) {
-            $echo[] = $value;
-            $echo[] = $time_name[$key];
+        $param = \fxapp\Param::merge(-1, false, $param, $predefined);
+        // 疏理提取
+        foreach ($predefined as $key => $value) {
+            $param['vars'][$key] = &$param[$key];
         }
-        $echo = \fxapp\Base::lang($echo);
+        // 疏理参数
+        $predefined = [
+            // 允许零
+            'zero' => false,
+            // 最大
+            'max' => count($param['switch']) - 1,
+            // 之前
+            'before' => true,
+        ];
+        $param = \fxapp\Param::merge(-1, false, $param, $predefined);
+        // 疏理提取
+        foreach ($predefined as $key => $value) {
+            $param['vars'][$key] = &$param[$key];
+        }
+        extract($param['vars'], EXTR_REFS);
+        // 疏理数据
+        $data = [];
+        ksort($switch);
+        foreach ($switch as $key => $value) {
+            // 校验开关
+            if (!$value || $key > $param['max']) continue;
+            // 疏理最大
+            if ($key == $param['max']) {
+                $format[$key] =  0;
+            }
+            // 计算时间
+            if ($format[$key]) {
+                $data[$key] = $time % $format[$key];
+                $time = intval($time / $format[$key]);
+            } else {
+                $data[$key] = $time;
+            }
+        }
+        krsort($data);
+        // 疏理输出
+        $echo = [];
+        foreach ($data as $key => $value) {
+            // 允许零
+            if (!$show[$key] || (!$zero && $value == 0)) continue;
+            // 校验之前
+            if (!$param['before'] && $key < $param['max']) continue;
+            $echo[] = $value;
+            $echo[] = \fxapp\Base::lang($title[$key]);
+        }
+        $echo = implode('', $echo);
         return $echo;
     }
 
