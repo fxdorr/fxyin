@@ -273,8 +273,13 @@ class Server
         if (!isset($tray['echo'])) {
             $tray['echo'] = \fxapp\Base::config('branch.default');
         }
-        // 配置分支
+        // 基础分支
+        $tray['base'] = $tray['store']['base'] ?? [];
+        // 匹配分支
         $tray['echo'] = $tray['store'][$data['full'][$tray['echo']]];
+        // 合并分支
+        $tray['echo'] = array_merge($tray['base'], $tray['echo']);
+        // 配置分支
         foreach ($tray['echo'] as $elem) {
             \fxapp\Base::config($elem[1], \fxapp\Base::config($elem[0]));
         }

@@ -101,7 +101,7 @@ class Text
     {
         // 初始化变量
         if (!is_array($data)) {
-            $data = \fxapp\Text::explode($delimiter, $data, false);
+            $data = $this->explode($delimiter, $data, false);
         }
         foreach ($data as $key => $value) {
             if (!is_array($value)) continue;
@@ -111,11 +111,11 @@ class Text
         $data = implode($delimiter, $data);
         // 校验去重
         if ($unique) {
-            $data = \fxapp\Text::explode($delimiter, $data, $unique);
+            $data = $this->explode($delimiter, $data, $unique);
             $data = implode($delimiter, $data);
         }
         if ($explode) {
-            $data = \fxapp\Text::explode($delimiter, $data, false);
+            $data = $this->explode($delimiter, $data, false);
         }
         return $data;
     }
@@ -392,7 +392,7 @@ class Text
         // 解析参数
         $param = \fxapp\Param::define([$param, array_keys($predefined)], '1.2.2');
         foreach ($predefined as $key => $value) {
-            $param[$key] = \fxapp\Text::explode(',', $param[$key], false);
+            $param[$key] = $this->explode(',', $param[$key], false);
             foreach ($param[$key] as $key2 => $value2) {
                 if ((is_string($value[0]) && !is_null($value2)) || (!is_string($value[0]) && !is_blank($value2))) continue;
                 unset($param[$key][$key2]);

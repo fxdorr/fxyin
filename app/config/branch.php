@@ -15,7 +15,12 @@
  */
 return [
     // 默认分支
-    'default' => '',
+    'default' => 'master',
     // 商店配置
-    'store' => [],
+    'store' => [
+        // 基础环境
+        'base' => [],
+        // 主线环境
+        'master' => [],
+    ],
 ];
