@@ -24,7 +24,7 @@ namespace fxapp;
  * @method static mixed env(array ...$vars) 环境参数-[获取|设置]
  * @method static void dump(array ...$vars) 浏览器友好的变量输出
  * @method static mixed json(mixed $var, string $type, mixed $param = null) 解析Json
- * @method static mixed ipv4(mixed $data, string $type) 解析Ipv4
+ * @method static mixed ipv4(mixed $data, string $type) 解析IPv4
  * @method static mixed crypt(mixed $var, string $type, string $param = null) 加密解密
  * @method static void throwable(string $message) 抛出异常
  */

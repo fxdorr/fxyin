@@ -222,7 +222,7 @@ class Base
     }
 
     /**
-     * 解析Ipv4
+     * 解析IPv4
      * @param mixed $data 数据
      * @param string $type 类型
      * @return mixed
