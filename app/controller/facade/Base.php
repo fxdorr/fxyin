@@ -202,19 +202,46 @@ class Base
             case 'encode':
                 // 编码
                 if (!is_json($data)) {
-                    $data = \fxapp\Param::json($data, 'encode', $param);
+                    $data = \fxapp\Param::json($data, $type, $param);
                 }
                 break;
             case 'decode':
                 // 解码
                 if (is_json($data)) {
-                    $data = \fxapp\Param::json($data, 'decode', $param);
+                    $data = \fxapp\Param::json($data, $type, $param);
                 } else if (is_object($data)) {
                     $data = (array) $data;
                 } else if (is_string($data)) {
                     $data = \fxapp\Text::strDecode($data);
                 } else if (!is_array($data)) {
                     $data = !is_null($data) ? [$data] : [];
+                }
+                break;
+        }
+        return $data;
+    }
+
+    /**
+     * 解析Ipv4
+     * @param mixed $data 数据
+     * @param string $type 类型
+     * @return mixed
+     */
+    public function ipv4($data, $type)
+    {
+        // 初始化变量
+        $type = strtolower($type);
+        switch ($type) {
+            case 'encode':
+                // 编码
+                if (filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+                    $data = \fxapp\Text::ipv4($data, $type);
+                }
+                break;
+            case 'decode':
+                // 解码
+                if (filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+                    $data = \fxapp\Text::ipv4($data, $type);
                 }
                 break;
         }

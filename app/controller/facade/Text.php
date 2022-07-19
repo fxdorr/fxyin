@@ -571,90 +571,86 @@ class Text
 
     /**
      * 解析Ipv4
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @return mixed
      */
-    public function ipv4($var, $type)
+    public function ipv4($data, $type)
     {
         // 初始化变量
-        $echo = null;
         $type = strtolower($type);
         switch ($type) {
             case 'encode':
                 // 编码
-                $var = explode('.', $var);
-                foreach ($var as $key => $value) {
+                $data = explode('.', $data);
+                foreach ($data as $key => $value) {
                     $value = ltrim($value, 0);
                     if ($value == '') {
                         $value = '0';
                     }
-                    $var[$key] = $value;
+                    $data[$key] = $value;
                 }
-                $var = implode('.', $var);
-                $echo = ip2long($var);
-                if ($echo !== false) {
-                    $echo = bindec(decbin($echo));
+                $data = implode('.', $data);
+                $data = ip2long($data);
+                if ($data !== false) {
+                    $data = bindec(decbin($data));
                 }
                 break;
             case 'decode':
                 // 解码
-                $echo = long2ip($var);
+                $data = long2ip($data);
                 break;
         }
-        return $echo;
+        return $data;
     }
 
     /**
      * 进制转换
-     * @param mixed $var 变量
+     * @param mixed $data 数据
      * @param string $type 类型
      * @return mixed
      */
-    public function convert($var, $type)
+    public function convert($data, $type)
     {
         // 初始化变量
-        $echo = null;
         $type = strtolower($type);
         switch ($type) {
             case 'hexstr':
                 // 16进制转字符串
-                if (!$var) {
+                if (!$data) {
                     // 空字符串
                     return false;
                 }
                 $strs = [];
-                $len = strlen($var);
+                $len = strlen($data);
                 for ($i = 0; $i < $len; $i++) {
-                    $str = substr($var, $i, 1);
+                    $str = substr($data, $i, 1);
                     $strs[] = bin2hex($str);
                 }
-                $strs = implode('', $strs);
-                $echo = $strs;
+                $data = implode('', $strs);
                 break;
             case 'strhex':
                 // 字符串转16进制
-                if (!$var) {
+                if (!$data) {
                     // 空字符串
                     return false;
-                } else if (mb_strlen($var, 'utf-8') != strlen($var)) {
+                } else if (mb_strlen($data, 'utf-8') != strlen($data)) {
                     // 不解析混编数据
                     return false;
-                } else if (strlen($var) % 2 != 0) {
+                } else if (strlen($data) % 2 != 0) {
                     // 不解析单数字符串
                     return false;
                 }
                 $strs = [];
-                $len = strlen($var);
+                $len = strlen($data);
                 for ($i = 0; $i < $len; $i = $i + 2) {
-                    $str = substr($var, $i, 2);
+                    $str = substr($data, $i, 2);
                     $strs[] = chr(hexdec($str));
                 }
-                $strs = implode('', $strs);
-                $echo = $strs;
+                $data = implode('', $strs);
                 break;
         }
-        return $echo;
+        return $data;
     }
 
     /**

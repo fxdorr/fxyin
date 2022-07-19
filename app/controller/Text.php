@@ -30,8 +30,8 @@ namespace fxapp;
  * @method static string strEncodeMerge(array $data) 处理字符串-编码-合并数组
  * @method static array strDecode(string $data) 处理字符串-解码
  * @method static string strDecodeMerge(array $data) 处理字符串-解码-合并数组
- * @method static mixed ipv4(mixed $var, string $type) 解析Ipv4
- * @method static mixed convert(mixed $var, string $type) 进制转换
+ * @method static mixed ipv4(mixed $data, string $type) 解析Ipv4
+ * @method static mixed convert(mixed $data, string $type) 进制转换
  * @method static mixed throwable(\Throwable $th, string $type, array $param) 提取抛出
  */
 class Text extends \fxyin\Facade
