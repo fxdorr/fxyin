@@ -515,7 +515,7 @@ class Text
             // 解析数据
             $value = explode('=', $value, 2);
             $predefined = [
-                // 键钥
+                // 键名
                 0,
                 // 键值
                 1,
@@ -525,7 +525,7 @@ class Text
             // 疏理数据
             $value[0] = !is_null($value[0]) ? urldecode($value[0]) : $value[0];
             $value[1] = !is_null($value[1]) ? urldecode($value[1]) : $value[1];
-            // 解析键钥
+            // 解析键名
             $value[0] = preg_replace('/^([^\[]*)/', '[$1]', $value[0]);
             $value[2] = $echo;
             $value = $this->strDecodeMerge($value);

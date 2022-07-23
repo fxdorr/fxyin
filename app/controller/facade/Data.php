@@ -539,7 +539,7 @@ class Data
         $echo = [];
         foreach ($tray['value'] as $key => $value) {
             if ($key == $param['key']) continue;
-            // 转义键钥
+            // 转义键名
             $key = $this->fieldEscape($key);
             $echo[] = implode('', [PHP_EOL, $key, ' = case ', $param['keys'], PHP_EOL, '', $value, PHP_EOL, 'end']);
         }
