@@ -943,11 +943,7 @@ class Data
                 $data[$key] = $this->htmlRemove($val, $flags);
             }
         } else if (!is_blank($data)) {
-            if ($flags === null) {
-                $data = strip_tags($data, $flags);
-            } else {
-                $data = strip_tags($data, $flags);
-            }
+            $data = strip_tags($data, $flags);
         }
         return $data;
     }

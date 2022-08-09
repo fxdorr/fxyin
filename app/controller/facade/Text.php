@@ -114,6 +114,7 @@ class Text
             $data = $this->explode($delimiter, $data, $unique);
             $data = implode($delimiter, $data);
         }
+        // 校验打散
         if ($explode) {
             $data = $this->explode($delimiter, $data, false);
         }
