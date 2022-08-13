@@ -297,7 +297,7 @@ class Data
 
     /**
      * SQL-条件搭建
-     * @param string $key 键名
+     * @param array|string $key 键名
      * @param string $value 键值
      * @param string $method 方法
      * @return string
@@ -305,15 +305,29 @@ class Data
     public function whereBuild($key, $value, $method)
     {
         // 初始化变量
-        // 疏理类型
-        if (strpos($key, '->') !== false) {
-            $key = $this->fieldJson($key, null, 1);
+        // 疏理键名
+        if (!is_array($key)) {
+            $key = [$key];
+        }
+        // 疏理替换
+        if (!isset($key[1])) {
+            $key[1] = null;
+        } else if (is_string($key[1])) {
+            $key[1] = '\'' . $key[1] . '\'';
+        }
+        // 疏理字符串
+        if (strpos($key[0], '->') !== false) {
+            // JSON
+            $key[0] = $this->fieldJson($key[0], $key[1], 1);
+        } else if (isset($key[1])) {
+            // 默认值
+            $key[0] = 'ifnull(' . $key[0] . ',' . $key[1] . ')';
         }
         // 组装函数
         switch ($method) {
             default:
                 // 默认
-                $echo = [$key, $method, $value];
+                $echo = [$key[0], $method, $value];
                 $echo = array_filter($echo, function ($value) {
                     return !is_blank($value);
                 });
@@ -323,24 +337,24 @@ class Data
                 // 批量
             case 'not in':
                 // 批量
-                $echo = $key . ' ' . $method . ' (' . $value . ')';
+                $echo = $key[0] . ' ' . $method . ' (' . $value . ')';
                 break;
             case 'find_in_set':
                 // 批量
                 $value = explode(',', $value);
                 $echo = [];
                 foreach ($value as $cell) {
-                    $echo[] = $method . '(' . $cell . ',' . $key . ')';
+                    $echo[] = $method . '(' . $cell . ',' . $key[0] . ')';
                 }
                 $echo = '(' . implode(' or ', $echo) . ')';
                 break;
             case 'json array':
                 // JSON-数组
-                $echo = 'json_contains(' . $key . ', json_array(' . $value . '))';
+                $echo = 'json_contains(' . $key[0] . ', json_array(' . $value . '))';
                 break;
             case 'json object':
                 // JSON-对象
-                $echo = 'json_contains(' . $key . ', json_object(' . $value . '))';
+                $echo = 'json_contains(' . $key[0] . ', json_object(' . $value . '))';
                 break;
         }
         return $echo;

@@ -18,7 +18,7 @@ namespace fxapp;
  * @method static array where(array $var, array $param) SQL-条件
  * @method static string whereSafe(string $var, string &$method, int $case = 0) SQL-条件安检
  * @method static string whereFilter(string $var, string $method, int $case = 0) SQL-条件过滤
- * @method static string whereBuild(string $key, string $value, string $method) SQL-条件搭建
+ * @method static string whereBuild(array|string $key, string $value, string $method) SQL-条件搭建
  * @method static string whereAssemble(array $array) SQL-条件装配
  * @method static string whereMake(array $var, int $type = 1) SQL-条件组装
  * @method static bool|string insert(string $table, array $data) SQL-插入
