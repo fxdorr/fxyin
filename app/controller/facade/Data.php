@@ -171,10 +171,10 @@ class Data
                 }
                 break;
             case 'json array':
-                // 简谱-数组
+                // JSON-数组
                 break;
             case 'json object':
-                // 简谱-对象
+                // JSON-对象
                 if (!is_array($value)) {
                     $value = explode(',', $value);
                 }
@@ -220,9 +220,9 @@ class Data
                 case 'field':
                     // 字段
                 case 'json array':
-                    // 简谱-数组
+                    // JSON-数组
                 case 'json object':
-                    // 简谱-对象
+                    // JSON-对象
                     break;
             }
             $value[$index] = $elem;
@@ -267,7 +267,7 @@ class Data
                 $tray['glue'] = ',';
                 break;
             case 'json array':
-                // 简谱-数组
+                // JSON-数组
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
@@ -275,7 +275,7 @@ class Data
                 $tray['glue'] = ',';
                 break;
             case 'json object':
-                // 简谱-对象
+                // JSON-对象
                 if (!count($value)) {
                     $value[] = '\'\'';
                 }
@@ -335,11 +335,11 @@ class Data
                 $echo = '(' . implode(' or ', $echo) . ')';
                 break;
             case 'json array':
-                // 简谱-数组
+                // JSON-数组
                 $echo = 'json_contains(' . $key . ', json_array(' . $value . '))';
                 break;
             case 'json object':
-                // 简谱-对象
+                // JSON-对象
                 $echo = 'json_contains(' . $key . ', json_object(' . $value . '))';
                 break;
         }
@@ -770,8 +770,8 @@ class Data
         $field[1] = '$.' . $field[1];
         // 疏理替换
         if (is_null($replace)) {
-            $replace = $field[0];
-        } else {
+            $replace = 'null';
+        } else if (is_string($replace)) {
             $replace = '\'' . $replace . '\'';
         }
         // 疏理输出

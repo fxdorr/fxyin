@@ -366,13 +366,19 @@ class Param
      * 合并数组
      * @param array|int $limit 次数限制或数组第1条
      * @param boolean $cover 覆盖或数组第2条
+     * @param boolean $type 类型或数组第3条
      * @param array $args 数组集合
      * @return mixed
      */
-    public function merge($limit = -1, $cover = true, ...$args)
+    public function merge($limit = -1, $cover = true, $type = false, ...$args)
     {
         // 初始化变量
         $echo = [];
+        // 疏理类型
+        if (!is_bool($type)) {
+            array_unshift($args, $type);
+            $type = false;
+        }
         // 疏理覆盖
         if (!is_bool($cover)) {
             array_unshift($args, $cover);
@@ -387,11 +393,11 @@ class Param
             return array_shift($args);
         } else if (count($args) > 2) {
             $echo[0] = array_shift($args);
-            $echo[1] = $this->merge($limit, $cover, ...$args);
+            $echo[1] = $this->merge($limit, $cover, $type, ...$args);
         } else {
             $echo = $args;
         }
-        return $this->cover($echo, $limit, $cover);
+        return $this->cover($echo, $limit, $cover, $type);
     }
 
     /**
@@ -399,9 +405,10 @@ class Param
      * @param array $args 数组集合
      * @param int $limit 次数限制
      * @param boolean $cover 覆盖
+     * @param boolean $type 类型
      * @return array
      */
-    public function cover($args, int $limit = -1, $cover = true)
+    public function cover($args, int $limit = -1, $cover = true, $type = false)
     {
         // 初始化变量
         if (!is_array($args[0]) || $limit === 0) {
@@ -415,9 +422,23 @@ class Param
                 if (!isset($args[0][$key])) {
                     $args[0][$key] = $value;
                 } else if (is_array($value)) {
-                    $args[0][$key] = $this->cover([$args[0][$key], $value], $limit, $cover);
+                    $args[0][$key] = $this->cover([$args[0][$key], $value], $limit, $cover, $type);
                 } else if ($cover) {
                     $args[0][$key] = $value;
+                }
+                // 转换类型
+                if ($type) {
+                    // 识别字段类型
+                    switch (gettype($value)) {
+                        case 'integer':
+                            // 整型
+                            $args[0][$key] = (int)$args[0][$key];
+                            break;
+                        case 'double':
+                            // 浮点型
+                            $args[0][$key] = (float)$args[0][$key];
+                            break;
+                    }
                 }
             }
         }
