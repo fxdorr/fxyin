@@ -912,7 +912,7 @@ class Data
             foreach ($data as $key => $val) {
                 $data[$key] = $this->htmlFilter($val, $flags);
             }
-        } else if (!is_blank($data)) {
+        } else if (!is_blank($data) && !is_numeric($data)) {
             if ($flags === null) {
                 $data = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $data);
                 if (strpos($data, '&amp;#') !== false) {
@@ -942,7 +942,7 @@ class Data
             foreach ($data as $key => $val) {
                 $data[$key] = $this->htmlRemove($val, $flags);
             }
-        } else if (!is_blank($data)) {
+        } else if (!is_blank($data) && !is_numeric($data)) {
             $data = strip_tags($data, $flags);
         }
         return $data;
