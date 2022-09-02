@@ -365,7 +365,7 @@ class Param
     /**
      * 合并数组
      * @param array|int $limit 次数限制或数组第1条
-     * @param boolean $cover 覆盖或数组第2条
+     * @param boolean|string $cover 覆盖或数组第2条
      * @param boolean $type 类型或数组第3条
      * @param array $args 数组集合
      * @return mixed
@@ -380,7 +380,7 @@ class Param
             $type = false;
         }
         // 疏理覆盖
-        if (!is_bool($cover)) {
+        if (!is_bool($cover) && !is_string($cover)) {
             array_unshift($args, $cover);
             $cover = true;
         }
@@ -404,7 +404,7 @@ class Param
      * 覆盖数组
      * @param array $args 数组集合
      * @param int $limit 次数限制
-     * @param boolean $cover 覆盖
+     * @param boolean|string $cover 覆盖
      * @param boolean $type 类型
      * @return array
      */
@@ -423,22 +423,23 @@ class Param
                     $args[0][$key] = $value;
                 } else if (is_array($value)) {
                     $args[0][$key] = $this->cover([$args[0][$key], $value], $limit, $cover, $type);
-                } else if ($cover) {
+                } else if ($cover === true) {
+                    $args[0][$key] = $value;
+                } else if ($cover == 'blank' && is_blank($args[0][$key])) {
                     $args[0][$key] = $value;
                 }
                 // 转换类型
-                if ($type) {
-                    // 识别字段类型
-                    switch (gettype($value)) {
-                        case 'integer':
-                            // 整型
-                            $args[0][$key] = (int)$args[0][$key];
-                            break;
-                        case 'double':
-                            // 浮点型
-                            $args[0][$key] = (float)$args[0][$key];
-                            break;
-                    }
+                if (!$type) continue;
+                // 识别字段类型
+                switch (gettype($value)) {
+                    case 'integer':
+                        // 整型
+                        $args[0][$key] = (int)$args[0][$key];
+                        break;
+                    case 'double':
+                        // 浮点型
+                        $args[0][$key] = (float)$args[0][$key];
+                        break;
                 }
             }
         }
