@@ -309,18 +309,18 @@ class Data
         if (!is_array($key)) {
             $key = [$key];
         }
-        // 疏理替换
-        if (!isset($key[1])) {
-            $key[1] = null;
-        } else if (is_string($key[1])) {
-            $key[1] = '\'' . $key[1] . '\'';
-        }
         // 疏理字符串
         if (strpos($key[0], '->') !== false) {
             // JSON
             $key[0] = $this->fieldJson($key[0], $key[1], 1);
         } else if (isset($key[1])) {
             // 默认值
+            // 疏理替换
+            if (!isset($key[1])) {
+                $key[1] = null;
+            } else if (is_string($key[1])) {
+                $key[1] = '\'' . $key[1] . '\'';
+            }
             $key[0] = 'ifnull(' . $key[0] . ',' . $key[1] . ')';
         }
         // 组装函数
