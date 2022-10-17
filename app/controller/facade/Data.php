@@ -314,13 +314,13 @@ class Data
             // JSON
             $key[0] = $this->fieldJson($key[0], $key[1], 1);
         } else if (isset($key[1])) {
-            // 默认值
             // 疏理替换
             if (!isset($key[1])) {
                 $key[1] = null;
             } else if (is_string($key[1])) {
                 $key[1] = '\'' . $key[1] . '\'';
             }
+            // 默认值
             $key[0] = 'ifnull(' . $key[0] . ',' . $key[1] . ')';
         }
         // 组装函数
