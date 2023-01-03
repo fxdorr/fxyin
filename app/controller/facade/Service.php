@@ -45,6 +45,10 @@ class Service
         // HTTPS请求，不验证证书和主机名
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
+        // 设置curl默认访问为IPv4
+        if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
+            curl_setopt($request, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        }
         // 识别请求方法
         switch ($method) {
             default:
