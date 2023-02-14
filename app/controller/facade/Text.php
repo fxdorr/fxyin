@@ -97,7 +97,7 @@ class Text
      * @param boolean $unique 去重
      * @return array|string
      */
-    public function implode($delimiter = '', $data, $explode = false, $unique = true)
+    public function implode($delimiter, $data, $explode = false, $unique = true)
     {
         // 初始化变量
         if (!is_array($data)) {
