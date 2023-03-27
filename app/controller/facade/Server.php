@@ -230,6 +230,7 @@ class Server
         // 载入分支
         $tray['branch'] = \fxapp\Base::env('base.host');
         $tray['store'] = \fxapp\Base::config('branch.store');
+        $tray['store'] = array_reverse($tray['store']);
         foreach ($tray['store'] as $index => $elem) {
             foreach (explode(',', $index) as $value) {
                 // 全文匹配
