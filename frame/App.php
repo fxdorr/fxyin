@@ -24,7 +24,7 @@ class App
     public static function init($name = null)
     {
         // 初始化变量
-        static $data = [];
+        static $data = ['load' => [], 'start' => []];
         $config = Config::get('env.app');
         if (!is_array($config)) return false;
         if (isset($config[$name])) {
@@ -33,9 +33,15 @@ class App
         ksort($config);
         // 加载应用
         foreach ($config as $key => $value) {
-            if (array_key_exists($key, $data)) continue;
+            if (array_key_exists($key, $data['load'])) continue;
             self::load($value);
-            $data[$key] = $value;
+            $data['load'][$key] = $value;
+        }
+        // 启动应用
+        foreach ($config as $key => $value) {
+            if (array_key_exists($key, $data['start'])) continue;
+            self::start($value);
+            $data['start'][$key] = $value;
         }
         return true;
     }
@@ -87,6 +93,19 @@ class App
                 }
             }
         }
+    }
+
+    /**
+     * 启动应用
+     * @param string $path 路径
+     * @return mixed
+     */
+    private static function start($path = null)
+    {
+        // 初始化变量
+        $path = realpath($path);
+        if (false === is_dir($path)) return;
+        $path .= DIRECTORY_SEPARATOR;
         // 加载商店文件
         if (is_dir($path . 'store')) {
             $dir = $path . 'store';
