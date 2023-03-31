@@ -22,12 +22,12 @@ class Param
      */
     public function init()
     {
-        // 初始化CLI变量
+        // 初始化CLI入参
         $param = $_SERVER['argv'] ?? [];
         $data = [];
-        foreach ($param as $name) {
-            if (strpos($name, '-') !== 0) continue;
-            $name = preg_replace('/^-/', '', $name);
+        foreach ($param as $key => $name) {
+            if (strpos($name, '@') !== 0) continue;
+            $name = preg_replace('/^@/', '', $name);
             $name = explode('=', $name, 2);
             $name[1] = $name[1] ?? null;
             // 解析名称
@@ -38,7 +38,11 @@ class Param
             }
             // 融合数据
             $data = $this->merge($data, $name[1]);
+            // 移除入参
+            unset($param[$key]);
         }
+        // 疏理CLI入参
+        $_SERVER['argv'] = array_values($param);
         \fxapp\Base::config('app.param.cli', $data);
     }
 
