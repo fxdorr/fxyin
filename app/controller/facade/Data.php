@@ -288,7 +288,7 @@ class Data
         }
         // 组装方法
         $value = array_map(function ($value) use ($case) {
-            if ($case) $value = 'binary ' . $value;
+            if ($case && !is_numeric($value)) $value = 'binary ' . $value;
             return $value;
         }, $value);
         $value = implode($tray['glue'], $value) . $tray['tail'];
@@ -545,7 +545,7 @@ class Data
         // 疏理替换值
         $tray['value'] = array_map(function ($value) {
             foreach ($value as $key => $value) {
-                $data[] = implode(' ', ['when binary', $key, 'then', $value]);
+                $data[] = implode(' ', ['when' . (is_numeric(trim($key, '\'')) ? '' : ' binary'), $key, 'then', $value]);
             }
             $data = implode(PHP_EOL, $data);
             return $data;
@@ -555,12 +555,12 @@ class Data
             if ($key == $param['key']) continue;
             // 转义键名
             $key = $this->fieldEscape($key);
-            $echo[] = implode('', [PHP_EOL, $key, ' = case ', $param['keys'], PHP_EOL, '', $value, PHP_EOL, 'end']);
+            $echo[] = implode('', [PHP_EOL, $key, ' = case ', $param['keys'], PHP_EOL, '', $value, PHP_EOL, 'else ', $key, PHP_EOL, 'end']);
         }
         $echo = implode(',', $echo);
         $tray['key'] = array_column($data, $param['key']);
         $tray['key'] = array_map(function ($value) {
-            return 'binary ' . $value;
+            return (is_numeric(trim($value, '\'')) ? '' : 'binary ') . $value;
         }, $tray['key']);
         // 疏理表达式
         $echo = 'update ' . $table . ' set ' . $echo . PHP_EOL . 'where ' . $param['keys'] . ' in (' . implode(',', $tray['key']) . ')';
@@ -568,6 +568,8 @@ class Data
         if (!is_blank($param['where'])) {
             $echo .= ' and ' . $param['where'];
         }
+        // 替换换行
+        $echo = str_replace(PHP_EOL, ' ', $echo);
         return $echo;
     }
 
@@ -582,26 +584,40 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($data_new)) {
+            // 新数据不存在
             $echo[0] = false;
             $echo[1] = 1002;
             $echo[2] = \fxapp\Base::lang(['lack', 'new', 'data']);
             return $echo;
         } else if (!isset($data_old)) {
+            // 旧数据不存在
             $echo[0] = false;
             $echo[1] = 1002;
             $echo[2] = \fxapp\Base::lang(['lack', 'old', 'data']);
             return $echo;
         } else if (!is_array($data_new) || !is_array($data_old)) {
+            // 数据非数组
             $echo[0] = false;
             $echo[1] = 1002;
             $echo[2] = \fxapp\Base::lang(['data', 'format', 'error']);
             return $echo;
         }
+        // 疏理数据不同
+        $tray['key'] = [];
         foreach ($data_new as $key => $value) {
-            if ($value == $data_old[$key]) continue;
-            $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . $key, ']', 'not', 'same']);
+            if ($value != $data_old[$key]) {
+                $tray['key'][] = $key;
+            } else {
+                unset($data_new[$key]);
+            }
+        }
+        // 校验数据不同
+        if (count($tray['key'])) {
+            $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . implode('、', $tray['key']), ']', 'not', 'same']);
+            $echo[3] = $data_new;
             return $echo;
         }
+        // 数据相同
         $echo[0] = false;
         $echo[1] = 1002;
         $echo[2] = \fxapp\Base::lang(['data', 'same']);
