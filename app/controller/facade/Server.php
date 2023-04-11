@@ -277,7 +277,7 @@ class Server
         // 基础分支
         $tray['base'] = $tray['store']['base'] ?? [];
         // 匹配分支
-        $tray['echo'] = $tray['store'][$data['full'][$tray['echo']]];
+        $tray['echo'] = $tray['store'][$data['full'][$tray['echo']]] ?? [];
         // 合并分支
         $tray['echo'] = array_merge($tray['base'], $tray['echo']);
         // 配置分支

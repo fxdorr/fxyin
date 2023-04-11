@@ -9,11 +9,9 @@
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
-$param = \fxapp\Client::param();
-$param['view'] = \fxapp\Base::json($param['view'] ?? null, 'decode');
 \fxyin\Lang::setLangCookieName(\fxapp\Base::config('app.lang.name'));
 // 视图配置
-$tray['lang'] = $param['view']['lang'] ?? ($_SERVER['HTTP_LANG'] ?? \fxyin\Lang::detect());
+$tray['lang'] = $_SERVER['HTTP_LANG'] ?? \fxyin\Lang::detect();
 // 识别语言
 $config = \fxapp\Base::config('app.lang');
 if (!in_array($tray['lang'], $config['list'])) {

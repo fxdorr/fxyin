@@ -76,6 +76,19 @@ class App
                 Config::load($file, $name);
             }
         }
+    }
+
+    /**
+     * 启动应用
+     * @param string $path 路径
+     * @return mixed
+     */
+    private static function start($path = null)
+    {
+        // 初始化变量
+        $path = realpath($path);
+        if (false === is_dir($path)) return;
+        $path .= DIRECTORY_SEPARATOR;
         // 加载语言包
         if (is_dir($path . 'language')) {
             $config = \fxapp\Base::config('app.lang');
@@ -93,19 +106,6 @@ class App
                 }
             }
         }
-    }
-
-    /**
-     * 启动应用
-     * @param string $path 路径
-     * @return mixed
-     */
-    private static function start($path = null)
-    {
-        // 初始化变量
-        $path = realpath($path);
-        if (false === is_dir($path)) return;
-        $path .= DIRECTORY_SEPARATOR;
         // 加载商店文件
         if (is_dir($path . 'store')) {
             $dir = $path . 'store';
