@@ -526,8 +526,8 @@ class Data
         $data = array_map(function ($data) {
             $data = array_map(function ($data) {
                 // 过滤表达式
-                $search = ['\\', '\''];
-                $replace = ['\\\\', '\\\''];
+                $search = ['\\', '\'', '"'];
+                $replace = ['\\\\', '\\\'', '\\"'];
                 foreach ($search as $key => $value) {
                     $data = str_replace($value, $replace[$key], $data);
                 }
@@ -805,7 +805,7 @@ class Data
             $replace = '"' . $replace . '"';
         }
         // 疏理输出
-        $echo = 'if(json_valid(' . $field[0] . '),ifnull(json_unquote(json_extract(' . $field[0] . ',"' . $field[1] . '")),' . $replace . '),' . $replace . ')';
+        $echo = 'if(json_valid(' . $field[0] . '),ifnull(json_unquote(json_extract(' . $field[0] . ',\'' . $field[1] . '\')),' . $replace . '),' . $replace . ')';
         return $echo;
     }
 
