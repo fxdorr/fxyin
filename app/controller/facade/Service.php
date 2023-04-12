@@ -19,7 +19,7 @@ class Service
     /**
      * HTTP请求
      * @param string $url 网址
-     * @param string $data 数据
+     * @param array|string $data 数据
      * @param array $header 请求头
      * @param string $method 请求方式
      * @param array $option 选项
@@ -40,7 +40,7 @@ class Service
             // 网址
             'url' => $url,
             // 数据
-            'data' => $data,
+            'data' => \fxapp\Text::strEncode($data),
             // 请求头
             'header' => $header,
             // 方法
