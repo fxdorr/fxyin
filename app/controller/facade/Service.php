@@ -40,7 +40,7 @@ class Service
             // 网址
             'url' => $url,
             // 数据
-            'data' => \fxapp\Text::strEncode($data),
+            'data' => $data,
             // 请求头
             'header' => $header,
             // 方法
@@ -67,6 +67,8 @@ class Service
             'easy' => true,
         ];
         $option = \fxapp\Param::define([$option, $predefined], '1.1.2');
+        // 数据进行字符串编码
+        $option['data'] = \fxapp\Text::strEncode($option['data']);
         // 初始化请求
         $request = curl_init();
         // 配置请求地址
