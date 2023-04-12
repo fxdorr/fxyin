@@ -461,15 +461,14 @@ class Text
     {
         // 初始化变量
         $echo = [];
+        // 校验数据
+        if (!is_array($data)) return $data;
         // 解析数据
         foreach ($data as $key => $value) {
             // 解析数据
             $value = $this->strEncodeMerge($value);
-            if (!is_array($value)) {
-                $value = [$value];
-            }
             // 疏理数据
-            foreach ($value as $key2 => $value2) {
+            foreach ($value as $value2) {
                 $echo[] = $key . $value2;
             }
         }
@@ -486,16 +485,20 @@ class Text
     {
         // 初始化变量
         $tray = [];
+        // 校验数据
         if (!is_array($data)) {
             $data = urlencode($data);
-            return '=' . $data;
+            return ['=' . $data];
         }
+        // 解析数据
         foreach ($data as $key => $value) {
             $value = $this->strEncodeMerge($value);
-            if (array_keys($data) != array_flip(array_keys($data))) {
-                $tray[] = '[' . $key . ']' . $value;
-            } else {
-                $tray[] = '[]' . $value;
+            foreach ($value as $value2) {
+                if (array_keys($data) != array_flip(array_keys($data))) {
+                    $tray[] = '[' . $key . ']' . $value2;
+                } else {
+                    $tray[] = '[]' . $value2;
+                }
             }
         }
         return $tray;
@@ -510,6 +513,8 @@ class Text
     {
         // 初始化变量
         $echo = [];
+        // 校验数据
+        if (is_array($data)) return $data;
         // 解析数据
         $data = explode('&', $data);
         foreach ($data as $key => $value) {
