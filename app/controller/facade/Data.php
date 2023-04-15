@@ -784,8 +784,11 @@ class Data
                 // 疏理子集
                 $field[1] = explode('.', $field[1]);
                 $field[1] = array_map(function ($value) {
-                    // 疏理数据
-                    if (strpos($value, '"') === false) {
+                    // 疏理键名
+                    if (strpos($value, '[') === 0) {
+                        // 数组
+                    } else if (strpos($value, '"') === false) {
+                        // 对象
                         $value = '"' . $value . '"';
                     }
                     return $value;
@@ -797,7 +800,13 @@ class Data
                 break;
         }
         // 疏理子集
-        $field[1] = '$.' . $field[1];
+        if (strpos($field[1], '[') === 0) {
+            // 数组
+            $field[1] = '$' . $field[1];
+        } else {
+            // 对象
+            $field[1] = '$.' . $field[1];
+        }
         // 疏理替换
         if (is_null($replace)) {
             $replace = 'null';
