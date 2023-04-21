@@ -180,13 +180,6 @@ class Data
         foreach ($value as $index => $elem) {
             // 包装键值
             switch ($method) {
-                case 'like':
-                    // 匹配
-                case 'not like':
-                    // 匹配-取反
-                    $search = array_merge($search, ['/', '_']);
-                    $replace = array_merge($replace, ['//', '/_']);
-                    break;
                 case 'like fuzzy':
                     // 模糊匹配
                 case 'not like fuzzy':
@@ -222,7 +215,7 @@ class Data
             $value[$index] = $elem;
         }
         // 组装方法
-        $tray['glue'] = '';
+        $tray['delimiter'] = '';
         $tray['tail'] = '';
         switch ($method) {
             default:
@@ -235,12 +228,8 @@ class Data
                 if (!count($value)) {
                     $value[] = '""';
                 }
-                $tray['glue'] = ',';
+                $tray['delimiter'] = ',';
                 break;
-            case 'like':
-                // 匹配
-            case 'not like':
-                // 匹配-取反
             case 'like fuzzy':
                 // 模糊匹配
             case 'not like fuzzy':
@@ -251,14 +240,14 @@ class Data
                 // 范围
             case 'not between':
                 // 范围-取反
-                $tray['glue'] = ' and ';
+                $tray['delimiter'] = ' and ';
                 break;
             case 'find_in_set':
                 // 批量
                 if (!count($value)) {
                     $value[] = '""';
                 }
-                $tray['glue'] = ',';
+                $tray['delimiter'] = ',';
                 break;
             case 'json array':
                 // JSON-数组
@@ -266,7 +255,7 @@ class Data
                     $value[] = '""';
                 }
                 $case = 0;
-                $tray['glue'] = ',';
+                $tray['delimiter'] = ',';
                 break;
             case 'json object':
                 // JSON-对象
@@ -277,7 +266,7 @@ class Data
                     $value[] = '""';
                 }
                 $case = 0;
-                $tray['glue'] = ',';
+                $tray['delimiter'] = ',';
                 break;
         }
         // 组装方法
@@ -285,7 +274,7 @@ class Data
             if ($case && !is_numeric(trim($value, '\'"'))) $value = 'binary ' . $value;
             return $value;
         }, $value);
-        $value = implode($tray['glue'], $value) . $tray['tail'];
+        $value = implode($tray['delimiter'], $value) . $tray['tail'];
         return $value;
     }
 
