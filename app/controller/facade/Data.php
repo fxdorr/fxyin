@@ -230,6 +230,10 @@ class Data
                 }
                 $tray['delimiter'] = ',';
                 break;
+            case 'like':
+                // 匹配
+            case 'not like':
+                // 匹配-取反
             case 'like fuzzy':
                 // 模糊匹配
             case 'not like fuzzy':
