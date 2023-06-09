@@ -82,6 +82,28 @@ function is_zipcode($data)
 }
 
 /**
+ * 校验IPv4
+ * @param string $data 数据
+ * @return boolean
+ */
+function is_ipv4($data)
+{
+    // 初始化变量
+    return filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
+}
+
+/**
+ * 校验IPv6
+ * @param string $data 数据
+ * @return boolean
+ */
+function is_ipv6($data)
+{
+    // 初始化变量
+    return filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
+}
+
+/**
  * 语言
  * @param array|string $name 语言变量名
  * @param array $vars 动态变量值
@@ -90,6 +112,7 @@ function is_zipcode($data)
  */
 function fxy_lang($name, $vars = [], $lang = '')
 {
+    // 初始化变量
     return \fxapp\Base::lang($name, $vars, $lang);
 }
 
@@ -100,6 +123,7 @@ function fxy_lang($name, $vars = [], $lang = '')
  */
 function fxy_config(...$vars)
 {
+    // 初始化变量
     return \fxapp\Base::config(...$vars);
 }
 
@@ -110,6 +134,7 @@ function fxy_config(...$vars)
  */
 function fxy_cookie(...$vars)
 {
+    // 初始化变量
     return \fxapp\Base::cookie(...$vars);
 }
 
@@ -120,6 +145,7 @@ function fxy_cookie(...$vars)
  */
 function fxy_env(...$vars)
 {
+    // 初始化变量
     return \fxapp\Base::env(...$vars);
 }
 
@@ -130,6 +156,7 @@ function fxy_env(...$vars)
  */
 function fxy_dump(...$vars)
 {
+    // 初始化变量
     \fxapp\Base::dump(...$vars);
 }
 
@@ -142,5 +169,6 @@ function fxy_dump(...$vars)
  */
 function fxy_json($var, $type, $param = null)
 {
+    // 初始化变量
     return \fxapp\Base::json($var, $type, $param);
 }

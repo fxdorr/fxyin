@@ -234,13 +234,13 @@ class Base
         switch ($type) {
             case 'encode':
                 // 编码
-                if (filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
+                if (is_ipv4($data)) {
                     $data = \fxapp\Text::ipv4($data, $type);
                 }
                 break;
             case 'decode':
                 // 解码
-                if (filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
+                if (!is_ipv4($data)) {
                     $data = \fxapp\Text::ipv4($data, $type);
                 }
                 break;
