@@ -104,6 +104,17 @@ function is_ipv6($data)
 }
 
 /**
+ * 校验IP
+ * @param string $data 数据
+ * @return boolean
+ */
+function is_ip($data)
+{
+    // 初始化变量
+    return is_ipv4($data) || is_ipv6($data);
+}
+
+/**
  * 语言
  * @param array|string $name 语言变量名
  * @param array $vars 动态变量值
