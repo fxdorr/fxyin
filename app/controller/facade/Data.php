@@ -196,13 +196,13 @@ class Data
             switch ($method) {
                 default:
                     // 默认
-                    $elem = '"' . $elem . '"';
+                    $elem = '\'' . $elem . '\'';
                     break;
                 case 'like fuzzy':
                     // 模糊匹配
                 case 'not like fuzzy':
                     // 模糊匹配-取反
-                    $elem = '"%' . $elem . '%"';
+                    $elem = '\'%' . $elem . '%\'';
                     break;
                 case 'field':
                     // 字段
@@ -226,7 +226,7 @@ class Data
             case 'not in':
                 // 批量-取反
                 if (!count($value)) {
-                    $value[] = '""';
+                    $value[] = '\'\'';
                 }
                 $tray['delimiter'] = ',';
                 break;
@@ -238,7 +238,7 @@ class Data
                 // 模糊匹配
             case 'not like fuzzy':
                 // 模糊匹配-取反
-                $tray['tail'] = ' escape "/"';
+                $tray['tail'] = ' escape \'/\'';
                 break;
             case 'between':
                 // 范围
@@ -249,14 +249,14 @@ class Data
             case 'find_in_set':
                 // 批量
                 if (!count($value)) {
-                    $value[] = '""';
+                    $value[] = '\'\'';
                 }
                 $tray['delimiter'] = ',';
                 break;
             case 'json array':
                 // JSON-数组
                 if (!count($value)) {
-                    $value[] = '""';
+                    $value[] = '\'\'';
                 }
                 $case = 0;
                 $tray['delimiter'] = ',';
@@ -264,10 +264,10 @@ class Data
             case 'json object':
                 // JSON-对象
                 if (!count($value)) {
-                    $value[] = '""';
+                    $value[] = '\'\'';
                 }
                 if (count($value) % 2 == 1) {
-                    $value[] = '""';
+                    $value[] = '\'\'';
                 }
                 $case = 0;
                 $tray['delimiter'] = ',';
@@ -305,7 +305,7 @@ class Data
             if (!isset($key[1])) {
                 $key[1] = null;
             } else if (is_string($key[1])) {
-                $key[1] = '"' . $key[1] . '"';
+                $key[1] = '\'' . $key[1] . '\'';
             }
             // 默认值
             $key[0] = 'ifnull(' . $key[0] . ',' . $key[1] . ')';
@@ -467,7 +467,7 @@ class Data
                 foreach ($search as $key2 => $value2) {
                     $value = str_replace($value2, $replace[$key2], $value);
                 }
-                $value = '"' . $value . '"';
+                $value = '\'' . $value . '\'';
                 return $value;
             }, $elem);
             $elem = '(' . implode(',', $elem) . ')';
@@ -518,7 +518,7 @@ class Data
                 foreach ($search as $key => $value) {
                     $data = str_replace($value, $replace[$key], $data);
                 }
-                return '"' . $data . '"';
+                return '\'' . $data . '\'';
             }, $data);
             return $data;
         }, $data);
@@ -629,7 +629,7 @@ class Data
         from (
             select `id`,
             if(find_in_set(`id`, @link_ids) > 0,
-                @link_ids := concat(@link_ids, ",", `link_id`),
+                @link_ids := concat(@link_ids, \',\', `link_id`),
                 0
             ) `link_ids`
             from (
@@ -637,9 +637,9 @@ class Data
              from ' . $table_name . '
              order by `link_id` desc
             ) `data`,
-            (select @link_ids := "' . $link_id . '") `base`
+            (select @link_ids := \'' . $link_id . '\') `base`
         ) `data`
-        where `link_ids` != "0" and `id` not in ("' . $link_id . '")';
+        where `link_ids` != \'0\' and `id` not in (\'' . $link_id . '\')';
         return $echo;
     }
 
@@ -661,7 +661,7 @@ class Data
         from (
             select `id`,
             if(find_in_set(`link_id`, @link_ids) > 0,
-                @link_ids := concat(@link_ids, ",", `id`),
+                @link_ids := concat(@link_ids, \',\', `id`),
                 0
             ) `link_ids`
             from (
@@ -669,9 +669,9 @@ class Data
              from ' . $table_name . '
              order by `link_id`
             ) `data`,
-            (select @link_ids := "' . $link_id . '") `base`
+            (select @link_ids := \'' . $link_id . '\') `base`
         ) `data`
-        where `link_ids` != "0"';
+        where `link_ids` != \'0\'';
         return $echo;
     }
 
@@ -712,14 +712,14 @@ class Data
             return false;
         }
         $echo = 'elt(
-            interval(conv(hex(left(convert(' . $field . ' using gbk),"1")),"16","10"),
+            interval(conv(hex(left(convert(' . $field . ' using gbk),\'1\')),\'16\',\'10\'),
             0,
             0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
             0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
             0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
-            UPPER(left(' . $field . ',"1")),
-            "A","B","C","D","E","F","G","H","J","K","L","M","N","O","P",
-            "Q","R","S","T","W","X","Y","Z"
+            UPPER(left(' . $field . ',\'1\')),
+            \'A\',\'B\',\'C\',\'D\',\'E\',\'F\',\'G\',\'H\',\'J\',\'K\',\'L\',\'M\',\'N\',\'O\',\'P\',
+            \'Q\',\'R\',\'S\',\'T\',\'W\',\'X\',\'Y\',\'Z\'
         )';
         $echo = str_replace(["  ", "　", "\t", "\n", "\r"], '', $echo);
         return $echo;
@@ -798,7 +798,7 @@ class Data
         if (is_null($replace)) {
             $replace = 'null';
         } else if (is_string($replace)) {
-            $replace = '"' . $replace . '"';
+            $replace = '\'' . $replace . '\'';
         }
         // 疏理输出
         $echo = 'if(json_valid(' . $field[0] . '),ifnull(json_unquote(json_extract(' . $field[0] . ',\'' . $field[1] . '\')),' . $replace . '),' . $replace . ')';
@@ -816,7 +816,7 @@ class Data
     {
         // 初始化变量
         if (!$this->paramEmpty([$field], 1)[0]) {
-            $field = '"' . $field . '"';
+            $field = '\'' . $field . '\'';
         }
         switch ($param) {
             default:
@@ -827,7 +827,7 @@ class Data
                 } else if (is_numeric($replace)) {
                     $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),' . $replace . ',' . $field . ')';
                 } else {
-                    $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),"' . $replace . '",' . $field . ')';
+                    $echo = 'if(length(' . $field . ')=0 or isnull(' . $field . '),\'' . $replace . '\',' . $field . ')';
                 }
                 break;
             case 2:
@@ -853,7 +853,7 @@ class Data
     {
         // 初始化变量
         if (!$this->paramEmpty([$field], 1)[0]) {
-            $field = '"' . $field . '"';
+            $field = '\'' . $field . '\'';
         }
         switch ($param) {
             case 1:
@@ -869,11 +869,11 @@ class Data
                 $param = '%H:%i:%s';
                 break;
         }
-        $param = 'from_unixtime(' . $field . ',"' . $param . '")';
+        $param = 'from_unixtime(' . $field . ',\'' . $param . '\')';
         if (is_null($replace)) {
             $replace = $param;
         } else {
-            $replace = '"' . $replace . '"';
+            $replace = '\'' . $replace . '\'';
         }
         // 疏理输出
         $echo = 'if(' . $field . '=0 or isnull(' . $field . '),' . $replace . ',' . $param . ')';
