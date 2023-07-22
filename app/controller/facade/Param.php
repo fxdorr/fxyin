@@ -483,28 +483,27 @@ class Param
                 // 解析地址
                 $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.uri');
                 $data['url'] = explode('?', $data['url'], 2);
-                $data['url'][1] = $data['url'][1] ?? null;
-                // 疏理数据
-                $data['url'] = [$data['url'][0]];
-                $data['param'] = $this->merge(\fxapp\Text::strDecode($data['url'][1]), $data['param']);
-                $data['param'] = \fxapp\Text::strEncode($data['param']);
-                // 拼接地址
-                if (!is_blank($data['param'])) {
-                    $data['url'][] = $data['param'];
+                $data['url'][1] = $this->merge(\fxapp\Text::strDecode($data['url'][1] ?? null), \fxapp\Text::strDecode($data['param']));
+                // 疏理参数
+                if (!empty($data['url'][1])) {
+                    $data['url'][1] = \fxapp\Text::strEncode($data['url'][1]);
+                } else {
+                    unset($data['url'][1]);
                 }
+                // 输出地址
                 return implode('?', $data['url']);
             case '2.1':
                 // 获取参数
                 // 解析地址
                 $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.web') . \fxapp\Base::env('base.uri');
                 $data['url'] = explode('?', $data['url'], 2);
-                $data['url'][1] = $data['url'][1] ?? null;
-                // 解析数据
-                $data['param'] = \fxapp\Text::strDecode($data['url'][1]);
-                if (!is_null($data['name'])) {
-                    return $data['param'][$data['name']];
+                $data['url'][1] = $this->merge(\fxapp\Text::strDecode($data['url'][1] ?? null), \fxapp\Text::strDecode($data['param']));
+                // 获取参数
+                if (!is_blank($data['name'])) {
+                    return $data['url'][1][$data['name']] ?? null;
                 }
-                return $data['param'];
+                // 输出参数
+                return $data['url'][1];
         }
     }
 

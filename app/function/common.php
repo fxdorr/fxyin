@@ -31,7 +31,7 @@ function is_json($data)
 function is_blank($data)
 {
     // 初始化变量
-    return is_null($data) || $data === '' ? true : false;
+    return is_null($data) || $data === '';
 }
 
 /**
