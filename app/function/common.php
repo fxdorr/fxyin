@@ -104,6 +104,17 @@ function is_ipv6($data)
 }
 
 /**
+ * 校验URL
+ * @param string $data 数据
+ * @return boolean
+ */
+function is_url($data)
+{
+    // 初始化变量
+    return filter_var($data, FILTER_VALIDATE_URL) !== false;
+}
+
+/**
  * 校验IP
  * @param string $data 数据
  * @return boolean
