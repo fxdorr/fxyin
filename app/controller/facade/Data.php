@@ -459,16 +459,17 @@ class Data
         // 疏理键值
         $tray['value'] = [];
         foreach ($data as $elem) {
-            $elem = array_map(function ($value) {
-                if (is_null($value)) $value = 'null';
+            $elem = array_map(function ($data) {
+                // 校验空值
+                if (is_null($data)) return 'null';
                 // 过滤键值
                 $search = ['\\', '\'', '"'];
                 $replace = ['\\\\', '\\\'', '\\"'];
-                foreach ($search as $key2 => $value2) {
-                    $value = str_replace($value2, $replace[$key2], $value);
+                foreach ($search as $key => $value) {
+                    $data = str_replace($value, $replace[$key], $data);
                 }
-                $value = '\'' . $value . '\'';
-                return $value;
+                $data = '\'' . $data . '\'';
+                return $data;
             }, $elem);
             $elem = '(' . implode(',', $elem) . ')';
             $tray['value'][] = $elem;
@@ -512,6 +513,8 @@ class Data
         // 疏理数据
         $data = array_map(function ($data) {
             $data = array_map(function ($data) {
+                // 校验空值
+                if (is_null($data)) return 'null';
                 // 过滤表达式
                 $search = ['\\', '\'', '"'];
                 $replace = ['\\\\', '\\\'', '\\"'];
