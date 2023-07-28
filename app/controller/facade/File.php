@@ -205,9 +205,8 @@ class File
                     $data['size'] = filesize($var);
                     return $data;
                 } catch (\Throwable $th) {
-                    \fxapp\Base::dump(\fxapp\Text::timeMilli(\fxapp\Text::timeMilli()), \fxapp\Text::throwable($th, '1.1'));
+                    throw $th;
                 }
-                break;
         }
     }
 }

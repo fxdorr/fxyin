@@ -258,7 +258,7 @@ class Text
             }
             return $var;
         } catch (\Throwable $th) {
-            return $var;
+            throw $th;
         }
     }
 
