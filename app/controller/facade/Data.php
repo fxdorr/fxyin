@@ -135,7 +135,7 @@ class Data
                 // 批量
             case 'not in':
                 // 批量-取反
-                $value = \fxapp\Text::implode(',', $value, true);
+                $value = \fxapp\Text::implode(',', $value, true, false);
                 break;
             case 'like':
                 // 匹配
@@ -156,7 +156,7 @@ class Data
                 if (is_string($value) && mb_strpos($value, ' and ', 0, 'utf-8') !== false) {
                     $value = explode(' and ', $value);
                 } else if (!is_array($value)) {
-                    $value = \fxapp\Text::implode(',', $value, true);
+                    $value = \fxapp\Text::implode(',', $value, true, false);
                 }
                 if (count($value) < 2) {
                     return false;
@@ -164,14 +164,14 @@ class Data
                 break;
             case 'find_in_set':
                 // 批量
-                $value = \fxapp\Text::implode(',', $value, true);
+                $value = \fxapp\Text::implode(',', $value, true, false);
                 break;
             case 'json array':
                 // JSON-数组
                 break;
             case 'json object':
                 // JSON-对象
-                $value = \fxapp\Text::implode(',', $value, true);
+                $value = \fxapp\Text::implode(',', $value, true, false);
                 break;
         }
         // 过滤键值
@@ -328,7 +328,7 @@ class Data
                 break;
             case 'find_in_set':
                 // 批量
-                $value = \fxapp\Text::implode(',', $value, true);
+                $value = \fxapp\Text::implode(',', $value, true, false);
                 $echo = [];
                 foreach ($value as $cell) {
                     $echo[] = $method . '(' . $cell . ',' . $key[0] . ')';
