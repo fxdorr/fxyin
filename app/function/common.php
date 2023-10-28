@@ -35,6 +35,22 @@ function is_blank($data)
 }
 
 /**
+ * 校验时间
+ * @param string $time 时间
+ * @param string $format 格式
+ * @return bool
+ */
+function is_time($time, $format = 'Y-m-d H:i:s')
+{
+    // 校验转时间戳
+    if (false === ($times = strtotime($time))) {
+        return $times;
+    }
+    // 校验格式化时间
+    return date($format, $times) == $time;
+}
+
+/**
  * 校验函数
  * @param object $data 数据
  * @return boolean
