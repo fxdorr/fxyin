@@ -924,7 +924,7 @@ class Data
             }
             return $value;
         }, $data);
-        $data = implode($delimiter, $data);
+        $data = implode($delimiter ?? '', $data);
         return $data;
     }
 
