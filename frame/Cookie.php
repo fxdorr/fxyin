@@ -39,7 +39,7 @@ class Cookie
     public static function set(...$vars)
     {
         // 初始化变量
-        $config = \fxapp\Base::config('app.cookie');
+        $config = fxy_config('app.cookie');
         $predefined = [
             // 键名
             0 => null,

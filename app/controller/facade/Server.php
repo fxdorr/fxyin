@@ -23,7 +23,7 @@ class Server
     public function echo()
     {
         // 初始化变量
-        $echo = \fxapp\Base::config('facade.server.echo.template');
+        $echo = fxy_config('facade.server.echo.template');
         return $echo;
     }
 
@@ -125,9 +125,9 @@ class Server
     {
         // 初始化变量
         $echo = [];
-        $debug['switch'] = \fxapp\Base::config('app.debug.switch');
-        $debug['trace'] = \fxapp\Base::config('app.debug.trace');
-        $debug['param'] = \fxapp\Base::config('app.param');
+        $debug['switch'] = fxy_config('app.debug.switch');
+        $debug['trace'] = fxy_config('app.debug.trace');
+        $debug['param'] = fxy_config('app.param');
         switch ($type) {
             default:
             case 1:
@@ -141,9 +141,9 @@ class Server
                 break;
             case 2:
                 // 通用
-                $base = \fxapp\Base::config('facade.server.echo.format');
+                $base = fxy_config('facade.server.echo.format');
                 // 处理数据
-                $data[2] = \fxapp\Base::lang($data[2] ?? '');
+                $data[2] = fxy_lang($data[2] ?? '');
                 foreach ($base as $key => $value) {
                     if (array_key_exists($key, $data)) {
                         $echo[$value] = $data[$key];
@@ -202,22 +202,22 @@ class Server
         // 配置请求主机
         if (PHP_SAPI === 'cli' && !isset($_SERVER['SERVER_NAME'])) {
             // 载入数据
-            $tray['host'] = \fxapp\Base::config('app.param.cli.svr_name');
+            $tray['host'] = fxy_config('app.param.cli.svr_name');
             $tray['host'] = !is_null($tray['host']) ? strtolower($tray['host']) : null;
             // 配置数据
             $_SERVER['SERVER_NAME'] = $tray['host'];
-            \fxapp\Base::config('env.base.host', $tray['host']);
-            \fxapp\Base::env('base.host', $tray['host']);
+            fxy_config('env.base.host', $tray['host']);
+            fxy_env('base.host', $tray['host']);
         }
         // 配置请求路径
         if (PHP_SAPI === 'cli' && !isset($_SERVER['REQUEST_URI'])) {
             // 载入数据
-            $tray['uri'] = \fxapp\Base::config('app.param.cli.svr_uri');
+            $tray['uri'] = fxy_config('app.param.cli.svr_uri');
             $tray['uri'] = !is_null($tray['uri']) ? strtolower($tray['uri']) : null;
             // 配置数据
             $_SERVER['REQUEST_URI'] = $tray['uri'];
-            \fxapp\Base::config('env.base.uri', $tray['uri']);
-            \fxapp\Base::env('base.uri', $tray['uri']);
+            fxy_config('env.base.uri', $tray['uri']);
+            fxy_env('base.uri', $tray['uri']);
         }
     }
 
@@ -228,8 +228,8 @@ class Server
     public function branch()
     {
         // 载入分支
-        $tray['branch'] = \fxapp\Base::env('base.host');
-        $tray['store'] = \fxapp\Base::config('branch.store');
+        $tray['branch'] = fxy_env('base.host');
+        $tray['store'] = fxy_config('branch.store');
         $tray['store'] = array_reverse($tray['store']);
         foreach ($tray['store'] as $index => $elem) {
             foreach (explode(',', $index) as $value) {
@@ -272,7 +272,7 @@ class Server
         }
         // 默认分支
         if (!isset($tray['echo'])) {
-            $tray['echo'] = \fxapp\Base::config('branch.default');
+            $tray['echo'] = fxy_config('branch.default');
         }
         // 基础分支
         $tray['base'] = $tray['store']['base'] ?? [];
@@ -282,7 +282,7 @@ class Server
         $tray['echo'] = array_merge($tray['base'], $tray['echo']);
         // 配置分支
         foreach ($tray['echo'] as $elem) {
-            \fxapp\Base::config($elem[1], \fxapp\Base::config($elem[0]));
+            fxy_config($elem[1], fxy_config($elem[0]));
         }
     }
 }

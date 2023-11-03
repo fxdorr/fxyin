@@ -43,7 +43,7 @@ class Param
         }
         // 疏理CLI入参
         $_SERVER['argv'] = array_values($param);
-        \fxapp\Base::config('app.param.cli', $data);
+        fxy_config('app.param.cli', $data);
     }
 
     /**
@@ -101,7 +101,7 @@ class Param
                     }
                 }
                 foreach ($param[1] as $key => $value) {
-                    $echo[$key] = \fxapp\Base::json($echo[$key], 'decode');
+                    $echo[$key] = fxy_json($echo[$key], 'decode');
                 }
                 break;
             case '1.2.1':
@@ -139,7 +139,7 @@ class Param
                 // data => json
                 $echo = $param[0];
                 foreach ($param[1] as $key => $value) {
-                    $echo[$value] = \fxapp\Base::json($echo[$value] ?? null, 'decode');
+                    $echo[$value] = fxy_json($echo[$value] ?? null, 'decode');
                 }
                 break;
             case '1.2.4':
@@ -438,11 +438,11 @@ class Param
                 switch (gettype($value)) {
                     case 'integer':
                         // 整型
-                        $args[0][$key] = (int)$args[0][$key];
+                        $args[0][$key] = (int) $args[0][$key];
                         break;
                     case 'double':
                         // 浮点型
-                        $args[0][$key] = (float)$args[0][$key];
+                        $args[0][$key] = (float) $args[0][$key];
                         break;
                 }
             }
@@ -481,7 +481,7 @@ class Param
             case '1.2':
                 // 组装地址
                 // 解析地址
-                $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.uri');
+                $data['url'] = !is_blank($data['url']) ? $data['url'] : fxy_env('base.uri');
                 $data['url'] = explode('?', $data['url'], 2);
                 $data['url'][1] = $this->merge(\fxapp\Text::strDecode($data['url'][1] ?? null), \fxapp\Text::strDecode($data['param']));
                 // 疏理参数
@@ -495,7 +495,7 @@ class Param
             case '2.1':
                 // 获取参数
                 // 解析地址
-                $data['url'] = !is_blank($data['url']) ? $data['url'] : \fxapp\Base::env('base.web') . \fxapp\Base::env('base.uri');
+                $data['url'] = !is_blank($data['url']) ? $data['url'] : fxy_env('base.web') . fxy_env('base.uri');
                 $data['url'] = explode('?', $data['url'], 2);
                 $data['url'][1] = $this->merge(\fxapp\Text::strDecode($data['url'][1] ?? null), \fxapp\Text::strDecode($data['param']));
                 // 获取参数

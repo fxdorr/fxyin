@@ -181,16 +181,10 @@ class Text
         $length = mb_strlen($string, 'utf-8');
         $end == 0 && $end = $length;
         $start > $end && $start = $end;
-        if (is_string($string)) {
-            if ($end > 0 && !($length >= $start && $length <= $end)) {
-                $echo[0] = false;
-                $echo[1] = 1004;
-                $echo[2] = \fxapp\Base::lang(['string', 'length', 'should', 'be', ($start == $end ? $end : $start . '-' . $end)]);
-            }
-        } else {
-            $echo[0] = false;
-            $echo[1] = 1000;
-            $echo[2] = \fxapp\Base::lang(['string', 'not2', 'input']);
+        if (!is_string($string)) {
+            $echo = fxy_echo('请输入字符串', 1002);
+        } else if ($end > 0 && !($length >= $start && $length <= $end)) {
+            $echo = fxy_echo(fxy_lang(['字符串长度应该是', ($start == $end ? $end : $start . '-' . $end)]), 1004);
         }
         return $echo;
     }
@@ -446,7 +440,7 @@ class Text
             // 校验之前
             if (!$param['before'] && $key < $param['max']) continue;
             $echo[] = $value;
-            $echo[] = \fxapp\Base::lang($title[$key]);
+            $echo[] = fxy_lang($title[$key]);
         }
         $echo = implode('', $echo);
         return $echo;

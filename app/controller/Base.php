@@ -27,6 +27,7 @@ namespace fxapp;
  * @method static mixed ipv4(mixed $data, string $type) 解析IPv4
  * @method static mixed crypt(mixed $var, string $type, string $param = null) 加密解密
  * @method static void throwable(string $message) 抛出异常
+ * @method static array echo(string $message, int|null $code = null, array $data = [], array $extend = []) 配置响应
  */
 class Base extends \fxyin\Facade
 {

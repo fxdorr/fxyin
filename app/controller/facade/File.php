@@ -136,7 +136,7 @@ class File
                 // 媒体-视频
                 try {
                     // 配置参数
-                    $config = \fxapp\Base::config('app.media.video');
+                    $config = fxy_config('app.media.video');
                     if (is_null($config)) return;
                     $command = sprintf($config, $var);
                     ob_start();

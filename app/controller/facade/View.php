@@ -32,7 +32,7 @@ class View
             case 'xml':
                 // XML
                 header('Content-Type:application/json; charset=utf-8');
-                $data = \fxapp\Base::json($data, 'encode');
+                $data = fxy_json($data, 'encode');
                 break;
         }
         return $data;

@@ -57,6 +57,6 @@ class Facade
                 return call_user_func_array([static::$data[$class], $name], $data);
             }
         }
-        throw new \Exception(\fxapp\Base::lang(['method', ' \'', static::class . '::' . $name, '\' ', 'not', 'exist']));
+        throw new \Exception(fxy_lang(['方法', ' \'', static::class . '::' . $name, '\' ', '不存在']));
     }
 }

@@ -91,8 +91,8 @@ class App
         $path .= DIRECTORY_SEPARATOR;
         // 加载语言包
         if (is_dir($path . 'language')) {
-            $config = \fxapp\Base::config('app.lang');
-            $lang = \fxapp\Base::config('env.view.lang');
+            $config = fxy_config('app.lang');
+            $lang = fxy_config('env.view.lang');
             $dir = $path . 'language' . DIRECTORY_SEPARATOR . $lang;
             if (!is_dir($dir)) {
                 $lang = $config['default'];
@@ -132,7 +132,7 @@ class App
         $class = explode('\\', strtolower(implode('\\', $class)));
         $class[] = ucfirst(array_pop($class));
         // 解析控制器
-        $app = \fxapp\Base::config('env.base.name') ?: 'app';
+        $app = fxy_config('env.base.name') ?: 'app';
         $class = '\\' . $app . '\\' . implode('\\', $class);
         if (!class_exists($class)) {
             \fxapp\Base::throwable('控制器不存在', '1.1');

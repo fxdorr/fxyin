@@ -297,20 +297,45 @@ class Base
             throw new \Exception($message);
         } catch (\Throwable $th) {
             // 执行异常处理
-            if (true !== \fxapp\Base::config('app.debug.switch')) {
+            if (true !== fxy_config('app.debug.switch')) {
                 $echo = '系统异常';
-            } else if (\fxapp\Base::env('base.method') == 'get') {
+            } else if (fxy_env('base.method') == 'get') {
                 $echo = \fxapp\Text::throwable($th, '1.1');
             } else if (PHP_SAPI !== 'cli') {
                 $echo = \fxapp\Server::echo();
                 $echo[0] = false;
+                $echo[1] = 1002;
                 $echo[2] = \fxapp\Text::throwable($th, '1.1');
                 header('Content-Type:application/json; charset=utf-8');
-                $echo = \fxapp\Base::json(\fxapp\Server::format($echo, 2), 'encode');
+                $echo = fxy_json(\fxapp\Server::format($echo, 2), 'encode');
             } else {
                 throw $th;
             }
         }
         exit($echo);
+    }
+
+    /**
+     * 配置响应
+     * @param string $message 提示信息
+     * @param int|null $code 状态代码
+     * @param array $data 响应数据
+     * @param array $extend 扩展数据
+     * @return array
+     */
+    public function echo($message, $code = null, $data = [], $extend = [])
+    {
+        // 初始化变量
+        $echo = \fxapp\Server::echo();
+        // 疏理输出
+        if (!is_null($code) && $echo[1] != $code) {
+            $echo[0] = false;
+            $echo[1] = $code;
+        }
+        $echo[2] = $message;
+        $echo[3] = $data;
+        $echo[4] = (object) $extend;
+        $echo[5] = strval(time());
+        return $echo;
     }
 }

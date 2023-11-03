@@ -195,7 +195,7 @@ class Client
             // INPUT
             'input' => $input,
             // CLI
-            'cli' => \fxapp\Base::config('app.param.cli'),
+            'cli' => fxy_config('app.param.cli'),
         ];
         $base = \fxapp\Param::define([null, $predefined], '1.1.3');
         // 识别方法

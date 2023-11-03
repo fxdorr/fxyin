@@ -210,3 +210,17 @@ function fxy_json($var, $type, $param = null)
     // 初始化变量
     return \fxapp\Base::json($var, $type, $param);
 }
+
+/**
+ * 配置响应
+ * @param string $message 提示信息
+ * @param int|null $code 状态代码
+ * @param array $data 响应数据
+ * @param array $extend 扩展数据
+ * @return array
+ */
+function fxy_echo($message, $code = null, $data = [], $extend = [])
+{
+    // 初始化变量
+    return \fxapp\Base::echo($message, $code, $data, $extend);
+}

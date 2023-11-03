@@ -9,13 +9,13 @@
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
-\fxyin\Lang::setLangCookieName(\fxapp\Base::config('app.lang.name'));
+\fxyin\Lang::setLangCookieName(fxy_config('app.lang.name'));
 // 视图配置
 $tray['lang'] = $_SERVER['HTTP_LANG'] ?? \fxyin\Lang::detect();
 // 识别语言
-$config = \fxapp\Base::config('app.lang');
+$config = fxy_config('app.lang');
 if (!in_array($tray['lang'], $config['list'])) {
-    $tray['lang'] = \fxapp\Base::config('app.lang.default');
+    $tray['lang'] = fxy_config('app.lang.default');
 }
 
 /**

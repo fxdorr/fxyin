@@ -25,7 +25,7 @@ class Data
     public function where($data, $param)
     {
         // 初始化变量
-        $predefined = \fxapp\Base::config('facade.data.where');
+        $predefined = fxy_config('facade.data.where');
         $param = \fxapp\Param::define([$param, $predefined], '1.1.1');
         $predefined = [
             // 表达式
@@ -575,22 +575,13 @@ class Data
         $echo = \fxapp\Server::echo();
         if (!isset($data_new)) {
             // 新数据不存在
-            $echo[0] = false;
-            $echo[1] = 1002;
-            $echo[2] = \fxapp\Base::lang(['lack', 'new', 'data']);
-            return $echo;
+            return fxy_echo('缺少新数据', 1002);
         } else if (!isset($data_old)) {
             // 旧数据不存在
-            $echo[0] = false;
-            $echo[1] = 1002;
-            $echo[2] = \fxapp\Base::lang(['lack', 'old', 'data']);
-            return $echo;
+            return fxy_echo('缺少旧数据', 1002);
         } else if (!is_array($data_new) || !is_array($data_old)) {
             // 数据非数组
-            $echo[0] = false;
-            $echo[1] = 1002;
-            $echo[2] = \fxapp\Base::lang(['data', 'format', 'error']);
-            return $echo;
+            return fxy_echo('数据格式错误', 1002);
         }
         // 疏理数据不同
         $tray['key'] = [];
@@ -603,15 +594,12 @@ class Data
         }
         // 校验数据不同
         if (count($tray['key'])) {
-            $echo[2] = \fxapp\Base::lang(['data', '[', \fxapp\Base::config('app.lang.prefix') . implode('、', $tray['key']), ']', 'not', 'same']);
+            $echo[2] = fxy_lang(['数据', '[', fxy_config('app.lang.prefix') . implode('、', $tray['key']), ']', '不相同']);
             $echo[3] = $data_new;
             return $echo;
         }
         // 数据相同
-        $echo[0] = false;
-        $echo[1] = 1002;
-        $echo[2] = \fxapp\Base::lang(['data', 'same']);
-        return $echo;
+        return fxy_echo('数据相同', 1002);
     }
 
     /**
@@ -1019,15 +1007,9 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            $echo[0] = false;
-            $echo[1] = 1000;
-            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-            return $echo;
+            return fxy_echo('缺少参数', 1000);
         } else if (!is_array($param)) {
-            $echo[0] = false;
-            $echo[1] = 1001;
-            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
-            return $echo;
+            return fxy_echo('参数格式错误', 1001);
         }
         // 抽取主键
         $tray['format'] = [];
@@ -1043,7 +1025,7 @@ class Data
             }
             ksort($param[$key]);
         }
-        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[2] = '请求成功';
         $echo[3] = $param;
         return $echo;
     }
@@ -1058,22 +1040,16 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            $echo[0] = false;
-            $echo[1] = 1000;
-            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-            return $echo;
+            return fxy_echo('缺少参数', 1000);
         } else if (!is_array($param)) {
-            $echo[0] = false;
-            $echo[1] = 1001;
-            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
-            return $echo;
+            return fxy_echo('参数格式错误', 1001);
         }
         foreach ($param as $key => $value) {
             if (is_null($value)) {
                 unset($param[$key]);
             }
         }
-        $echo[2] = \fxapp\Base::lang(['request', 'success']);
+        $echo[2] = '请求成功';
         $echo[3] = $param;
         return $echo;
     }
@@ -1090,15 +1066,9 @@ class Data
         $echo = \fxapp\Server::echo();
         $echo[3] = $param;
         if (!isset($param)) {
-            $echo[0] = false;
-            $echo[1] = 1000;
-            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-            return $echo;
+            return fxy_echo('缺少参数', 1000);
         } else if (!is_array($param)) {
-            $echo[0] = false;
-            $echo[1] = 1001;
-            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
-            return $echo;
+            return fxy_echo('参数格式错误', 1001);
         }
         // 疏理键值
         foreach ($param as $key => $value) {
@@ -1130,7 +1100,7 @@ class Data
                 return $value;
             }, $echo[2]);
             unset($echo[2][0][0]);
-            $echo[2] = \fxapp\Base::lang(['lack', $echo[2]]);
+            $echo[2] = fxy_lang(['缺少', $echo[2]]);
         }
         return $echo;
     }
@@ -1145,25 +1115,15 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            $echo[0] = false;
-            $echo[1] = 1000;
-            $echo[2] = \fxapp\Base::lang(['lack', 'parameter']);
-            return $echo;
+            return fxy_echo('缺少参数', 1000);
         } else if (!is_array($param)) {
-            $echo[0] = false;
-            $echo[1] = 1001;
-            $echo[2] = \fxapp\Base::lang(['parameter', 'format', 'error']);
-            return $echo;
+            return fxy_echo('参数格式错误', 1001);
         }
         foreach ($param as $key => $value) {
             if (is_blank($value)) {
-                $echo[0] = false;
-                $echo[1] = 1000;
-                $echo[2] = \fxapp\Base::lang(['lack', 'param']);
+                $echo = fxy_echo('缺少参数', 1000);
             } else {
-                $echo[0] = true;
-                $echo[1] = 0;
-                $echo[2] = \fxapp\Base::lang(['check', 'success']);
+                $echo = fxy_echo('检查成功');
                 break;
             }
         }
