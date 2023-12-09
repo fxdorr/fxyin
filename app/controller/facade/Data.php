@@ -575,13 +575,13 @@ class Data
         $echo = \fxapp\Server::echo();
         if (!isset($data_new)) {
             // 新数据不存在
-            return fxy_echo('缺少新数据', 1002);
+            return fxy_echo('缺少新数据', 0);
         } else if (!isset($data_old)) {
             // 旧数据不存在
-            return fxy_echo('缺少旧数据', 1002);
+            return fxy_echo('缺少旧数据', 0);
         } else if (!is_array($data_new) || !is_array($data_old)) {
             // 数据非数组
-            return fxy_echo('数据格式错误', 1002);
+            return fxy_echo('数据格式错误', 0);
         }
         // 疏理数据不同
         $tray['key'] = [];
@@ -599,7 +599,7 @@ class Data
             return $echo;
         }
         // 数据相同
-        return fxy_echo('数据相同', 1002);
+        return fxy_echo('数据相同', 0);
     }
 
     /**
@@ -1007,9 +1007,9 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            return fxy_echo('缺少参数', 1000);
+            return fxy_echo('缺少参数', 0);
         } else if (!is_array($param)) {
-            return fxy_echo('参数格式错误', 1001);
+            return fxy_echo('参数格式错误', 0);
         }
         // 抽取主键
         $tray['format'] = [];
@@ -1040,9 +1040,9 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            return fxy_echo('缺少参数', 1000);
+            return fxy_echo('缺少参数', 0);
         } else if (!is_array($param)) {
-            return fxy_echo('参数格式错误', 1001);
+            return fxy_echo('参数格式错误', 0);
         }
         foreach ($param as $key => $value) {
             if (is_null($value)) {
@@ -1066,9 +1066,9 @@ class Data
         $echo = \fxapp\Server::echo();
         $echo[3] = $param;
         if (!isset($param)) {
-            return fxy_echo('缺少参数', 1000);
+            return fxy_echo('缺少参数', 0);
         } else if (!is_array($param)) {
-            return fxy_echo('参数格式错误', 1001);
+            return fxy_echo('参数格式错误', 0);
         }
         // 疏理键值
         foreach ($param as $key => $value) {
@@ -1087,7 +1087,7 @@ class Data
             $name = is_numeric($key) ? 'param' : $key;
             if ($echo[0]) {
                 $echo[0] = false;
-                $echo[1] = 1000;
+                $echo[1] = 0;
                 $echo[4]['error']['name'] = 'lack';
             }
             $echo[4]['error']['data'][$name] = $value;
@@ -1115,15 +1115,15 @@ class Data
         // 初始化变量
         $echo = \fxapp\Server::echo();
         if (!isset($param)) {
-            return fxy_echo('缺少参数', 1000);
+            return fxy_echo('缺少参数', 0);
         } else if (!is_array($param)) {
-            return fxy_echo('参数格式错误', 1001);
+            return fxy_echo('参数格式错误', 0);
         }
         foreach ($param as $key => $value) {
             if (is_blank($value)) {
-                $echo = fxy_echo('缺少参数', 1000);
+                $echo = fxy_echo('缺少参数', 0);
             } else {
-                $echo = fxy_echo('检查成功');
+                $echo = fxy_echo('检查成功', 1);
                 break;
             }
         }

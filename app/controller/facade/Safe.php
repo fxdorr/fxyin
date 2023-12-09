@@ -170,7 +170,7 @@ class Safe
             'type', 'secret',
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.2.2');
-        $param['secret'] = $this->rsapem($param['secret'], 'private');
+        $param['secret'] = $this->rsapem($param['secret']);
         $param['secret'] = openssl_pkey_get_private($param['secret']);
         $type = strtolower($type);
         switch ($type) {
@@ -235,7 +235,7 @@ class Safe
             'type', 'secret',
         ];
         $param = \fxapp\Param::define([$param, $predefined], '1.2.2');
-        $param['secret'] = $this->rsapem($param['secret'], 'public');
+        $param['secret'] = $this->rsapem($param['secret']);
         $param['secret'] = openssl_pkey_get_public($param['secret']);
         $type = strtolower($type);
         switch ($type) {
@@ -287,44 +287,28 @@ class Safe
     /**
      * 解析数据-RSA密钥
      * @param string $data 数据
-     * @param string $type 类型
      * @return string
      */
-    public function rsapem($data, $type)
+    public function rsapem($data)
     {
         // 初始化变量
-        if (!is_string($data)) return false;
-        $type = strtolower($type);
-        switch ($type) {
-            default:
-                // 默认
-                $data = null;
-                break;
-            case 'private':
-                // 私钥
-                if (is_file($data)) {
-                    $data = file_get_contents($data);
-                }
-                $data = str_replace("\n", '', $data);
-                $data = str_replace("-----BEGIN RSA PRIVATE KEY-----", '', $data);
-                $data = str_replace("-----END RSA PRIVATE KEY-----", '', $data);
-                $data = "-----BEGIN RSA PRIVATE KEY-----\n" .
-                    wordwrap($data, 64, "\n", true) .
-                    "\n-----END RSA PRIVATE KEY-----";
-                break;
-            case 'public':
-                // 公钥
-                if (is_file($data)) {
-                    $data = file_get_contents($data);
-                }
-                $data = str_replace("\n", '', $data);
-                $data = str_replace("-----BEGIN PUBLIC KEY-----", '', $data);
-                $data = str_replace("-----END PUBLIC KEY-----", '', $data);
-                $data = "-----BEGIN PUBLIC KEY-----\n" .
-                    wordwrap($data, 64, "\n", true) .
-                    "\n-----END PUBLIC KEY-----";
-                break;
+        if (!is_string($data)) {
+            // 检查类型
+            return false;
+        } else if (is_file($data)) {
+            // 读取密钥
+            $data = file_get_contents($data);
         }
+        // 移除换行
+        $data = str_replace("\n", '', $data);
+        // 处理头尾
+        $regular = '/-+[^-]+-+/i';
+        preg_match_all($regular, $data, $match);
+        $data = preg_replace($regular, '', $data);
+        // 组装密钥
+        $data = ($match[0][0] ?? '') . "\n" .
+            wordwrap($data, 64, "\n", true) .
+            "\n" . ($match[0][1] ?? '');
         return $data;
     }
 }

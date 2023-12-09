@@ -304,7 +304,7 @@ class Base
             } else if (PHP_SAPI !== 'cli') {
                 $echo = \fxapp\Server::echo();
                 $echo[0] = false;
-                $echo[1] = 1002;
+                $echo[1] = 0;
                 $echo[2] = \fxapp\Text::throwable($th, '1.1');
                 header('Content-Type:application/json; charset=utf-8');
                 $echo = fxy_json(\fxapp\Server::format($echo, 2), 'encode');

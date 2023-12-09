@@ -132,7 +132,7 @@ class Text
     public function explode($delimiter, $data, $unique = true, $limit = PHP_INT_MAX)
     {
         // 初始化变量
-        if (is_null($data) || '' == $data) {
+        if (is_null($data) || '' === $data) {
             $data = [];
         } else if (!is_array($data) && !is_string($data) && !is_numeric($data)) {
             $data = [$data];
@@ -585,7 +585,7 @@ class Text
                 $data = explode('.', $data);
                 foreach ($data as $key => $value) {
                     $value = ltrim($value, 0);
-                    if ($value == '') {
+                    if ($value === '') {
                         $value = '0';
                     }
                     $data[$key] = $value;

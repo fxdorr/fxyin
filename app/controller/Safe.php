@@ -20,7 +20,7 @@ namespace fxapp;
  * @method static mixed token(mixed $var, string $type) 解析数据-令牌
  * @method static mixed rsapri(mixed $var, string $type, array $param = []) 解析数据-RSA私钥
  * @method static mixed rsapub(mixed $var, string $type, array $param = []) 解析数据-RSA公钥
- * @method static mixed rsapem(mixed $var, string $type) 解析数据-RSA密钥
+ * @method static string rsapem(string $var) 解析数据-RSA密钥
  */
 class Safe extends \fxyin\Facade
 {

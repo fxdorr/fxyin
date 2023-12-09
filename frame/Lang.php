@@ -59,7 +59,7 @@ class Lang
     public static function range($range = '')
     {
         // 初始化变量
-        if ('' == $range) {
+        if ('' === $range) {
             return self::$range;
         } else {
             self::$range = $range;
