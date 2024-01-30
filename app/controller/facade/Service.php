@@ -67,10 +67,30 @@ class Service
             'easy' => true,
         ];
         $option = \fxapp\Param::define([$option, $predefined], '1.1.2');
-        // 数据进行字符串编码
-        $option['data'] = \fxapp\Text::strEncode($option['data']);
         // 初始化请求
         $request = curl_init();
+        // 识别请求方法
+        switch ($option['method']) {
+            default:
+            case 'POST':
+            case 'PUT':
+            case 'PATCH':
+            case 'DELETE':
+                // 默认
+                // 数据进行字符串编码
+                $option['data'] = \fxapp\Text::strEncode($option['data']);
+                // 配置请求
+                curl_setopt($request, CURLOPT_POST, true);
+                curl_setopt($request, CURLOPT_POSTFIELDS, $option['data']);
+                break;
+            case 'GET':
+                // GET
+                // 数据合并到url
+                $option['url'] = \fxapp\Param::url(['type' => '1.2', 'url' => $option['url'], 'param' => $option['data']]);
+                // 配置请求
+                curl_setopt($request, CURLOPT_POST, false);
+                break;
+        }
         // 配置请求地址
         curl_setopt($request, CURLOPT_URL, $option['url']);
         // 配置请求方法
@@ -91,22 +111,6 @@ class Service
         // 设置curl默认访问为IPv4
         if ($option['ipv4'] && defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
             curl_setopt($request, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        }
-        // 识别请求方法
-        switch ($option['method']) {
-            default:
-            case 'POST':
-            case 'PUT':
-            case 'PATCH':
-            case 'DELETE':
-                // 默认
-                curl_setopt($request, CURLOPT_POST, true);
-                curl_setopt($request, CURLOPT_POSTFIELDS, $option['data']);
-                break;
-            case 'GET':
-                // GET
-                curl_setopt($request, CURLOPT_POST, false);
-                break;
         }
         // 发送请求
         $option['res_data'] = curl_exec($request);
