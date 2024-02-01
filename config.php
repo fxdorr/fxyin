@@ -9,7 +9,7 @@
 // | Link https://www.fxri.net
 // +----------------------------------------------------------------------
 
-$tray['scheme'] = $_SERVER['REQUEST_SCHEME'] ?? null;
+$tray['scheme'] = $_SERVER['REQUEST_SCHEME'] ?? (isset($_SERVER['SCRIPT_URI']) ? explode('://', $_SERVER['SCRIPT_URI'])[0] : null);
 $tray['host'] = $_SERVER['HTTP_HOST'] ?? null;
 $tray['uri'] = $_SERVER['REQUEST_URI'] ?? null;
 $tray['method'] = $_SERVER['REQUEST_METHOD'] ?? null;
